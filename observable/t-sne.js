@@ -1,11 +1,11 @@
 // URL: https://beta.observablehq.com/@robstelling/t-sne
 // Title: Visualizando dados de altas dimensões com *t*-SNE
 // Author: Roberto Stelling (@robstelling)
-// Version: 6504
+// Version: 6523
 // Runtime version: 1
 
 const m0 = {
-  id: "2331ea7cae3cdc98@6504",
+  id: "2331ea7cae3cdc98@6523",
   variables: [
     {
       inputs: ["md"],
@@ -239,7 +239,7 @@ vegalite({
       inputs: ["md"],
       value: (function(md){return(
 md `## Círculos
-Algoritmo divino: Como este dataset poderia ser projetado em 1D?`
+Algoritmo *divino*: Como este dataset poderia ser projetado em 1D?`
 )})
     },
     {
@@ -305,7 +305,7 @@ md `# Nem sempre é possível projetar os dados separando clusters`
       inputs: ["md"],
       value: (function(md){return(
 md `### Por exemplo consumo, potência e país de origem no dataset [*carros*](https://vega.github.io/vega-lite/data/cars.json)
-Se as dimensões não forem separáveis na dimensão superior, não será possível separá-las em uma dimensão inferior. Isso leva à ideia de dimensionalidade intrínseca, que é o mínimo de dimensões necessárias para representar fielmente os dados.`
+Se os dados não forem separáveis na dimensão superior, não será possível separá-los em uma dimensão inferior. Isso leva à ideia de dimensionalidade intrínseca, que é o mínimo de dimensões necessárias para representar fielmente os dados.`
 )})
     },
     {
@@ -327,7 +327,7 @@ vegalite({
     {
       inputs: ["md"],
       value: (function(md){return(
-md`Para ajudar no problema de *visualização* de dados em altas dimensões, vamos analisar o:
+md`Para resolver o problema de *visualização* de dados em altas dimensões, vamos analisar o:
 # <center>*t*-SNE</center>
 [*t*-Distributed Stochastic Neighbour Embedding<sup>2</sup>](#ref) (*t*-SNE, pronunciado ***tí-ciní***) é uma técnica de visualização em 1D, 2D ou 3D de datasets de altas dimensões.
 
@@ -335,7 +335,7 @@ O *t*-SNE, desenvolvido por *Laurens van der Maaten* e *Geoffrey Hinton*, é um 
 
 O *t*-SNE utiliza um kernel gaussiano para converter pontos em altas dimensões para probabilidades de conexões (**P**) e um kernel *t*-Student, com um grau de liberdade, para representar as probabilidades de conexões entre os pontos em baixas dimensões (**Q**), no espaço mapeado. O custo das diferenças entre as duas distribuições **P** e **Q** é modelado pela divergência de Kullbach-Leibler<sup><a href="#ref">20</a></sup>, o gradiente desta função (ver \`[Equação 5]\` abaixo) é utilizado para atualizar o mapa de pontos em baixas dimensões.
 
-O algoritmo não tem garantia de convergir mas produz resultados muito bons, como por exemplo, o mapeamento das 784 dimensões do MNIST para apenas duas (ou tres, se contarmos os canais cores e marcas - que representam a mesma informação), como mostrada no gráfico abaixo, implementado com Tensorflow.js<sup><a href="#ref">17</a></sup>`
+O *t*-SNE não tem garantia de convergir mas produz resultados muito bons, como por exemplo, o mapeamento das 784 dimensões do MNIST para apenas duas (ou tres, se contarmos os canais cores e marcas - que representam a mesma informação), como mostrada no gráfico abaixo, implementado com Tensorflow.js<sup><a href="#ref">17</a></sup>`
 )})
     },
     {
@@ -619,12 +619,12 @@ ${tex.block`${eq5}`}`
       inputs: ["md","tex","eq5","gamma_eval"],
       value: (function(md,tex,eq5,gamma_eval){return(
 md `A versão acima do algoritmo omite alguns detalhes importantes, após a leitura do paper é possível reescrever o algoritmo e gerar uma versão mais próxima de implementação que facilite o entendimento do algoritmo.
-# <center>Algoritmo do *t*-SNE<br>*Em português*</center>
+# <center>Algoritmo do *t*-SNE<br>*Revisitado*</center>
 
 1. Dado um conjunto de ${tex`N`} pontos em um espaço em altas dimensões
 2. Determine um fator de entropia ${tex`Perp`}, taxa de aprendizado *${tex`\eta`}*, momentum ${tex`\alpha(t)`} e o número de iterações ${tex`T`}
-3. Calcule a distâncias entre os pontos em altas dimensões, converta estas dimensões em probabilidades utilizando uma distribuição Gaussiana, com uma variância para cada ponto, de acordo com o fator de entropia *Perp*.
-  4. Faça uma busca binária para encontrar as variâncias adequadas para cada ponto, de forma tal que cada linha da matriz de probabilidades (${tex`p_{ik}\forall k`}) tenha aproximadamente a mesma entropia
+3. Calcule a distâncias entre os pontos em altas dimensões, converta estas dimensões em probabilidades utilizando uma distribuição Gaussiana, com uma variância para cada ponto, de acordo com o fator de entropia ${tex`Perp`}.
+  4. Faça uma busca binária para encontrar as variâncias adequadas para cada ponto, de forma tal que cada linha da matriz de probabilidades (${tex`p_{ik}\forall k`}) tenha aproximadamente a mesma entropia, em função de ${tex`Perp`}.
   5. Ajuste as probabilidades para que a matriz de probabilidades dos pontos seja simétrica, com ${tex`p_{i|j} = \frac{p_{i|j}+p_{j|i}}{2}`}
 6. Faça um chute inicial do conjunto mapeado ${tex`\gamma^{(1)} = \{y_1, \dots, y_N\}`}
 7. Repita ${tex`T`} vezes, atualizando ${tex`t = 1\dots T`}:
@@ -1088,10 +1088,10 @@ ${tex.block`\log(Perp(p_i)) = entropia(p_i) = \sum_{j\ne i} -p_{j|i} \log_2(p_{j
 )})
     },
     {
-      inputs: ["md","Perp","tex"],
-      value: (function(md,Perp,tex){return(
+      inputs: ["md","Perp_display","tex"],
+      value: (function(md,Perp_display,tex){return(
 md`#### Entropia
-A entropia desejada é definida pela perplexidade [\`Perp\` = ${Perp}]: ${tex.block`entropia = \log_2(Perp) = ${+Math.log2(Perp).toFixed(4)}`}`
+A entropia desejada é definida pela perplexidade [\`Perp\` = ${Perp_display}]: ${tex.block`entropia = \log_2(Perp) = ${+Math.log2(Perp_display).toFixed(4)}`}`
 )})
     },
     {
@@ -3258,7 +3258,7 @@ require("d3-format")
 };
 
 const notebook = {
-  id: "2331ea7cae3cdc98@6504",
+  id: "2331ea7cae3cdc98@6523",
   modules: [m0,m1,m2]
 };
 
