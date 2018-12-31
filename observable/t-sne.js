@@ -1,11 +1,11 @@
 // URL: https://beta.observablehq.com/@robstelling/t-sne
 // Title: Visualizando dados de altas dimensões com *t*-SNE
 // Author: Roberto Stelling (@robstelling)
-// Version: 6523
+// Version: 6549
 // Runtime version: 1
 
 const m0 = {
-  id: "2331ea7cae3cdc98@6523",
+  id: "2331ea7cae3cdc98@6549",
   variables: [
     {
       inputs: ["md"],
@@ -1193,16 +1193,15 @@ slider({
       value: (G, _) => G.input(_)
     },
     {
-      inputs: ["md","calcEntropia","p_variancias"],
-      value: (function(md,calcEntropia,p_variancias){return(
-md`Entropia resultante = ${calcEntropia(p_variancias)}`
+      inputs: ["md","calcEntropia","p_variancias_display"],
+      value: (function(md,calcEntropia,p_variancias_display){return(
+md`Entropia resultante = ${calcEntropia(p_variancias_display)}`
 )})
     },
     {
-      name: "entropia",
-      inputs: ["Perp"],
-      value: (function(Perp){return(
-Math.log2(Perp)
+      inputs: ["md","tex","Perp_display"],
+      value: (function(md,tex,Perp_display){return(
+md`${tex`entropia = \log_2(Perp) = ${Math.log2(Perp_display)}`}`
 )})
     },
     {
@@ -1594,10 +1593,11 @@ vegalite(copiaPequeno)
 )})
     },
     {
-      inputs: ["md","iteracao","T","custoRun","it_exagero","valor_exagero","valores_momentum","gatilho_momentum"],
-      value: (function(md,iteracao,T,custoRun,it_exagero,valor_exagero,valores_momentum,gatilho_momentum){return(
+      inputs: ["md","iteracao","T","custoRun","it_exagero","valor_exagero","Perp","valores_momentum","gatilho_momentum"],
+      value: (function(md,iteracao,T,custoRun,it_exagero,valor_exagero,Perp,valores_momentum,gatilho_momentum){return(
 md`**Iteração**: ${iteracao}/${T} - **Custo**: ${custoRun}<br>
-**Exagero**: ${iteracao<=it_exagero?valor_exagero:"nenhum"} (${valor_exagero} até iteração ${it_exagero})<br>
+**Exagero**: ${iteracao<=it_exagero?valor_exagero:"nenhum"} (${valor_exagero} até iteração ${it_exagero}) - 
+**Perplexidade**: ${Perp}<br>
 **Momentum**: ${valores_momentum[iteracao<gatilho_momentum]} (${valores_momentum[true]} até iteração ${gatilho_momentum}, ${valores_momentum[false]} depois)`
 )})
     },
@@ -1802,17 +1802,24 @@ matrizDistancias(pontos_flat)
 )
     },
     {
-      name: "p_variancias",
-      inputs: ["ajustaVariancias","pontos_flat","entropia"],
-      value: (function(ajustaVariancias,pontos_flat,entropia){return(
-ajustaVariancias(pontos_flat, entropia, 1e-4, 50)
-)})
-    },
-    {
       name: "p_variancias_display",
       inputs: ["ajustaVariancias","pontos_flat","Perp_display"],
       value: (function(ajustaVariancias,pontos_flat,Perp_display){return(
 ajustaVariancias(pontos_flat, Math.log2(Perp_display), 1e-4, 50)
+)})
+    },
+    {
+      name: "entropia",
+      inputs: ["Perp"],
+      value: (function(Perp){return(
+Math.log2(Perp)
+)})
+    },
+    {
+      name: "p_variancias",
+      inputs: ["ajustaVariancias","pontos_flat","entropia"],
+      value: (function(ajustaVariancias,pontos_flat,entropia){return(
+ajustaVariancias(pontos_flat, entropia, 1e-4, 50)
 )})
     },
     {
@@ -3258,7 +3265,7 @@ require("d3-format")
 };
 
 const notebook = {
-  id: "2331ea7cae3cdc98@6523",
+  id: "2331ea7cae3cdc98@6549",
   modules: [m0,m1,m2]
 };
 
