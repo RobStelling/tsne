@@ -1,11 +1,11 @@
 // URL: https://beta.observablehq.com/@robstelling/t-sne
 // Title: Visualizando dados de altas dimensões com *t*-SNE
 // Author: Roberto Stelling (@robstelling)
-// Version: 6489
+// Version: 6504
 // Runtime version: 1
 
 const m0 = {
-  id: "2331ea7cae3cdc98@6489",
+  id: "2331ea7cae3cdc98@6504",
   variables: [
     {
       inputs: ["md"],
@@ -1577,7 +1577,7 @@ slider({
   min: 0.5,
   max: 10,
   step: 0.5,
-  value: 4,
+  value: 1.5,
   description: 'Multiplicador das probabilidades do espaço original'
 })
 )})
@@ -1612,7 +1612,7 @@ vegalite([fr1(pontosMapa), fr2(pontosMapa)][+dimensoes-1])
       inputs: ["html"],
       value: (function(html)
 {
-  const form = html`<form><button name=button>Reiniciar`;
+  const form = html`<form><button name=button>Iniciar`;
   form.button.onclick = event => {
     event.preventDefault(); // Don’t submit the form.
     form.dispatchEvent(new CustomEvent("input"));
@@ -1628,8 +1628,8 @@ vegalite([fr1(pontosMapa), fr2(pontosMapa)][+dimensoes-1])
     },
     {
       name: "pontosMapa",
-      inputs: ["iteracao","T","yDisplay","Y","gradiente","p_final","mutable custoRun","custo","mutable iteracao","zeros","ystep","gains","valores_momentum","gatilho_momentum","eta"],
-      value: (function*(iteracao,T,yDisplay,Y,gradiente,p_final,$0,custo,$1,zeros,ystep,gains,valores_momentum,gatilho_momentum,eta)
+      inputs: ["iteracao","T","yDisplay","Y","gradiente","p_final","mutable custoRun","custo","mutable iteracao","ystep","gains","valores_momentum","gatilho_momentum","eta"],
+      value: (function*(iteracao,T,yDisplay,Y,gradiente,p_final,$0,custo,$1,ystep,gains,valores_momentum,gatilho_momentum,eta)
 {
   if (iteracao >= T)
     yield yDisplay.map((p, i)=>(p.y==undefined?{x:Y[i][0], 
@@ -1640,6 +1640,7 @@ vegalite([fr1(pontosMapa), fr2(pontosMapa)][+dimensoes-1])
                                                 nome:p.nome,
                                                 Cluster:p.Cluster}));
   else {
+    // Adaptado de: https://github.com/karpathy/tsnejs
     var N = Y.length;
     var dim = Y[0].length;
     var grad = gradiente(Y, p_final, iteracao);
@@ -1647,7 +1648,6 @@ vegalite([fr1(pontosMapa), fr2(pontosMapa)][+dimensoes-1])
     $0.value = custo(Y, p_final);
     $1.value++;    
     // perform gradient step
-    var ymean = zeros(dim);
     for(var i=0;i<N;i++) {
       for(var d=0;d<dim;d++) {
         var gid = grad[i][d];
@@ -1666,19 +1666,8 @@ vegalite([fr1(pontosMapa), fr2(pontosMapa)][+dimensoes-1])
 
         // step!
         Y[i][d] += newsid; 
-
-        ymean[d] += Y[i][d]; // accumulate mean so that we can center later
       }
     }
-
-    // reproject Y to be zero mean
-    for(var i=0;i<N;i++) {
-      for(var d=0;d<dim;d++) {
-        Y[i][d] -= ymean[d]/N;
-      }
-    }
-
-    //if(iteracao%100===0) console.log('iteracao ' + iteracao + ', custo: ' + custoRun);
     yield yDisplay.map((p, i)=>(p.y==undefined?{x:Y[i][0], 
                                                 nome:p.nome, 
                                                 Cluster:p.Cluster}:
@@ -1701,7 +1690,7 @@ md `# Limitações
 * Da implementação:
   * A implementação atual se aplica apenas à reduções do ${tex`\mathbb{R}^M`} para o ${tex`\mathbb{R}^{1|2}`}.
   * Não é difícil incluir outros dados para redução, mas requer edição manual
-  * Algortimo do t-SNE completo porém implementado em partes (ver github)`
+  * Algortimo do t-SNE completo porém implementado em partes. <a href="#ref">Texto e código<sup>23</sup></a>`
 )})
     },
     {
@@ -1744,7 +1733,8 @@ md`# Referências
 19. [Função Gamma](https://github.com/substack/gamma.js/blob/master/index.js)
 20. [Divergência de Kullback-Leibler](https://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence)
 21. [Mike Bostock - Let's try t-SNE](https://beta.observablehq.com/@mbostock/lets-try-t-sne)
-22. [Yasser S. Abu-Mostafa - Caltech](https://work.caltech.edu/)`
+22. [Yasser S. Abu-Mostafa - Caltech](https://work.caltech.edu/)
+23. [Repositório github](https://github.com/RobStelling/tsne)`
 )})
     },
     {
@@ -3268,7 +3258,7 @@ require("d3-format")
 };
 
 const notebook = {
-  id: "2331ea7cae3cdc98@6489",
+  id: "2331ea7cae3cdc98@6504",
   modules: [m0,m1,m2]
 };
 
