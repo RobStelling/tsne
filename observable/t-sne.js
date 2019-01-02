@@ -1,11 +1,11 @@
 // URL: https://beta.observablehq.com/@robstelling/t-sne
 // Title: Visualizando dados de altas dimensões com *t*-SNE
 // Author: Roberto Stelling (@robstelling)
-// Version: 6549
+// Version: 6576
 // Runtime version: 1
 
 const m0 = {
-  id: "2331ea7cae3cdc98@6549",
+  id: "2331ea7cae3cdc98@6576",
   variables: [
     {
       inputs: ["md"],
@@ -52,10 +52,10 @@ Nos casos a seguir, projetamos os dados de 2D em em 1D para cada um dos eixos: *
     },
     {
       name: "grafico_simples",
-      inputs: ["vegalite","pontos","tamanhoCirculo","opacity","colorScheme"],
-      value: (function(vegalite,pontos,tamanhoCirculo,opacity,colorScheme){return(
+      inputs: ["vegalite","width","pontos","tamanhoCirculo","opacity","colorScheme"],
+      value: (function(vegalite,width,pontos,tamanhoCirculo,opacity,colorScheme){return(
 vegalite({
-  width: 400,
+  width: Math.min(400, width),
   height: 400,
   data: pontos,
   mark: {type: "circle", size: tamanhoCirculo, opacity: opacity},
@@ -74,10 +74,10 @@ md`# Projetando os pontos no eixo X`
 )})
     },
     {
-      inputs: ["vegalite","pontos","tamanhoCirculo","opacity","colorScheme"],
-      value: (function(vegalite,pontos,tamanhoCirculo,opacity,colorScheme){return(
+      inputs: ["vegalite","width","pontos","tamanhoCirculo","opacity","colorScheme"],
+      value: (function(vegalite,width,pontos,tamanhoCirculo,opacity,colorScheme){return(
 vegalite({
-  width: 400,
+  width: Math.min(400, width),
   data: pontos,
   mark: {type: "circle", size: tamanhoCirculo, opacity: opacity},
   encoding: {
@@ -106,10 +106,10 @@ md `e transladando para a horizontal`
 )})
     },
     {
-      inputs: ["vegalite","pontos","tamanhoCirculo","opacity","colorScheme"],
-      value: (function(vegalite,pontos,tamanhoCirculo,opacity,colorScheme){return(
+      inputs: ["vegalite","width","pontos","tamanhoCirculo","opacity","colorScheme"],
+      value: (function(vegalite,width,pontos,tamanhoCirculo,opacity,colorScheme){return(
 vegalite({
-  width: 400,
+  width: Math.min(400, width),
   data: pontos,
   mark: {type: "circle", size: tamanhoCirculo, opacity: opacity},
   encoding: {
@@ -133,10 +133,10 @@ Em um *"mundo ideal"* teríamos a redução de duas dimensões deste conjunto de
 )})
     },
     {
-      inputs: ["vegalite","ideal_linear","tamanhoCirculo","opacity","colorScheme"],
-      value: (function(vegalite,ideal_linear,tamanhoCirculo,opacity,colorScheme){return(
+      inputs: ["vegalite","width","ideal_linear","tamanhoCirculo","opacity","colorScheme"],
+      value: (function(vegalite,width,ideal_linear,tamanhoCirculo,opacity,colorScheme){return(
 vegalite({
-  width: 400,
+  width: Math.min(400, width),
   data: ideal_linear,
   mark: {type: "circle", size: tamanhoCirculo, opacity: opacity},
   encoding: {
@@ -153,10 +153,10 @@ md `# Dataset tipo meia lua`
 )})
     },
     {
-      inputs: ["vegalite","meia_lua","tamanhoCirculo","opacity","colorScheme"],
-      value: (function(vegalite,meia_lua,tamanhoCirculo,opacity,colorScheme){return(
+      inputs: ["vegalite","width","meia_lua","tamanhoCirculo","opacity","colorScheme"],
+      value: (function(vegalite,width,meia_lua,tamanhoCirculo,opacity,colorScheme){return(
 vegalite({
-  width: 500,
+  width: Math.min(500, width),
   height : 250,
   data: {values: meia_lua},
   mark: {type: "circle", size: tamanhoCirculo, opacity: opacity},
@@ -175,10 +175,10 @@ md `## Projetando sobre o eixo *x*`
 )})
     },
     {
-      inputs: ["vegalite","meia_lua","tamanhoCirculo","opacity","colorScheme"],
-      value: (function(vegalite,meia_lua,tamanhoCirculo,opacity,colorScheme){return(
+      inputs: ["vegalite","width","meia_lua","tamanhoCirculo","opacity","colorScheme"],
+      value: (function(vegalite,width,meia_lua,tamanhoCirculo,opacity,colorScheme){return(
 vegalite({
-  width: 500,
+  width: Math.min(500, width),
   data: {values: meia_lua},
   mark: {type: "circle", size: tamanhoCirculo, opacity: opacity},
   encoding: {
@@ -195,10 +195,10 @@ md `## Projetando sobre o eixo *y*`
 )})
     },
     {
-      inputs: ["vegalite","meia_lua","tamanhoCirculo","opacity","colorScheme"],
-      value: (function(vegalite,meia_lua,tamanhoCirculo,opacity,colorScheme){return(
+      inputs: ["vegalite","width","meia_lua","tamanhoCirculo","opacity","colorScheme"],
+      value: (function(vegalite,width,meia_lua,tamanhoCirculo,opacity,colorScheme){return(
 vegalite({
-  width: 500,
+  width: Math.min(500, width),
   data: {values: meia_lua},
   mark: {type: "circle", size: tamanhoCirculo, opacity: opacity},
   encoding: {
@@ -222,10 +222,10 @@ md `## Projeção *"ideal"*`
 )})
     },
     {
-      inputs: ["vegalite","cluster_falso","tamanhoCirculo","opacity","colorScheme"],
-      value: (function(vegalite,cluster_falso,tamanhoCirculo,opacity,colorScheme){return(
+      inputs: ["vegalite","width","cluster_falso","tamanhoCirculo","opacity","colorScheme"],
+      value: (function(vegalite,width,cluster_falso,tamanhoCirculo,opacity,colorScheme){return(
 vegalite({
-  width: 500,
+  width: Math.min(500, width),
   data: {values: cluster_falso},
   mark: {type: "circle", size: tamanhoCirculo, opacity: opacity},
   encoding: {
@@ -243,10 +243,10 @@ Algoritmo *divino*: Como este dataset poderia ser projetado em 1D?`
 )})
     },
     {
-      inputs: ["vegalite","circulos","tamanhoCirculo","opacity","colorScheme"],
-      value: (function(vegalite,circulos,tamanhoCirculo,opacity,colorScheme){return(
+      inputs: ["vegalite","width","circulos","tamanhoCirculo","opacity","colorScheme"],
+      value: (function(vegalite,width,circulos,tamanhoCirculo,opacity,colorScheme){return(
 vegalite({
-  width: 500,
+  width: Math.min(500, width),
   height : 500,
   data: {values: circulos},
   mark: {type: "circle", size: tamanhoCirculo, opacity: opacity},
@@ -282,10 +282,10 @@ circulos
 )
     },
     {
-      inputs: ["vegalite","circulosMap","tamanhoCirculo","opacity","colorScheme"],
-      value: (function(vegalite,circulosMap,tamanhoCirculo,opacity,colorScheme){return(
+      inputs: ["vegalite","width","circulosMap","tamanhoCirculo","opacity","colorScheme"],
+      value: (function(vegalite,width,circulosMap,tamanhoCirculo,opacity,colorScheme){return(
 vegalite({
-  width: 500,
+  width: Math.min(500, width),
   data: {values: circulosMap},
   mark: {type: "circle", size: tamanhoCirculo, opacity: opacity},
   encoding: {
@@ -309,10 +309,10 @@ Se os dados não forem separáveis na dimensão superior, não será possível s
 )})
     },
     {
-      inputs: ["vegalite","carros","tamanhoCirculo","opacity","colorScheme"],
-      value: (function(vegalite,carros,tamanhoCirculo,opacity,colorScheme){return(
+      inputs: ["vegalite","width","carros","tamanhoCirculo","opacity","colorScheme"],
+      value: (function(vegalite,width,carros,tamanhoCirculo,opacity,colorScheme){return(
 vegalite({
-  width: 400,
+  width: Math.min(400, width),
   height : 400,
   data: {values: carros},
   mark: {type: "circle", size: tamanhoCirculo, opacity: opacity},
@@ -357,10 +357,10 @@ md `### Alterando parâmetros da curva de densidade de uma distribuição normal
 )})
     },
     {
-      inputs: ["vegalite","gera_normal","var_2","media"],
-      value: (function(vegalite,gera_normal,var_2,media){return(
+      inputs: ["vegalite","width","gera_normal","var_2","media"],
+      value: (function(vegalite,width,gera_normal,var_2,media){return(
 vegalite({
-  width: 600,
+  width: Math.min(600, width),
   height: 300,
   layer: [
     {
@@ -435,10 +435,10 @@ md `### Comparando distribuições normal e *t* de Student`
 )})
     },
     {
-      inputs: ["vegalite","gera_student","intervalo","gera_normal","var2"],
-      value: (function(vegalite,gera_student,intervalo,gera_normal,var2){return(
+      inputs: ["vegalite","width","gera_student","intervalo","gera_normal","var2"],
+      value: (function(vegalite,width,gera_student,intervalo,gera_normal,var2){return(
 vegalite({
-  width: 600,
+  width: Math.min(600, width),
   height: 300,
   layer: [
     {
@@ -512,10 +512,10 @@ md`### Graus de liberdade e variância em normais e *t* de Student`
 )})
     },
     {
-      inputs: ["vegalite","gera_curvas","intervalo","variancia","gl","colorScheme"],
-      value: (function(vegalite,gera_curvas,intervalo,variancia,gl,colorScheme){return(
+      inputs: ["vegalite","width","gera_curvas","intervalo","variancia","gl","colorScheme"],
+      value: (function(vegalite,width,gera_curvas,intervalo,variancia,gl,colorScheme){return(
 vegalite({
-  width: 600,
+  width: Math.min(600, width),
   height: 300,
   data: {values: gera_curvas(-intervalo, intervalo, 0.01, Math.sqrt(variancia), 0, gl)},
   mark: "line",
@@ -1914,10 +1914,10 @@ Math.abs(Math.floor(Math.log10(math.mean(distQ))))
     },
     {
       name: "original",
-      inputs: ["pontos","colorScheme","tamanhoCirculo","opacity"],
-      value: (function(pontos,colorScheme,tamanhoCirculo,opacity){return(
+      inputs: ["width","pontos","colorScheme","tamanhoCirculo","opacity"],
+      value: (function(width,pontos,colorScheme,tamanhoCirculo,opacity){return(
 {
-  width: 300,
+  width: Math.min(300, width),
   height: 300,
   data: pontos,
   title: "Dados originais",
@@ -1940,11 +1940,11 @@ Math.abs(Math.floor(Math.log10(math.mean(distQ))))
     },
     {
       name: "copiaPequeno",
-      inputs: ["original"],
-      value: (function(original)
+      inputs: ["original","width"],
+      value: (function(original,width)
 {
   var cp = JSON.parse(JSON.stringify(original));;
-  cp.width = 200;
+  cp.width = Math.min(200, width);
   cp.height = 200;
   cp.layer[0].mark.size = 50;
   cp.title = "Dados originais";
@@ -1954,11 +1954,11 @@ Math.abs(Math.floor(Math.log10(math.mean(distQ))))
     },
     {
       name: "fr1",
-      inputs: ["colorScheme","tamanhoCirculo","opacity"],
-      value: (function(colorScheme,tamanhoCirculo,opacity){return(
+      inputs: ["width","colorScheme","tamanhoCirculo","opacity"],
+      value: (function(width,colorScheme,tamanhoCirculo,opacity){return(
 function fr1(dados) {
   return ({
-    width: 800,
+    width: Math.min(800, width),
     data: {values: dados},
     //title: "Projeção inicial dos pontos",
     encoding: {
@@ -1980,11 +1980,11 @@ function fr1(dados) {
     },
     {
       name: "fr2",
-      inputs: ["colorScheme","tamanhoCirculo","opacity"],
-      value: (function(colorScheme,tamanhoCirculo,opacity){return(
+      inputs: ["width","colorScheme","tamanhoCirculo","opacity"],
+      value: (function(width,colorScheme,tamanhoCirculo,opacity){return(
 function fr2(dados) {
   return {
-    width: 300,
+    width: Math.min(300, width),
     height: 300,
     data: {values:dados},
     encoding: {
@@ -3265,7 +3265,7 @@ require("d3-format")
 };
 
 const notebook = {
-  id: "2331ea7cae3cdc98@6549",
+  id: "2331ea7cae3cdc98@6576",
   modules: [m0,m1,m2]
 };
 
