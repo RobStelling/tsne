@@ -1,11 +1,11 @@
 // URL: https://beta.observablehq.com/@robstelling/t-sne
 // Title: Visualizando dados de altas dimensões com *t*-SNE
 // Author: Roberto Stelling (@robstelling)
-// Version: 6576
+// Version: 6583
 // Runtime version: 1
 
 const m0 = {
-  id: "2331ea7cae3cdc98@6576",
+  id: "2331ea7cae3cdc98@6583",
   variables: [
     {
       inputs: ["md"],
@@ -1530,25 +1530,6 @@ slider({
       value: (G, _) => G.input(_)
     },
     {
-      name: "viewof T",
-      inputs: ["slider"],
-      value: (function(slider){return(
-slider({
-  title: 'Número de iterações',
-  min: 0,
-  max: 5000,
-  step: 50,
-  value: 0,
-  description: 'Número de iterações do gradiente descendente do t-SNE'
-})
-)})
-    },
-    {
-      name: "T",
-      inputs: ["Generators","viewof T"],
-      value: (G, _) => G.input(_)
-    },
-    {
       name: "viewof it_exagero",
       inputs: ["slider"],
       value: (function(slider){return(
@@ -1624,6 +1605,25 @@ vegalite([fr1(pontosMapa), fr2(pontosMapa)][+dimensoes-1])
     {
       name: "reset",
       inputs: ["Generators","viewof reset"],
+      value: (G, _) => G.input(_)
+    },
+    {
+      name: "viewof T",
+      inputs: ["slider"],
+      value: (function(slider){return(
+slider({
+  title: 'Número de iterações',
+  min: 0,
+  max: 5000,
+  step: 50,
+  value: 0,
+  description: 'Número de iterações do gradiente descendente do t-SNE'
+})
+)})
+    },
+    {
+      name: "T",
+      inputs: ["Generators","viewof T"],
       value: (G, _) => G.input(_)
     },
     {
@@ -1909,7 +1909,7 @@ Infinity
       name: "digitos",
       inputs: ["math","distQ"],
       value: (function(math,distQ){return(
-Math.abs(Math.floor(Math.log10(math.mean(distQ))))
+Math.max(3, Math.abs(Math.floor(Math.log10(math.mean(distQ)))))
 )})
     },
     {
@@ -3265,7 +3265,7 @@ require("d3-format")
 };
 
 const notebook = {
-  id: "2331ea7cae3cdc98@6576",
+  id: "2331ea7cae3cdc98@6583",
   modules: [m0,m1,m2]
 };
 
