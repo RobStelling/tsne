@@ -1,11 +1,11 @@
 // URL: https://beta.observablehq.com/@robstelling/t-sne
 // Title: Visualizando dados de altas dimensões com *t*-SNE
 // Author: Roberto Stelling (@robstelling)
-// Version: 6583
+// Version: 6630
 // Runtime version: 1
 
 const m0 = {
-  id: "2331ea7cae3cdc98@6583",
+  id: "2331ea7cae3cdc98@6630",
   variables: [
     {
       inputs: ["md"],
@@ -364,7 +364,7 @@ vegalite({
   height: 300,
   layer: [
     {
-      title: "Densidade da curva normal",
+      title: "Curva de densidade de uma distribuição normal",
       data: {values: gera_normal(-6, +6, 0.01, 1, 0)},
       mark: "line",
       encoding: {
@@ -395,7 +395,7 @@ slider({
   max: 16, 
   step: 0.01,
   value: 1,
-  description: "Variância de 0 a 9"
+  description: "Variância de [0 a 16]"
 })
 )})
     },
@@ -411,8 +411,9 @@ slider({
 slider({
   min: -2, 
   max: 2, 
-  step: 0.01, 
-  description: "Média de -2 a 2"
+  step: 0.01,
+  value: 0.0,
+  description: "Média [-2 a 2]"
 })
 )})
     },
@@ -490,7 +491,7 @@ slider({
   max: 100,
   value: 6,
   step: 1,
-  description: "Intervalo (-i, i)"
+  description: "Intervalo"
 })
 )})
     },
@@ -567,7 +568,7 @@ slider({
     {
       inputs: ["md"],
       value: (function(md){return(
-md`Uma curva *t* de Student é, na verdade, uma "*combinação*" de infinitas curvas normais. Com um grau de liberdade ela é "*mais baixa*" e possui "*cauda mais longa*" que a curva normal de mesma variância. Aumentando os graus de liberdade a curva *t* de Student converge para a curva normal correspondente, como pode ser visto alterando os parâmetros do gráfico acima.`
+md`Uma curva *t* de Student é, na verdade, uma "*combinação*" de infinitas curvas normais. Com um grau de liberdade ela é "*mais baixa*" e possui "*cauda mais longa*" que a curva normal de mesma variância. Aumentando os graus de liberdade a curva *t* de Student converge para a curva normal correspondente, como pode ser observado alterando os parâmetros do gráfico acima.`
 )})
     },
     {
@@ -586,7 +587,7 @@ Parâmetros da função de custo: perplexidade ${tex`Perp`}<br>
 Parâmetros de otimização: número de iterações ${tex`T`}, taxa de aprendizado ${tex`\eta`}, momentum ${tex`\alpha (t)`}.<br>
 **Resultado**: representação em baixa dimensões ${tex`\gamma^{(T)} = \{y_1, y_2,\dots,y_n\}, y_i \in \mathbb{R}^{(1, 2, 3)}`}.<br>
 \`begin\`<br>
-&nbsp;&nbsp;Computar afinidades par a par ${tex`p_{j|i}`} com perplexidade ${tex`Perp`} (usando \`Equação 1\`)<br>
+&nbsp;&nbsp;Calcular afinidades par a par ${tex`p_{j|i}`} com perplexidade ${tex`Perp`} (usando \`Equação 1\`)<br>
 &nbsp;&nbsp;definir ${tex`p_{ij} = \frac{p_{j|i}+p_{i|j}}{2}`}<br>
 &nbsp;&nbsp;gerar amostra da solução inicial ${tex`\gamma^{(0)} = \{y_1, y_2,\dots,y_n\}`} de ${tex`\mathcal{N}(0,10^{-4}I)`}<br>
 &nbsp;&nbsp;\`for\` *t=1* \`to\` *T* \`do\`<br>
@@ -618,14 +619,14 @@ ${tex.block`${eq5}`}`
     {
       inputs: ["md","tex","eq5","gamma_eval"],
       value: (function(md,tex,eq5,gamma_eval){return(
-md `A versão acima do algoritmo omite alguns detalhes importantes, após a leitura do paper é possível reescrever o algoritmo e gerar uma versão mais próxima de implementação que facilite o entendimento do algoritmo.
+md `A versão acima do algoritmo omite alguns detalhes importantes, após a leitura do paper é possível reescrever o algoritmo e gerar uma versão passível de ser implementada e que facilite o entendimento do algoritmo.
 # <center>Algoritmo do *t*-SNE<br>*Revisitado*</center>
 
 1. Dado um conjunto de ${tex`N`} pontos em um espaço em altas dimensões
 2. Determine um fator de entropia ${tex`Perp`}, taxa de aprendizado *${tex`\eta`}*, momentum ${tex`\alpha(t)`} e o número de iterações ${tex`T`}
 3. Calcule a distâncias entre os pontos em altas dimensões, converta estas dimensões em probabilidades utilizando uma distribuição Gaussiana, com uma variância para cada ponto, de acordo com o fator de entropia ${tex`Perp`}.
   4. Faça uma busca binária para encontrar as variâncias adequadas para cada ponto, de forma tal que cada linha da matriz de probabilidades (${tex`p_{ik}\forall k`}) tenha aproximadamente a mesma entropia, em função de ${tex`Perp`}.
-  5. Ajuste as probabilidades para que a matriz de probabilidades dos pontos seja simétrica, com ${tex`p_{i|j} = \frac{p_{i|j}+p_{j|i}}{2}`}
+  5. Ajuste as probabilidades para que a matriz de probabilidades dos pontos no espaço original seja simétrica, com ${tex`p_{i|j} = \frac{p_{i|j}+p_{j|i}}{2}`}
 6. Faça um chute inicial do conjunto mapeado ${tex`\gamma^{(1)} = \{y_1, \dots, y_N\}`}
 7. Repita ${tex`T`} vezes, atualizando ${tex`t = 1\dots T`}:
   8. Calcule as probabilidades dos pontos no espaço mapeado, ${tex`q_{ij}`}, com distribuição *t* de Student com 1 grau de liberdade e ${tex`\sigma^2`} igual a 1
@@ -658,7 +659,7 @@ vegalite(original)
       value: (function(md,tex,distancias,normal){return(
 md`A ideia, para transformarmos distâncias em probabilidades, é que podemos imaginar cada ponto como o centro de uma distribuição (que pode ser normal/gaussiana ou qualquer outra) e usar a distância entre este ponto e os outros como a probabilidade de ocorrência daquela distância dentro da distribuição escolhida. Quanto menor a distância entre os pontos, maior a probabilidade. *De uma certa forma, estamos determinando a vizinhança entre os pontos*.
 
-Por exemplo, nos pontos acima, a distância entre ${tex`p_0`} e ${tex`p_1`} é dado pela matriz de distâncias, na posição \`distancias[0][1]\` e é igual a ${tex`0.604`}. Em uma distribuição normal, com média ${tex`0`} e variância ${tex`1`}, esta distância corresponde a ${tex.block`distancias[0][1] = ${distancias[0][1]}\rightarrow P_{01} = ${normal(distancias[0][1], 1,0)}`}
+Por exemplo, nos pontos acima, a distância entre ${tex`p_0`} e ${tex`p_1`} é dado pela matriz de distâncias, na posição \`distancias[0][1]\` e é igual a ${tex`${distancias[0][1]}`}. Em uma distribuição normal, com média ${tex`0`} e variância ${tex`1`}, esta distância corresponderia a ${tex.block`distancias[0][1] = ${distancias[0][1]}\rightarrow P_{01} = ${normal(distancias[0][1], 1,0)}`}
 Abaixo vemos as distâncias e probabilidades para alguns pontos usando uma distribuição normal com ${tex`\mu = 0`} e ${tex`\sigma^2 = 1`}`
 )})
     },
@@ -1025,9 +1026,9 @@ ${tex.block`${eq1}`}`
 )})
     },
     {
-      inputs: ["md"],
-      value: (function(md){return(
-md `O denominador age como uma *"normalização"* das probabilidades, em função da densidade ao redor do ponto x<sub>i</sub>. Assim distâncias ligeiramente maiores ao redor de pontos em locais poucos densos, são equivalentes a distâncias menores ao redor de pontos em locais mais densos. O valor de cada variância é determinado por uma busca binária utilizando o hiperparâmetro *perplexidade* (\`Perp\`) determinado pelo usuário.`
+      inputs: ["md","tex"],
+      value: (function(md,tex){return(
+md `O denominador age como uma *"normalização"* das probabilidades, em função da densidade ao redor do ponto x<sub>i</sub>. Assim distâncias ligeiramente maiores ao redor de pontos em locais poucos densos, são equivalentes a distâncias menores ao redor de pontos em locais mais densos. O valor de cada variância é determinado por uma busca binária utilizando o ${tex`\log_2`} do hiperparâmetro *perplexidade* (\`Perp\`) determinado pelo usuário.`
 )})
     },
     {
@@ -1059,11 +1060,12 @@ pt(math.matrix(math.reshape(p_flat.map(x => +x.toFixed(3)), [16,16])))
       inputs: ["slider"],
       value: (function(slider){return(
 slider({
+  title: 'Variância',
   min: 0.1,
   max: 9,
   step: 0.1,
   value: 1,
-  description: "Variância"
+  description: "Altere a variância para todos os pontos"
 })
 )})
     },
@@ -1084,7 +1086,7 @@ A perplexidade (${tex`Perp`}) é um hiper-parâmetro que ajusta a variância das
       inputs: ["md","tex"],
       value: (function(md,tex){return(
 md`A perplexidade é uma medida relacionada à dispersão ao redor dos pontos, ou sua entropia. A intuição é que a perplexidade indicaria o número real de vizinhos de um ponto e seu logarítmo corresponde à medida de entropia. Então, definimos perplexidade de cada ponto como:
-${tex.block`\log(Perp(p_i)) = entropia(p_i) = \sum_{j\ne i} -p_{j|i} \log_2(p_{j|i})`}`
+${tex.block`\log_2(Perp(p_i)) = entropia(p_i) = \sum_{j\ne i} -p_{j|i} \log_2(p_{j|i})`}`
 )})
     },
     {
@@ -1113,7 +1115,7 @@ function calcEntropia(probabilidades){
     {
       inputs: ["md","s2","tex","calcEntropia","p_flat"],
       value: (function(md,s2,tex,calcEntropia,p_flat){return(
-md `No nosso exemplo, com todas as variâncias iguais a ${+(s2).toFixed(3)}, temos ${tex`entropia = ${+(calcEntropia(p_flat)/16).toFixed(4)}`} e ${tex`perplexidade = ${Math.exp(calcEntropia(p_flat)/16).toFixed(4)}`}`
+md `No nosso exemplo, com todas as variâncias iguais a ${+(s2).toFixed(3)}, corresponde a ${tex`entropia = ${+(calcEntropia(p_flat)/16).toFixed(4)}`} e ${tex`perplexidade = ${Math.exp(calcEntropia(p_flat)/16).toFixed(4)}`}`
 )})
     },
     {
@@ -1183,7 +1185,7 @@ slider({
   max: 100,
   step: 0.5,
   value: 10,
-  description: "Entre com o valor do parâmetro perplexidade"
+  description: "Ajuste o valor do hiperparâmetro perplexidade"
 })
 )})
     },
@@ -1473,25 +1475,6 @@ O valor dos novos pontos mapeados corresponde aos pontos anteriores, somados ao 
 )})
     },
     {
-      name: "viewof Perp",
-      inputs: ["slider"],
-      value: (function(slider){return(
-slider({
-  title: 'Perplexidade',
-  min: 1,
-  max: 100,
-  step: 0.5,
-  value: 10,
-  description: "Entre com o valor do parâmetro perplexidade"
-})
-)})
-    },
-    {
-      name: "Perp",
-      inputs: ["Generators","viewof Perp"],
-      value: (G, _) => G.input(_)
-    },
-    {
       name: "viewof eta",
       inputs: ["slider"],
       value: (function(slider){return(
@@ -1519,7 +1502,7 @@ slider({
   min: 1,
   max: 500,
   step: 1,
-  value: 250,
+  value: 100,
   description: 'Passo em que o valor do momentum será alterado'
 })
 )})
@@ -1565,6 +1548,25 @@ slider({
     {
       name: "valor_exagero",
       inputs: ["Generators","viewof valor_exagero"],
+      value: (G, _) => G.input(_)
+    },
+    {
+      name: "viewof Perp",
+      inputs: ["slider"],
+      value: (function(slider){return(
+slider({
+  title: 'Perplexidade',
+  min: 1,
+  max: 100,
+  step: 0.5,
+  value: 10,
+  description: "Entre com o valor do parâmetro perplexidade"
+})
+)})
+    },
+    {
+      name: "Perp",
+      inputs: ["Generators","viewof Perp"],
       value: (G, _) => G.input(_)
     },
     {
@@ -1689,8 +1691,9 @@ md `# Limitações
   * Não há garantia de convergência para a ótima global da sua função de custo.
 * Da implementação:
   * A implementação atual se aplica apenas à reduções do ${tex`\mathbb{R}^M`} para o ${tex`\mathbb{R}^{1|2}`}.
-  * Não é difícil incluir outros dados para redução, mas requer edição manual
-  * Algortimo do t-SNE completo porém implementado em partes. <a href="#ref">Texto e código<sup>23</sup></a>`
+  * Não é difícil incluir outros dados para redução, mas requer edição manual.
+  * Algortimo do t-SNE completo porém implementado em partes. <a href="#ref">Texto e código<sup>23</sup></a>
+  * Embora seja possĩvel observar comportamentos interessantes do algoritmo em reduções do ${tex`\mathbb{R}^2`} para ${tex`\mathbb{R}^1`}, é preciso ter cuidado ao generalizar conclusões sobre *t*-SNE baseadas apenas nesta redução de uma dimensão.`
 )})
     },
     {
@@ -1714,7 +1717,7 @@ md`# Referências
 ### Links
 1. [MNIST](http://yann.lecun.com/exdb/mnist/)
 2. [Paper: Visualizing data using t-SNE](http://www.jmlr.org/papers/volume9/vandermaaten08a/vandermaaten08a.pdf)
-3. [Site do t-SNE](https://lvdmaaten.github.io/tsne/)
+3. [Site do t-SNE - Laurens van der Maaten](https://lvdmaaten.github.io/tsne/)
 4. [Wikipedia: t-SNE](https://en.wikipedia.org/wiki/T-distributed_stochastic_neighbor_embedding)
 5. [Paper: Linear t-SNE optimization for the web](https://arxiv.org/pdf/1805.10817.pdf)
 6. [How to use t-SNE effectively](https://distill.pub/2016/misread-tsne/)
@@ -2525,26 +2528,6 @@ JSON.parse(circ)
 )})
     },
     {
-      inputs: ["vegalite","gera_normal"],
-      value: (function(vegalite,gera_normal){return(
-vegalite({
-  width: 600,
-  height: 300,
-  layer: [
-    {
-      title: "Normal com μ=0 e σ²=1",
-      data: {values: gera_normal(-6, 6, 0.01, 1, 0)},
-      mark: {type: "area", fill:"#d0d0d0", fillOpacity: 0.4},
-      encoding: {
-        x: {field: "x", type: "quantitative"},
-        y: {field: "y", type: "quantitative", title: "φ(x)"}
-      }
-    }
-  ]
-})
-)})
-    },
-    {
       inputs: ["md"],
       value: (function(md){return(
 md`#### Atributos de gráficos`
@@ -3265,7 +3248,7 @@ require("d3-format")
 };
 
 const notebook = {
-  id: "2331ea7cae3cdc98@6583",
+  id: "2331ea7cae3cdc98@6630",
   modules: [m0,m1,m2]
 };
 
