@@ -1,11 +1,11 @@
 // URL: https://beta.observablehq.com/@robstelling/t-sne_en
 // Title: t-SNE
 // Author: Roberto Stelling (@robstelling)
-// Version: 7076
+// Version: 7105
 // Runtime version: 1
 
 const m0 = {
-  id: "2379c50fe5f906fb@7076",
+  id: "2379c50fe5f906fb@7105",
   variables: [
     {
       inputs: ["md"],
@@ -453,7 +453,7 @@ vegalite({
   height: 300,
   layer: [
     {
-      title: "Normal (red) e Studend-t (blue)",
+      title: "Normal (red) and Studend-t (blue)",
       data: {values: gera_student(-intervalo, intervalo, 0.01, 1, 1)},
       mark: {type: "line"},
       encoding: {
@@ -681,7 +681,7 @@ vegalite({
   height: 300,
   layer: [
     {
-      title: "Gaussian with μ=0 e σ=1",
+      title: "Gaussian with μ=0 and σ=1",
       data: {values: gera_normal(-5, 5, 0.01, 1, 0)},
       mark: {type: "area", fill:"#d0d0d0", fillOpacity: 0.4},
       encoding: {
@@ -839,7 +839,7 @@ vegalite({
   height: 300,
   layer: [
     {
-      title: "Student-t with μ=0 e σ=1, 1 degree of freedom",
+      title: "Student-t with μ=0 and σ=1, 1 degree of freedom",
       data: {values: gera_student(-5, 5, 0.01, 1, 0)},
       mark: {type: "area", fill:"#d0d0d0", fillOpacity: 0.4},
       encoding: {
@@ -1275,7 +1275,7 @@ vegalite(original)
       value: (function(radio){return(
 radio({
   title: 'Map dimensions',
-  description: 'Choose the number of dimensions to map the points',
+  description: 'Choose the number of dimensions to map the points, the graph below should change accordingly',
   options: [
     {label:'One', value:1},
     {label:'Two', value:2}
@@ -1307,7 +1307,7 @@ vegalite([fr1(yDisplay),fr2(yDisplay)][dimensoes-1])
       value: (function(radio){return(
 radio({
   title: 'Type of the initial projection',
-  description: 'Choose how to generate the initial guess',
+  description: 'Choose how to generate the initial guess, see how the distance matrix is affected',
   options: [
     {label:'Random', value:'randomico'},
     {label:'Compressed random', value:'comprimido'},
@@ -1325,7 +1325,7 @@ radio({
     {
       inputs: ["md"],
       value: (function(md){return(
-md`### Distance between the generated points`
+md`### Distance between generated points`
 )})
     },
     {
@@ -1345,7 +1345,7 @@ matrizDistancias(y_flat)
       inputs: ["md"],
       value: (function(md){return(
 md`## Computing low dimension affinities
-The low dimension affinities are computed over a Student *t* distribution, with 1 degree of freedom and variance equals to 1.`
+The low dimension affinities are computed over a Student *t* distribution, with 1 degree of freedom and variance equal to 1.`
 )})
     },
     {
@@ -1465,7 +1465,7 @@ To speed the the optimization stage and to help find better solutions, the paper
     {
       inputs: ["md","tex","pt","math","gradiente","y_flat","p_final"],
       value: (function(md,tex,pt,math,gradiente,y_flat,p_final){return(
-md`Gradient on the first iteraction: ${tex`\frac{\delta C}{\delta y_i} =`} ${pt(math.matrix(gradiente(y_flat, p_final, 1)), '\\footnotesize')}`
+md`Gradient for the first iteraction: ${tex`\frac{\delta C}{\delta y_i} =`} ${pt(math.matrix(gradiente(y_flat, p_final, 1)), '\\footnotesize')}`
 )})
     },
     {
@@ -1478,7 +1478,7 @@ The value of the new mapped points correspond to the previous points, added up t
 )})
     },
     {
-      name: "valores_momentum",
+      name: "momentum",
       value: (function(){return(
 {true:0.5, false:0.8}
 )})
@@ -1585,12 +1585,12 @@ vegalite(copiaPequeno)
 )})
     },
     {
-      inputs: ["md","iteracao","T","custoRun","it_exagero","valor_exagero","Perp","valores_momentum","gatilho_momentum"],
-      value: (function(md,iteracao,T,custoRun,it_exagero,valor_exagero,Perp,valores_momentum,gatilho_momentum){return(
+      inputs: ["md","iteracao","T","custoRun","it_exagero","valor_exagero","Perp","momentum","gatilho_momentum"],
+      value: (function(md,iteracao,T,custoRun,it_exagero,valor_exagero,Perp,momentum,gatilho_momentum){return(
 md`**Iteraction**: ${iteracao}/${T} - **Cost**: ${custoRun}<br>
 **Exaggeration**: ${iteracao<=it_exagero?valor_exagero:"none"} (${valor_exagero} until interaction ${it_exagero}) - 
 **Perplexity**: ${Perp}<br>
-**Momentum**: ${valores_momentum[iteracao<gatilho_momentum]} (${valores_momentum[true]} until iteraction ${gatilho_momentum}, ${valores_momentum[false]} afterwards)`
+**Momentum**: ${momentum[iteracao<gatilho_momentum]} (${momentum[true]} until iteraction ${gatilho_momentum}, ${momentum[false]} afterwards)`
 )})
     },
     {
@@ -1628,7 +1628,7 @@ slider({
   max: 5000,
   step: 50,
   value: 0,
-  description: 'Inform the number of interactions for the gradient descent'
+  description: 'Inform the number of interactions for the gradient descent and click on Start'
 })
 )})
     },
@@ -1639,8 +1639,8 @@ slider({
     },
     {
       name: "pontosMapa",
-      inputs: ["iteracao","T","yDisplay","Y","gradiente","p_final","mutable custoRun","custo","mutable iteracao","ystep","gains","valores_momentum","gatilho_momentum","eta"],
-      value: (function*(iteracao,T,yDisplay,Y,gradiente,p_final,$0,custo,$1,ystep,gains,valores_momentum,gatilho_momentum,eta)
+      inputs: ["iteracao","T","yDisplay","Y","gradiente","p_final","mutable custoRun","custo","mutable iteracao","ystep","gains","momentum","gatilho_momentum","eta"],
+      value: (function*(iteracao,T,yDisplay,Y,gradiente,p_final,$0,custo,$1,ystep,gains,momentum,gatilho_momentum,eta)
 {
   if (iteracao >= T)
     yield yDisplay.map((p, i)=>(p.y==undefined?{x:Y[i][0], 
@@ -1651,7 +1651,7 @@ slider({
                                                 nome:p.nome,
                                                 Cluster:p.Cluster}));
   else {
-    // Adaptado de: https://github.com/karpathy/tsnejs
+    // Adapted from: https://github.com/karpathy/tsnejs
     var N = Y.length;
     var dim = Y[0].length;
     var grad = gradiente(Y, p_final, iteracao);
@@ -1671,7 +1671,7 @@ slider({
         gains[i][d] = newgain; // store for next turn
 
         // compute momentum step direction
-        var momval = valores_momentum[iteracao < gatilho_momentum]; // ? 0.5 : 0.8;
+        var momval = momentum[iteracao < gatilho_momentum]; // ? 0.5 : 0.8;
         var newsid = momval * sid - eta * newgain * grad[i][d];
         ystep[i][d] = newsid; // remember the step we took
 
@@ -3252,7 +3252,7 @@ require("d3-format")
 };
 
 const notebook = {
-  id: "2379c50fe5f906fb@7076",
+  id: "2379c50fe5f906fb@7105",
   modules: [m0,m1,m2]
 };
 
