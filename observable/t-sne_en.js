@@ -1,23 +1,28 @@
 // URL: https://beta.observablehq.com/@robstelling/t-sne_en
-// Title: t-SNE
+// Title: Opening the *t*-SNE black box
 // Author: Roberto Stelling (@robstelling)
-// Version: 7165
+// Version: 7195
 // Runtime version: 1
 
 const m0 = {
-  id: "2379c50fe5f906fb@7165",
+  id: "2379c50fe5f906fb@7195",
   variables: [
     {
       inputs: ["md"],
       value: (function(md){return(
-md`# t-SNE`
+md`# Opening the *t*-SNE black box`
+)})
+    },
+    {
+      inputs: ["html"],
+      value: (function(html){return(
+html`<center><img width="800" src="https://raw.githubusercontent.com/RobStelling/miscImg/master/imagens/tSNE_1D.png"></img></center>`
 )})
     },
     {
       inputs: ["md"],
       value: (function(md){return(
-md `# Opening *t*-SNE black box
-
+md `
 #### *Problem*: Given a dataset of points in high dimensions, how can we have an idea of how the points are organized in the original space?
 <p>
 Representing data from high dimensions in *3D* or *2D* (or in *1D*!), independent of their original organization in space, is a problem that do not have a unique and generic solution. Data can be organized in many ways in the original dimensions and different data contexts and usages can suggest or imply different projections in two or three dimensions.
@@ -159,19 +164,9 @@ md `# Half moon dataset`
 )})
     },
     {
-      inputs: ["vegalite","width","meia_lua","tamanhoCirculo","opacity","colorScheme"],
-      value: (function(vegalite,width,meia_lua,tamanhoCirculo,opacity,colorScheme){return(
-vegalite({
-  width: Math.min(500, width),
-  height : 250,
-  data: {values: meia_lua},
-  mark: {type: "circle", size: tamanhoCirculo, opacity: opacity},
-  encoding: {
-    x: {field: "x", type: "quantitative"},
-    y: {field: "y", type: "quantitative"},
-    color: {field: "label", type: "nominal", scale: {scheme: colorScheme}, title:"Cluster"},
-  }
-})
+      inputs: ["vegalite","halfMoonGraph"],
+      value: (function(vegalite,halfMoonGraph){return(
+vegalite(halfMoonGraph)
 )})
     },
     {
@@ -181,11 +176,11 @@ md `## Projecting over the *x* axis`
 )})
     },
     {
-      inputs: ["vegalite","width","meia_lua","tamanhoCirculo","opacity","colorScheme"],
-      value: (function(vegalite,width,meia_lua,tamanhoCirculo,opacity,colorScheme){return(
+      inputs: ["vegalite","width","halfMoon","tamanhoCirculo","opacity","colorScheme"],
+      value: (function(vegalite,width,halfMoon,tamanhoCirculo,opacity,colorScheme){return(
 vegalite({
   width: Math.min(500, width),
-  data: {values: meia_lua},
+  data: {values: halfMoon},
   mark: {type: "circle", size: tamanhoCirculo, opacity: opacity},
   encoding: {
     x: {field: "x", type: "quantitative"},
@@ -201,24 +196,16 @@ md `## Projecting over the *y* axis`
 )})
     },
     {
-      inputs: ["vegalite","width","meia_lua","tamanhoCirculo","opacity","colorScheme"],
-      value: (function(vegalite,width,meia_lua,tamanhoCirculo,opacity,colorScheme){return(
-vegalite({
-  width: Math.min(500, width),
-  data: {values: meia_lua},
-  mark: {type: "circle", size: tamanhoCirculo, opacity: opacity},
-  encoding: {
-    x: {field: "y", type: "quantitative"},
-    color: {field: "label", type: "nominal", scale: {scheme: colorScheme}, title: "Cluster"},
-  }
-})
+      inputs: ["vegalite","halfMoonGraph"],
+      value: (function(vegalite,halfMoonGraph){return(
+vegalite(halfMoonGraph)
 )})
     },
     {
       name: "fake_cluster",
-      inputs: ["meia_lua"],
-      value: (function(meia_lua){return(
-meia_lua.map(p => {return {x:(p.x+p.label)*(p.label+1.7), label:p.label}})
+      inputs: ["halfMoon"],
+      value: (function(halfMoon){return(
+halfMoon.map(p => {return {x:(p.x+p.label)*(p.label+1.7), label:p.label}})
 )})
     },
     {
@@ -2504,17 +2491,34 @@ md `#### Half moon dataset`
 )})
     },
     {
-      name: "m_l",
+      name: "h_m",
       inputs: ["d3"],
       value: (function(d3){return(
 d3.json("https://raw.githubusercontent.com/RobStelling/miscImg/master/dados/halfMoon.json")
 )})
     },
     {
-      name: "meia_lua",
-      inputs: ["m_l"],
-      value: (function(m_l){return(
-JSON.parse(m_l)
+      name: "halfMoon",
+      inputs: ["h_m"],
+      value: (function(h_m){return(
+JSON.parse(h_m)
+)})
+    },
+    {
+      name: "halfMoonGraph",
+      inputs: ["width","halfMoon","tamanhoCirculo","opacity","colorScheme"],
+      value: (function(width,halfMoon,tamanhoCirculo,opacity,colorScheme){return(
+{
+  width: Math.min(500, width),
+  height : 250,
+  data: {values: halfMoon},
+  mark: {type: "circle", size: tamanhoCirculo, opacity: opacity},
+  encoding: {
+    x: {field: "x", type: "quantitative"},
+    y: {field: "y", type: "quantitative"},
+    color: {field: "label", type: "nominal", scale: {scheme: colorScheme}, title:"Cluster"},
+  }
+}
 )})
     },
     {
@@ -3258,7 +3262,7 @@ require("d3-format")
 };
 
 const notebook = {
-  id: "2379c50fe5f906fb@7165",
+  id: "2379c50fe5f906fb@7195",
   modules: [m0,m1,m2]
 };
 
