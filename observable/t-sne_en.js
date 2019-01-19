@@ -1,11 +1,11 @@
 // URL: https://beta.observablehq.com/@robstelling/t-sne_en
 // Title: t-SNE
 // Author: Roberto Stelling (@robstelling)
-// Version: 7105
+// Version: 7165
 // Runtime version: 1
 
 const m0 = {
-  id: "2379c50fe5f906fb@7105",
+  id: "2379c50fe5f906fb@7165",
   variables: [
     {
       inputs: ["md"],
@@ -16,7 +16,7 @@ md`# t-SNE`
     {
       inputs: ["md"],
       value: (function(md){return(
-md `# Visualizing high dimension data with *t*-SNE
+md `# Opening *t*-SNE black box
 
 #### *Problem*: Given a dataset of points in high dimensions, how can we have an idea of how the points are organized in the original space?
 <p>
@@ -38,12 +38,14 @@ Over these two new dimenstions we used a simple Perceptron to generate a cut lin
 md `# Is there an *optimal solution* to visualize high dimensional data?
 Before we move on, it is important to understand that there isn't an optimal solution to this problem. To develop this intuition, let's investigate a few alternatives to reduce a couple of artificial datasets from 2 dimensions to 1 dimension.
 
-How can we reduce data from two (*x* and *y*) dimensions to one (*x*) dimension? Let's try a few alternatives (from naïve to complex aproaches):
+How can we reduce data from two (*x* and *y*) dimensions to one (*x*) dimension? Let's try a few alternatives (from naïve to more complex aproaches):
 
 1. Flatten the data to the *x* axis
 2. Flatten the data to the *y* axis
 3. *"Figure out"* the ideal projection of the data
-3. Apply a dimensionality reduction or visualization algorithm to the dataset, like SVG, PCA or *t*-SNE`
+4. Apply a dimensionality reduction or visualization algorithm to the dataset, like SVG, PCA or *t*-SNE
+
+In the following few examples we will see what happens when we "experiment with" 1, 2 and 3. Later we will look into *t*-SNE`
 )})
     },
     {
@@ -51,7 +53,7 @@ How can we reduce data from two (*x* and *y*) dimensions to one (*x*) dimension?
       value: (function(md){return(
 md `# Simple examples
 ### Mapping *2D* data to *1D*
-In the following examples, we will project the data from *2* dimensions to *1* dimension for each one of *x* e *y* axes.`
+In the following examples, we will project the data from *2* dimensions to *1* dimension to each one of the *x* e *y* axes.`
 )})
     },
     {
@@ -213,7 +215,7 @@ vegalite({
 )})
     },
     {
-      name: "cluster_falso",
+      name: "fake_cluster",
       inputs: ["meia_lua"],
       value: (function(meia_lua){return(
 meia_lua.map(p => {return {x:(p.x+p.label)*(p.label+1.7), label:p.label}})
@@ -227,11 +229,11 @@ To map *these particular datapoints* from *2D* to *1D* we can shift all red poin
 )})
     },
     {
-      inputs: ["vegalite","width","cluster_falso","tamanhoCirculo","opacity","colorScheme"],
-      value: (function(vegalite,width,cluster_falso,tamanhoCirculo,opacity,colorScheme){return(
+      inputs: ["vegalite","width","fake_cluster","tamanhoCirculo","opacity","colorScheme"],
+      value: (function(vegalite,width,fake_cluster,tamanhoCirculo,opacity,colorScheme){return(
 vegalite({
   width: Math.min(500, width),
-  data: {values: cluster_falso},
+  data: {values: fake_cluster},
   mark: {type: "circle", size: tamanhoCirculo, opacity: opacity},
   encoding: {
    x: {field: "x", type: "quantitative"},
@@ -248,12 +250,12 @@ md `## Circles
 )})
     },
     {
-      inputs: ["vegalite","width","circulos","tamanhoCirculo","opacity","colorScheme"],
-      value: (function(vegalite,width,circulos,tamanhoCirculo,opacity,colorScheme){return(
+      inputs: ["vegalite","width","circles","tamanhoCirculo","opacity","colorScheme"],
+      value: (function(vegalite,width,circles,tamanhoCirculo,opacity,colorScheme){return(
 vegalite({
   width: Math.min(500, width),
   height : 500,
-  data: {values: circulos},
+  data: {values: circles},
   mark: {type: "circle", size: tamanhoCirculo, opacity: opacity},
   encoding: {
     x: {field: "x", type: "quantitative"},
@@ -273,27 +275,27 @@ But how would we choose what transformation to apply on unknown data with 10, 10
 )})
     },
     {
-      inputs: ["circulos"],
-      value: (function(circulos){return(
-circulos
+      inputs: ["circles"],
+      value: (function(circles){return(
+circles
 )})
     },
     {
-      name: "circulosMap",
-      inputs: ["circulos","dist"],
-      value: (function(circulos,dist)
+      name: "radialMap",
+      inputs: ["circles","dist"],
+      value: (function(circles,dist)
 {
-  var circ = circulos.map((p) => ({x:dist(p, {x:0, y:0}), label:p.label}));
-  return circ.map((p) => ({x: p.x-circ.reduce((soma, ponto) => soma + ponto.x,0)/circulos.length,label:p.label}));
+  var circ = circles.map((p) => ({x:dist(p, {x:0, y:0}), label:p.label}));
+  return circ.map((p) => ({x: p.x-circ.reduce((sum, point) => sum + point.x,0)/circles.length,label:p.label}));
 }
 )
     },
     {
-      inputs: ["vegalite","width","circulosMap","tamanhoCirculo","opacity","colorScheme"],
-      value: (function(vegalite,width,circulosMap,tamanhoCirculo,opacity,colorScheme){return(
+      inputs: ["vegalite","width","radialMap","tamanhoCirculo","opacity","colorScheme"],
+      value: (function(vegalite,width,radialMap,tamanhoCirculo,opacity,colorScheme){return(
 vegalite({
   width: Math.min(500, width),
-  data: {values: circulosMap},
+  data: {values: radialMap},
   mark: {type: "circle", size: tamanhoCirculo, opacity: opacity},
   encoding: {
    x: {field: "x", type: "quantitative"},
@@ -629,7 +631,7 @@ ${tex.block`${eq5}`}`
     {
       inputs: ["md","tex","eq5","gamma_eval"],
       value: (function(md,tex,eq5,gamma_eval){return(
-md `The depiction of the *t*-SNE algorithm above do not include a few important details that are clarified througout the original paper. To accomodate these details and to expose a few hidden corners of *t*-SNE, we revisit the algorithm below.
+md `The depiction of the *t*-SNE algorithm above do not include a few important details that are clarified througout the original paper. To accomodate these details and to expose a few hidden corners of *t*-SNE, we will revisit the algorithm below.
 # <center>*t*-SNE Algorithm<br>*Revised version*</center>
 
 1. Given a set of ${tex`N`} points in a high dimensional space
@@ -667,7 +669,7 @@ vegalite(original)
     {
       inputs: ["md","tex","distancias","normal"],
       value: (function(md,tex,distancias,normal){return(
-md`To convert distances to probabilities, we can imagine each point in the original space as a center of a distribution (Normal/Gaussian or any other of your choosing) and use the distance between the chosen point and every other point as the probability of a link between these points. In principle, the smaller the distance, the bigger the probability of a link. In a way we are *defining the neighbourhood between the points*. 
+md`To convert distances to probabilities, we can imagine each point in the original space as a center of a distribution (Normal/Gaussian or any other of your choosing) and use the distance between the chosen point and every other point as the probability of a link between these points. In principle, the smaller the distance, the bigger the probability of a link. In a way we are *defining the neighbourhood between points*. 
 
 For example, in the dataset above, the distance between ${tex`p_0`} and ${tex`p_1`} is given by the distance matrix, on \`distances[0][1]\` and equals ${tex`${distancias[0][1]}`}. In a normal distribution, with average ${tex`0`} and variance ${tex`1`}, this distance would correspond to ${tex.block`distances[0][1] = ${distancias[0][1]}\rightarrow P_{01} = ${normal(distancias[0][1], 1,0)}`}
 Below we can see the distances and probabilities between a few other points with a normal distribution with  ${tex`\mu = 0`} e ${tex`\sigma^2 = 1`}`
@@ -1017,9 +1019,9 @@ radio({
       value: (G, _) => G.input(_)
     },
     {
-      inputs: ["md","cDistancia","math","pts","calcDistancia"],
-      value: (function(md,cDistancia,math,pts,calcDistancia){return(
-md`The ${["euclidean","L2"][cDistancia]} distance between the points ${math.matrix(pts[0])} and ${math.matrix(pts[1])} is ${calcDistancia(pts[0], pts[1])}`
+      inputs: ["md","tex","cDistancia","math","pts","calcDistancia"],
+      value: (function(md,tex,cDistancia,math,pts,calcDistancia){return(
+md`The ${["euclidean",tex`L^2`][cDistancia]} distance between the points ${math.matrix(pts[0])} and ${math.matrix(pts[1])} is ${calcDistancia(pts[0], pts[1])}`
 )})
     },
     {
@@ -1031,13 +1033,13 @@ md`The ${["euclidean","L2"][cDistancia]} distance between the points ${math.matr
     {
       inputs: ["md","tex","eq1"],
       value: (function(md,tex,eq1){return(
-md`The euclidean or L2 distance between the points is computed for each pair of points on the original high dimensional space and the probability that a point ${tex`x_i`} is "close" to a point ${tex`x_j`}, denoted as ${tex`p_{j|i}`} is given by the \`[Equation 1]\` below, using a Gaussian distribution with a different variance (${tex`\sigma^2`}) for each point in space. ${tex.block`${eq1}`}`
+md`The Euclidean, or ${tex`L^2`}, distance between the points is computed for each pair of points on the original high dimensional space and the probability that a point ${tex`x_i`} is "close" to a point ${tex`x_j`}, denoted as ${tex`p_{j|i}`} is given by the \`[Equation 1]\` below, using a Gaussian distribution with a different variance (${tex`\sigma^2`}) for each point in space. ${tex.block`${eq1}`}`
 )})
     },
     {
       inputs: ["md","tex"],
       value: (function(md,tex){return(
-md `The denominator acts as a *"normalization"* of the probabilities around each ${tex`x_i`}. This way, bigger distances around locations not too dense are similar to smaller distances on denser locations. The value for each variance ${tex`\sigma^2_i`} is determined by a binary search using the ${tex`\log_2`} of the hyperparameter *perplexity* (\`Perp\`), given by the user.`
+md `The denominator acts as a *"normalization"* of the probabilities around each ${tex`x_i`}. This way, bigger distances around locations not too dense are similar to smaller distances on denser locations. The value for each variance ${tex`\sigma^2_i`} is determined by a binary search using the ${tex`\log_2`} of the hyperparameter *perplexity* (\`Perp\`), given by the user. We will delve into the binary search and \`Perp\` later on the road.`
 )})
     },
     {
@@ -1074,7 +1076,7 @@ slider({
   max: 9,
   step: 0.1,
   value: 1,
-  description: "Adjust the variance for all points"
+  description: "Adjust the variance for all points and see how the values change"
 })
 )})
     },
@@ -1087,7 +1089,11 @@ slider({
       inputs: ["md","tex","eq3"],
       value: (function(md,tex,eq3){return(
 md`# Perplexity
-Perplexity (${tex`Perp`}) is a hyperparameter that is used to adjust the variances of the affinities around each point in the original space. We can understand preplexity as a measure of entropy of affinities (${tex`P`}) between the points on the original high dimensional space. The mapped space will have its affinities (${tex`Q`}) canculated over a Student *t* distribution with the same variance for all points, as per \`[Equation 3]\`. ${tex.block`${eq3}`}`
+Perplexity (${tex`Perp`}) is a hyperparameter that is used to adjust the variances of the affinities around each point in the original space. We can understand preplexity as a measure of entropy of affinities (${tex`P`}) between the points on the original high dimensional space.
+
+The mapped space, in low dimensions, will have its affinities (${tex`Q`}) computed over a Student *t* distribution with the same variance for all points, as per \`[Equation 3]\`. ${tex.block`${eq3}`}
+
+\`Note\`: \`Perp\` is used to adjust the affinities in the high dimensional space, not in the low dimensional map.`
 )})
     },
     {
@@ -1205,7 +1211,7 @@ slider({
     {
       inputs: ["md","calcEntropia","p_variancias_display"],
       value: (function(md,calcEntropia,p_variancias_display){return(
-md`Entropia resultante = ${calcEntropia(p_variancias_display)}`
+md`Resulting entropy (computed from data) = ${calcEntropia(p_variancias_display)}`
 )})
     },
     {
@@ -1218,7 +1224,7 @@ md`${tex`entropy = \log_2(Perp) = ${Math.log2(Perp_display)}`}`
       inputs: ["md","tex"],
       value: (function(md,tex){return(
 md`# Making the affinities matrix symmetric
-The resulting affinities matrix is asymmetric, to make it symmetric, so that ${tex`P_{i|j} = P_{j|i}`}, we need to compute: ${tex.block`p_{ij} = \frac{p_{j|i}+p_{i|j}}{2}`}`
+The resulting affinities matrix is asymmetric, to make it symmetric, so that ${tex.block`P_{i|j} = P_{j|i}`} we need to compute: ${tex.block`p_{ij} = \frac{P_{j|i}+P_{i|j}}{2}`}`
 )})
     },
     {
@@ -1252,7 +1258,7 @@ pt(math.matrix(math.reshape(p_final_display.map(x => +x.toFixed(3)), [16,16])))
       inputs: ["md","tex","d_flat","dimensoes"],
       value: (function(md,tex,d_flat,dimensoes){return(
 md`# Mapping the low dimension points
-With the high dimensional affinities matrix in hand (${tex`P`}), we need to generate lower dimension points, compute their affinities matrix (${tex`Q`}) and adjust the generated points with a gradient descent. The first iteration low dimensional points are randomically generated, with the desired number of dimensions. We will generate ${Math.sqrt(d_flat.length)} poins in ${tex`\mathbb{R}^${dimensoes}`}`
+With the high dimensional affinities matrix in hand (${tex`P`}), we need to generate lower dimension points, compute their affinities matrix (${tex`Q`}) and adjust the generated points with a gradient descent. The first batch of low dimensional points are *"randomically"* generated, with the desired number of dimensions. In our example we will generate ${Math.sqrt(d_flat.length)} poins in ${tex`\mathbb{R}^${dimensoes}`}`
 )})
     },
     {
@@ -1260,7 +1266,7 @@ With the high dimensional affinities matrix in hand (${tex`P`}), we need to gene
       value: (function(md,tex,dimensoes){return(
 md`## Initial projection from ${tex`\mathbb{R}^2`} to ${tex`\mathbb{R}^${dimensoes}`}
 
-With the affinities matrix in high dimensions, we must randomically generate the first set of low dimension points mapping ${tex`\mathbb{R}^2 \rightarrow \mathbb{R}^${dimensoes}`}, in our toy example. The paper authors recommend points distributed over a gaussian with ${tex `\mu = 0`} and ${tex`\sigma^2 = 10^{-4}`}`
+With the affinities matrix in high dimensions, we must randomically generate the first set of low dimension points mapping ${tex`\mathbb{R}^2 \rightarrow \mathbb{R}^${dimensoes}`}, as per our toy example. The paper authors recommend points distributed over a gaussian with ${tex `\mu = 0`} and ${tex`\sigma^2 = 10^{-4}`}`
 )})
     },
     {
@@ -1307,7 +1313,7 @@ vegalite([fr1(yDisplay),fr2(yDisplay)][dimensoes-1])
       value: (function(radio){return(
 radio({
   title: 'Type of the initial projection',
-  description: 'Choose how to generate the initial guess, see how the distance matrix is affected',
+  description: 'Choose how to generate the initial projection points, see how the distance matrix is affected',
   options: [
     {label:'Random', value:'randomico'},
     {label:'Compressed random', value:'comprimido'},
@@ -2525,7 +2531,7 @@ d3.json("https://raw.githubusercontent.com/RobStelling/miscImg/master/dados/2cir
 )})
     },
     {
-      name: "circulos",
+      name: "circles",
       inputs: ["circ"],
       value: (function(circ){return(
 JSON.parse(circ)
@@ -3252,7 +3258,7 @@ require("d3-format")
 };
 
 const notebook = {
-  id: "2379c50fe5f906fb@7105",
+  id: "2379c50fe5f906fb@7165",
   modules: [m0,m1,m2]
 };
 
