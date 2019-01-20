@@ -1,11 +1,11 @@
 // URL: https://beta.observablehq.com/@robstelling/t-sne_en
 // Title: Opening the *t*-SNE black box
 // Author: Roberto Stelling (@robstelling)
-// Version: 7195
+// Version: 7211
 // Runtime version: 1
 
 const m0 = {
-  id: "2379c50fe5f906fb@7195",
+  id: "2379c50fe5f906fb@7211",
   variables: [
     {
       inputs: ["md"],
@@ -17,6 +17,21 @@ md`# Opening the *t*-SNE black box`
       inputs: ["html"],
       value: (function(html){return(
 html`<center><img width="800" src="https://raw.githubusercontent.com/RobStelling/miscImg/master/imagens/tSNE_1D.png"></img></center>`
+)})
+    },
+    {
+      inputs: ["md"],
+      value: (function(md){return(
+md `# Topics
+What are you going to see here?
+- A brief discussion of the high dimension data visualization problem
+- Description of the *t*-SNE algorithm as given by the original paper<a href="#ref"><sup>2</sup></a>
+- A more detailed description of *t*-SNE algorithm, that was used to implement the code in this notebook
+- The *t*-SNE algorithm in baby steps
+- A *t*-SNE playground, where you can:
+  - Adjust the algorithm hyperparameters
+  - Play with a toy problem
+  - See an animation of the algorithm while it is being run`
 )})
     },
     {
@@ -3262,7 +3277,7 @@ require("d3-format")
 };
 
 const notebook = {
-  id: "2379c50fe5f906fb@7195",
+  id: "2379c50fe5f906fb@7211",
   modules: [m0,m1,m2]
 };
 
