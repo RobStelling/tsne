@@ -1,16 +1,43 @@
 // URL: https://beta.observablehq.com/@robstelling/t-sne
-// Title: Visualizando dados de altas dimensões com *t*-SNE
+// Title: Abrindo a caixa preta do t-SNE
 // Author: Roberto Stelling (@robstelling)
-// Version: 6630
+// Version: 6655
 // Runtime version: 1
 
 const m0 = {
-  id: "2331ea7cae3cdc98@6630",
+  id: "2331ea7cae3cdc98@6655",
   variables: [
     {
       inputs: ["md"],
       value: (function(md){return(
-md `# Visualizando dados de altas dimensões com *t*-SNE
+md`# Abrindo a caixa preta do t-SNE`
+)})
+    },
+    {
+      inputs: ["html"],
+      value: (function(html){return(
+html`<center><img width="800" src="https://raw.githubusercontent.com/RobStelling/miscImg/master/imagens/tSNE_1D-pt.png"></img></center>`
+)})
+    },
+    {
+      inputs: ["md"],
+      value: (function(md){return(
+md `# Tópicos
+O que veremos nesse notebook?
+- Uma breve discussão do problema de visualização de dados de altas dimensões
+- Descrição do algoritmo do *t*-SNE como proposto no paper original<a href="#ref"><sup>2</sup></a>
+- Descrição mais detalhada do algoritmo do *t*-SNE, que foi usada para implementar o código deste notebook
+- O algoritmo do *t*-SNE, em pequenos passos
+- Um *playground* do *t*-SNE, onde você pode:
+  - Ajustar os hiperparâmetros do algoritmo
+  - Testar o algoritmo em um problema simplificado
+  - Ver uma animação do algoritmo enquanto este está sendo executado`
+)})
+    },
+    {
+      inputs: ["md"],
+      value: (function(md){return(
+md `# Visualizando dados de altas dimensões
 
 #### *Problema*: Dado um conjunto de pontos em altas dimensões, como podemos ter uma ideia de como os pontos estão organizados no espaço?
 <p>
@@ -39,7 +66,7 @@ Como podemos reduzir dados de duas (*x* e *y*) dimensões para uma dimensão (*x
 1. Considerar apenas o eixo x
 2. Considerar apenas o eixo y
 3. Considerar a distância euclideana entre os pontos
-3. Fazer o SVD dos pontos`
+3. Reduzir a dimensionalidade dos pontos, com algoritmos como SVG ou PCA`
 )})
     },
     {
@@ -47,7 +74,7 @@ Como podemos reduzir dados de duas (*x* e *y*) dimensões para uma dimensão (*x
       value: (function(md){return(
 md `# Exemplos simples
 ### Passando de 2D para 1D
-Nos casos a seguir, projetamos os dados de 2D em em 1D para cada um dos eixos: *x* e *y*`
+Vamos utilizar como exemplos dados projetados de 2 dimensões para 1 dimensão, para desenvolver a intuição sobre as dificuldades da visualização de dados em altas dimensões, projetando os dados em cada um dos eixos: *x* e *y*, e supor qual seria a projeção *"ideal"* para estes dados`
 )})
     },
     {
@@ -329,7 +356,7 @@ vegalite({
       value: (function(md){return(
 md`Para resolver o problema de *visualização* de dados em altas dimensões, vamos analisar o:
 # <center>*t*-SNE</center>
-[*t*-Distributed Stochastic Neighbour Embedding<sup>2</sup>](#ref) (*t*-SNE, pronunciado ***tí-ciní***) é uma técnica de visualização em 1D, 2D ou 3D de datasets de altas dimensões.
+[*t*-Distributed Stochastic Neighbour Embedding<sup>2</sup>](#ref) (*t*-SNE, pronunciado ***tí-ciní***) é uma técnica de visualização em *1D*, *2D* ou *3D* de datasets de altas dimensões.
 
 O *t*-SNE, desenvolvido por *Laurens van der Maaten* e *Geoffrey Hinton*, é um refinamento do SNE e se diferencia deste, principalmente, pela utilização de distribuição *t* de Student para representar os dados em baixas dimensões (ou dados mapeados).
 
@@ -3248,7 +3275,7 @@ require("d3-format")
 };
 
 const notebook = {
-  id: "2331ea7cae3cdc98@6630",
+  id: "2331ea7cae3cdc98@6655",
   modules: [m0,m1,m2]
 };
 
