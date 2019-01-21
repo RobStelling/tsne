@@ -1,11 +1,11 @@
 // URL: https://beta.observablehq.com/@robstelling/t-sne_en
 // Title: Opening the *t*-SNE black box
 // Author: Roberto Stelling (@robstelling)
-// Version: 7211
+// Version: 7242
 // Runtime version: 1
 
 const m0 = {
-  id: "2379c50fe5f906fb@7211",
+  id: "2379c50fe5f906fb@7242",
   variables: [
     {
       inputs: ["md"],
@@ -23,18 +23,20 @@ html`<center><img width="800" src="https://raw.githubusercontent.com/RobStelling
       inputs: ["md"],
       value: (function(md){return(
 md `# Topics
-What are you going to see here?
-- A brief discussion of the high dimension data visualization problem
-- Description of the *t*-SNE algorithm as given by the original paper<a href="#ref"><sup>2</sup></a>
-- A more detailed description of *t*-SNE algorithm, that was used to implement the code in this notebook
-- The *t*-SNE algorithm in baby steps
-- A *t*-SNE playground, where you can:
+What are you going to see here?<br>
+Note: you can click on the links below to go directly to the corresponding section
+- A <a href="#tsneStart">brief discussion</a> of the high dimension data visualization problem
+- <a href="#tsneAlgorithm1">Description of the *t*-SNE algorithm</a> as given by the original paper<a href="#ref"><sup>2</sup></a>
+- <a href="#tsneAlgorithm2">A more detailed description of *t*-SNE algorithm</a>, that was used to implement the code in this notebook
+- The *t*-SNE algorithm in <a href="#babySteps">baby steps</a>
+- A <a href="#tsnePlayground">*t*-SNE playground</a>, where you can:
   - Adjust the algorithm hyperparameters
   - Play with a toy problem
   - See an animation of the algorithm while it is being run`
 )})
     },
     {
+      name: "tsneStart",
       inputs: ["md"],
       value: (function(md){return(
 md `
@@ -211,16 +213,17 @@ md `## Projecting over the *y* axis`
 )})
     },
     {
-      inputs: ["vegalite","halfMoonGraph"],
-      value: (function(vegalite,halfMoonGraph){return(
-vegalite(halfMoonGraph)
-)})
-    },
-    {
-      name: "fake_cluster",
-      inputs: ["halfMoon"],
-      value: (function(halfMoon){return(
-halfMoon.map(p => {return {x:(p.x+p.label)*(p.label+1.7), label:p.label}})
+      inputs: ["vegalite","width","halfMoon","tamanhoCirculo","opacity","colorScheme"],
+      value: (function(vegalite,width,halfMoon,tamanhoCirculo,opacity,colorScheme){return(
+vegalite({
+  width: Math.min(500, width),
+  data: {values: halfMoon},
+  mark: {type: "circle", size: tamanhoCirculo, opacity: opacity},
+  encoding: {
+    x: {field: "y", type: "quantitative"},
+    color: {field: "label", type: "nominal", scale: {scheme: colorScheme}, title: "Cluster"},
+  }
+})
 )})
     },
     {
@@ -228,6 +231,13 @@ halfMoon.map(p => {return {x:(p.x+p.label)*(p.label+1.7), label:p.label}})
       value: (function(md){return(
 md `## *"Ideal"* projection
 To map *these particular datapoints* from *2D* to *1D* we can shift all red points a bit to the left, all blue points a bit to the right and then project them on the *x* axis`
+)})
+    },
+    {
+      name: "fake_cluster",
+      inputs: ["halfMoon"],
+      value: (function(halfMoon){return(
+halfMoon.map(p => {return {x:(p.x+p.label)*(p.label+1.7), label:p.label}})
 )})
     },
     {
@@ -336,6 +346,7 @@ vegalite({
 )})
     },
     {
+      name: "tsne",
       inputs: ["md"],
       value: (function(md){return(
 md`To visualize data from high dimensions we can use
@@ -593,6 +604,7 @@ First, lets review the *t*-SNE algorithm as described in the original paper<sup>
 )})
     },
     {
+      name: "tsneAlgorithm1",
       inputs: ["md","tex","gamma_eval"],
       value: (function(md,tex,gamma_eval){return(
 md `# *t*-SNE simplified algorigthm
@@ -631,6 +643,7 @@ ${tex.block`${eq5}`}`
 )})
     },
     {
+      name: "tsneAlgorithm2",
       inputs: ["md","tex","eq5","gamma_eval"],
       value: (function(md,tex,eq5,gamma_eval){return(
 md `The depiction of the *t*-SNE algorithm above do not include a few important details that are clarified througout the original paper. To accomodate these details and to expose a few hidden corners of *t*-SNE, we will revisit the algorithm below.
@@ -650,6 +663,7 @@ md `The depiction of the *t*-SNE algorithm above do not include a few important 
 )})
     },
     {
+      name: "babySteps",
       inputs: ["md"],
       value: (function(md){return(
 md `# <center>*t*-SNE baby steps</center>`
@@ -1489,6 +1503,13 @@ The value of the new mapped points correspond to the previous points, added up t
       name: "momentum",
       value: (function(){return(
 {true:0.5, false:0.8}
+)})
+    },
+    {
+      name: "tsnePlayground",
+      inputs: ["md"],
+      value: (function(md){return(
+md`# *t*-SNE Playground`
 )})
     },
     {
@@ -3277,7 +3298,7 @@ require("d3-format")
 };
 
 const notebook = {
-  id: "2379c50fe5f906fb@7211",
+  id: "2379c50fe5f906fb@7242",
   modules: [m0,m1,m2]
 };
 
