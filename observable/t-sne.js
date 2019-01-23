@@ -1,11 +1,11 @@
 // URL: https://beta.observablehq.com/@robstelling/t-sne
 // Title: Abrindo a caixa preta do t-SNE
 // Author: Roberto Stelling (@robstelling)
-// Version: 6655
+// Version: 6877
 // Runtime version: 1
 
 const m0 = {
-  id: "2331ea7cae3cdc98@6655",
+  id: "2331ea7cae3cdc98@6877",
   variables: [
     {
       inputs: ["md"],
@@ -23,18 +23,20 @@ html`<center><img width="800" src="https://raw.githubusercontent.com/RobStelling
       inputs: ["md"],
       value: (function(md){return(
 md `# Tópicos
-O que veremos nesse notebook?
-- Uma breve discussão do problema de visualização de dados de altas dimensões
-- Descrição do algoritmo do *t*-SNE como proposto no paper original<a href="#ref"><sup>2</sup></a>
-- Descrição mais detalhada do algoritmo do *t*-SNE, que foi usada para implementar o código deste notebook
-- O algoritmo do *t*-SNE, em pequenos passos
-- Um *playground* do *t*-SNE, onde você pode:
+O que veremos nesse notebook?<br>
+\`Nota\`: Clique nos links para ir diretamente à seção desejada
+- Uma <a href="#tsneProblema">breve discussão</a> do problema de visualização de dados de altas dimensões
+- <a href="#tsneAlgoritmo1">Descrição do algoritmo do *t*-SNE</a> como proposto no paper original<a href="#ref"><sup>2</sup></a>
+- <a href="#tsneAlgoritmo2">Descrição detalhada do algoritmo do *t*-SNE</a>, que foi usada para implementar o código deste notebook
+- O algoritmo do *t*-SNE, em <a href="#tsnePassoAPasso">pequenos passos</a>
+- Um <a href="#tsnePlayground">*playground* do *t*-SNE</a>, onde você pode:
   - Ajustar os hiperparâmetros do algoritmo
   - Testar o algoritmo em um problema simplificado
   - Ver uma animação do algoritmo enquanto este está sendo executado`
 )})
     },
     {
+      name: "tsneProblema",
       inputs: ["md"],
       value: (function(md){return(
 md `# Visualizando dados de altas dimensões
@@ -606,6 +608,7 @@ Primeiro vamos revisar o algoritmo do *t*-SNE como descrito no paper original<su
 )})
     },
     {
+      name: "tsneAlgoritmo1",
       inputs: ["md","tex","gamma_eval"],
       value: (function(md,tex,gamma_eval){return(
 md `# Algoritmo simplificado do t-SNE
@@ -644,6 +647,7 @@ ${tex.block`${eq5}`}`
 )})
     },
     {
+      name: "tsneAlgoritmo2",
       inputs: ["md","tex","eq5","gamma_eval"],
       value: (function(md,tex,eq5,gamma_eval){return(
 md `A versão acima do algoritmo omite alguns detalhes importantes, após a leitura do paper é possível reescrever o algoritmo e gerar uma versão passível de ser implementada e que facilite o entendimento do algoritmo.
@@ -663,6 +667,7 @@ md `A versão acima do algoritmo omite alguns detalhes importantes, após a leit
 )})
     },
     {
+      name: "tsnePassoAPasso",
       inputs: ["md"],
       value: (function(md){return(
 md `# <center>*t*-SNE<br>Passo a passo</center>`
@@ -1007,6 +1012,12 @@ md`## Matriz de distâncias`
 )})
     },
     {
+      inputs: ["vegalite","original"],
+      value: (function(vegalite,original){return(
+vegalite(original)
+)})
+    },
+    {
       inputs: ["pt","math","d_flat","zero"],
       value: (function(pt,math,d_flat,zero){return(
 pt(math.matrix(math.reshape(d_flat.map(y => y<=zero?0.0:+y.toFixed(3)), [16,16])), "\\footnotesize")
@@ -1014,14 +1025,16 @@ pt(math.matrix(math.reshape(d_flat.map(y => y<=zero?0.0:+y.toFixed(3)), [16,16])
     },
     {
       name: "viewof cDistancia",
-      inputs: ["radio"],
-      value: (function(radio){return(
+      inputs: ["radio","nomeMetrica"],
+      value: (function(radio,nomeMetrica){return(
 radio({
   title: 'Métrica de distância',
   description: 'Escolha a métrica de distância a usar',
   options: [
-    { label: 'Euclidiana', value: 0 },
-    { label: 'L2', value: 1 },
+    { label: nomeMetrica(0), value: 0 },
+    { label: nomeMetrica(1), value: 1 },
+    { label: nomeMetrica(2), value: 2},
+    { label: nomeMetrica(3), value: 3}
   ],
   value: 1
 
@@ -1034,15 +1047,15 @@ radio({
       value: (G, _) => G.input(_)
     },
     {
-      inputs: ["md","cDistancia","math","pts","calcDistancia"],
-      value: (function(md,cDistancia,math,pts,calcDistancia){return(
-md`A distância ${["euclidiana","L2"][cDistancia]} entre os pontos ${math.matrix(pts[0])} e ${math.matrix(pts[1])} é ${calcDistancia(pts[0], pts[1])}`
+      inputs: ["md","nomeMetricaTex","cDistancia","math","pts","calcDistancia"],
+      value: (function(md,nomeMetricaTex,cDistancia,math,pts,calcDistancia){return(
+md`A distância ${nomeMetricaTex(cDistancia)} entre os pontos ${math.matrix(pts[0])} e ${math.matrix(pts[1])} é ${calcDistancia(pts[0], pts[1])}`
 )})
     },
     {
       name: "pts",
       value: (function(){return(
-[[0, 0], [-1, -1]]
+[[0, 0], [-2, 1]]
 )})
     },
     {
@@ -1071,9 +1084,9 @@ vegalite(original)
 )})
     },
     {
-      inputs: ["md"],
-      value: (function(md){return(
-md`### Matriz de probabilidades, com mesma variância para todos os pontos.`
+      inputs: ["md","nomeMetricaTex","cDistancia"],
+      value: (function(md,nomeMetricaTex,cDistancia){return(
+md`### Matriz de probabilidades, com distância ${nomeMetricaTex(cDistancia)}, e mesma variância entre todos os pontos.`
 )})
     },
     {
@@ -1142,7 +1155,7 @@ function calcEntropia(probabilidades){
     {
       inputs: ["md","s2","tex","calcEntropia","p_flat"],
       value: (function(md,s2,tex,calcEntropia,p_flat){return(
-md `No nosso exemplo, com todas as variâncias iguais a ${+(s2).toFixed(3)}, corresponde a ${tex`entropia = ${+(calcEntropia(p_flat)/16).toFixed(4)}`} e ${tex`perplexidade = ${Math.exp(calcEntropia(p_flat)/16).toFixed(4)}`}`
+md `No nosso exemplo, com todas as variâncias iguais a ${+(s2).toFixed(3)}, temos a ${tex`entropia = ${+(calcEntropia(p_flat)/16).toFixed(4)}`} e ${tex`perplexidade = ${Math.exp(calcEntropia(p_flat)/16).toFixed(4)}`}`
 )})
     },
     {
@@ -1342,9 +1355,9 @@ radio({
       value: (G, _) => G.input(_)
     },
     {
-      inputs: ["md"],
-      value: (function(md){return(
-md`### Cálculo das distâncias entre pontos gerados`
+      inputs: ["md","nomeMetricaTex","cDistancia"],
+      value: (function(md,nomeMetricaTex,cDistancia){return(
+md`### Cálculo das distâncias entre pontos gerados com métrica ${nomeMetricaTex(cDistancia)}`
 )})
     },
     {
@@ -1371,33 +1384,6 @@ As probabilidades em baixa dimensão são calculadas sobre uma distribuição *t
       inputs: ["tex","eq3"],
       value: (function(tex,eq3){return(
 tex.block`${eq3}`
-)})
-    },
-    {
-      name: "calcQ",
-      inputs: ["vetor","L2"],
-      value: (function(vetor,L2){return(
-function calcQ(y) {
-  // Calcula probabilidades dos pontos no espaço mapeado, com kernel t-student
-  // y: pontos no espaço mapeado
-  // N: número de pontos
-  // Q: probabilidades
-  var N = y.length;
-  var Q = vetor(N*N, 1e-100);
-  var soma = 0.0;
-  for(var i=0; i<N; i++) {
-    for(var j=i+1; j<N; j++) {
-      var dist = L2(y[i], y[j]);
-      if (i != j) {
-        Q[i*N+j] =  Math.exp(-dist); //*/ 1/(1 + dist);
-        Q[j*N+i] = Q[i*N+j];
-        soma += 2*Q[i*N+j];
-      }
-    }
-  }
-  // Retorna Q normalizado
-  return Q.map(x=>x>1e-100?x/soma:x);
-}
 )})
     },
     {
@@ -1502,6 +1488,13 @@ O valor dos novos pontos mapeados corresponde aos pontos anteriores, somados ao 
 )})
     },
     {
+      name: "tsnePlayground",
+      inputs: ["md"],
+      value: (function(md){return(
+md`# *t*-SNE Playground`
+)})
+    },
+    {
       name: "viewof eta",
       inputs: ["slider"],
       value: (function(slider){return(
@@ -1603,12 +1596,13 @@ vegalite(copiaPequeno)
 )})
     },
     {
-      inputs: ["md","iteracao","T","custoRun","it_exagero","valor_exagero","Perp","valores_momentum","gatilho_momentum"],
-      value: (function(md,iteracao,T,custoRun,it_exagero,valor_exagero,Perp,valores_momentum,gatilho_momentum){return(
+      inputs: ["md","iteracao","T","custoRun","it_exagero","valor_exagero","Perp","valores_momentum","gatilho_momentum","nomeMetricaTex","cDistancia"],
+      value: (function(md,iteracao,T,custoRun,it_exagero,valor_exagero,Perp,valores_momentum,gatilho_momentum,nomeMetricaTex,cDistancia){return(
 md`**Iteração**: ${iteracao}/${T} - **Custo**: ${custoRun}<br>
 **Exagero**: ${iteracao<=it_exagero?valor_exagero:"nenhum"} (${valor_exagero} até iteração ${it_exagero}) - 
 **Perplexidade**: ${Perp}<br>
-**Momentum**: ${valores_momentum[iteracao<gatilho_momentum]} (${valores_momentum[true]} até iteração ${gatilho_momentum}, ${valores_momentum[false]} depois)`
+**Momentum**: ${valores_momentum[iteracao<gatilho_momentum]} (${valores_momentum[true]} até iteração ${gatilho_momentum}, ${valores_momentum[false]} depois)<br>
+**Métrica de distância**: ${nomeMetricaTex(cDistancia)}`
 )})
     },
     {
@@ -1727,7 +1721,7 @@ md `# Limitações
       name: "ref",
       inputs: ["md"],
       value: (function(md){return(
-md`# Referências
+md`# Referências e recursos adicionais
 ### BibTeX do artigo
 \`\`\`
 @article{maaten2008visualizing,
@@ -1986,8 +1980,7 @@ Math.max(3, Math.abs(Math.floor(Math.log10(math.mean(distQ)))))
       name: "fr1",
       inputs: ["width","colorScheme","tamanhoCirculo","opacity"],
       value: (function(width,colorScheme,tamanhoCirculo,opacity){return(
-function fr1(dados) {
-  return ({
+dados => ({
     width: Math.min(800, width),
     data: {values: dados},
     //title: "Projeção inicial dos pontos",
@@ -2004,16 +1997,14 @@ function fr1(dados) {
         color: {value: "black"}
       }
     }]
-  });
-}
+  })
 )})
     },
     {
       name: "fr2",
       inputs: ["width","colorScheme","tamanhoCirculo","opacity"],
       value: (function(width,colorScheme,tamanhoCirculo,opacity){return(
-function fr2(dados) {
-  return {
+(dados) => ({
     width: Math.min(300, width),
     height: 300,
     data: {values:dados},
@@ -2031,8 +2022,7 @@ function fr2(dados) {
           color: {value: "black"}
         }
     }]
-  };
-}
+  })
 )})
     },
     {
@@ -2114,26 +2104,54 @@ function matrizDistancias(pontos, metrica) {
 )})
     },
     {
-      name: "calcDistancia",
-      inputs: ["euclidiana","L2","cDistancia"],
-      value: (function(euclidiana,L2,cDistancia){return(
-[euclidiana, L2][cDistancia]
+      name: "nomeMetrica",
+      value: (function(){return(
+c => ["L2", "L2 Quadrado", "L1", "Max"][c]
 )})
     },
     {
-      name: "euclidiana",
-      inputs: ["L2"],
-      value: (function(L2){return(
-function euclidiana(p1, p2) {
-  // Distância euclidiana 
-  return Math.sqrt(L2(p1, p2));
+      name: "nomeMetricaTex",
+      inputs: ["tex"],
+      value: (function(tex){return(
+c => [tex`L^2`, tex`L^{2^2}`, tex`L^1`, tex`\max`][c]
+)})
+    },
+    {
+      name: "calcDistancia",
+      inputs: ["L2","L2Q","L1","Lmax","cDistancia"],
+      value: (function(L2,L2Q,L1,Lmax,cDistancia){return(
+[L2, L2Q, L1, Lmax][cDistancia]
+)})
+    },
+    {
+      name: "L1",
+      value: (function(){return(
+function L1(p1, p2) {
+  // p = [P1,..,Pdim]
+  var dim = p1.length,
+      dist = 0;
+  for (var i = 0; i < dim; i++) {
+    var p1i = p1[i], p2i = p2[i];
+    dist += Math.abs(p1i-p2i);
+  }
+  return dist;
 }
 )})
     },
     {
       name: "L2",
-      value: (function(){return(
+      inputs: ["L2Q"],
+      value: (function(L2Q){return(
 function L2(p1, p2) {
+  // Distância L2 - euclidiana 
+  return Math.sqrt(L2Q(p1, p2));
+}
+)})
+    },
+    {
+      name: "L2Q",
+      value: (function(){return(
+function L2Q(p1, p2) {
   // p = [P1,..,Pdim]
   var dim = p1.length,
       dist = 0;
@@ -2146,19 +2164,34 @@ function L2(p1, p2) {
 )})
     },
     {
+      name: "Lmax",
+      value: (function(){return(
+function Lmax(p1, p2) {
+  // p = [P1,..,Pdim]
+  var dim = p1.length,
+      dist = 0;
+  for (var i = 0; i < dim; i++) {
+    var p1i = p1[i], p2i = p2[i];
+    dist = Math.max(dist, Math.abs(p1i-p2i));
+  }
+  return dist;
+}
+)})
+    },
+    {
       name: "calcPi",
-      inputs: ["matrizDistancias","euclidiana","zeros","L2"],
-      value: (function(matrizDistancias,euclidiana,zeros,L2){return(
+      inputs: ["zeros","calcDistancia"],
+      value: (function(zeros,calcDistancia){return(
 function calcPi(p, i, s2i) {
   var N = p.length,
       N2 = N*N,
       dim = p[i].length,
       norma = 0.0,
-      D = matrizDistancias(p, euclidiana),
+      //D = matrizDistancias(p, undefined),
       P = zeros(N);
   for (var j=0; j<N; j++) {
     if (i != j)
-      P[j] = Math.exp(-(L2(p[i], p[j]))/(2*s2i));
+      P[j] = Math.exp(-(calcDistancia(p[i], p[j]))/(2*s2i));
     norma += P[j];
   }
   return P.map(p=>p/norma);
@@ -2167,8 +2200,8 @@ function calcPi(p, i, s2i) {
     },
     {
       name: "gradiente",
-      inputs: ["it_exagero","valor_exagero","calcQ","zeros","L2"],
-      value: (function(it_exagero,valor_exagero,calcQ,zeros,L2){return(
+      inputs: ["it_exagero","valor_exagero","calcQ","zeros","L2Q"],
+      value: (function(it_exagero,valor_exagero,calcQ,zeros,L2Q){return(
 function gradiente(y, P, iter) {
   // Retorna o gradiente dados:
   // y: pontos no espaço mapeado
@@ -2184,7 +2217,7 @@ function gradiente(y, P, iter) {
     for (var j=0; j<N; j++) {
       const ij = N*i+j,
             pq = (ex*P[ij])-Q[ij],
-            dist = 1+L2(y[i], y[j]);
+            dist = 1+L2Q(y[i], y[j]);
       for (var d=0; d<dim; d++)
         g[i][d] += 4*pq*(y[i][d]-y[j][d])/dist;
     }
@@ -2194,9 +2227,36 @@ function gradiente(y, P, iter) {
 )})
     },
     {
+      name: "calcQ",
+      inputs: ["vetor","calcDistancia"],
+      value: (function(vetor,calcDistancia){return(
+function calcQ(y) {
+  // Calcula probabilidades dos pontos no espaço mapeado, com kernel t-student
+  // y: pontos no espaço mapeado
+  // N: número de pontos
+  // Q: probabilidades
+  var N = y.length;
+  var Q = vetor(N*N, 1e-100);
+  var soma = 0.0;
+  for(var i=0; i<N; i++) {
+    for(var j=i+1; j<N; j++) {
+      var dist = calcDistancia(y[i], y[j]);
+      if (i != j) {
+        Q[i*N+j] =  Math.exp(-dist); //*/ 1/(1 + dist);
+        Q[j*N+i] = Q[i*N+j];
+        soma += 2*Q[i*N+j];
+      }
+    }
+  }
+  // Retorna Q normalizado
+  return Q.map(x=>x>1e-100?x/soma:x);
+}
+)})
+    },
+    {
       name: "grad",
-      inputs: ["it_exagero","valor_exagero","zeros","L2","ind"],
-      value: (function(it_exagero,valor_exagero,zeros,L2,ind){return(
+      inputs: ["it_exagero","valor_exagero","zeros","L2Q","ind"],
+      value: (function(it_exagero,valor_exagero,zeros,L2Q,ind){return(
 function grad(p, q, y, iter) {
   /*
    * Retorna o gradiente dados:
@@ -2214,7 +2274,7 @@ function grad(p, q, y, iter) {
     soma = 0;
     for (j=0; j<numPontos; j++) {
       // p_ij - q_ij * (y_i - y_j) * (1 + dist(y_i, y_j))^-1
-      let dist = L2(y[i], y[j]), //distR1({x:y[i]}, {x:y[j]}),
+      let dist = L2Q(y[i], y[j]), //distR1({x:y[i]}, {x:y[j]}),
           ij = ind(i,j);
       for (var d=0; d<dim; d++)
         gradiente[i][d] += 4*(exagero * p[ij] - q[ij]) *
@@ -2261,16 +2321,15 @@ function zeros(m, n) {
 function vetor(n, s) {
   // Retorna um vetor de n itens de formato s
   // Se s for uma função, chama a funcão a cada vez
-  // Se s for indefinido, inicializa com tgRand
-  if (typeof(n) === 'undefined' || isNaN(n))
-    return [];
-  if (typeof(n) === 'number')
-    if (typeof(s) == 'number')
-      return [...new Float64Array(n)].map(()=>s);
-    else if (typeof(s) == 'function') // Idealmente, funcao retornará um numero
-      return [...new Float64Array(n)].map(()=>s());
-    else if (typeof(s) == 'undefined') // Retorna tgRand
-      return [...new Float64Array(n)].map(()=>math.random());
+  // Se s for indefinido, inicializa "randomicamente"
+  if (isNaN(n) || +n<1 || !Number.isInteger(n))
+    return undefined;
+  if (typeof(s) == 'number')
+    return [...new Float64Array(n)].map(()=>s);
+  else if (typeof(s) == 'function') // Idealmente, funcao retornará um numero
+    return [...new Float64Array(n)].map(()=>s());
+  else if (typeof(s) == 'undefined') // Retorna tgRand
+    return [...new Float64Array(n)].map(()=>math.random());
   return [...new Array(n)].map(()=>s);
 }
 )})
@@ -2280,9 +2339,11 @@ function vetor(n, s) {
       inputs: ["vetor"],
       value: (function(vetor){return(
 function matriz(m, n, s) {
-  // Retorna uma matriz mxn inicializada com s
-  // Se s não for definido, inicializa com tgRand (ver vetor)
-  return [...new Array(m)].map(()=>vetor(n, s));
+	// Retorna uma matriz mxn inicializada com s
+	// Se s não for definido, inicializa randomicamente (ver vetor)
+	if (isNaN(m) || +m<1 || !Number.isInteger(m))
+  	return undefined;
+	return [...new Array(m)].map(()=>vetor(n, s));
 }
 )})
     },
@@ -3275,7 +3336,7 @@ require("d3-format")
 };
 
 const notebook = {
-  id: "2331ea7cae3cdc98@6655",
+  id: "2331ea7cae3cdc98@6877",
   modules: [m0,m1,m2]
 };
 
