@@ -1,11 +1,11 @@
 // URL: https://beta.observablehq.com/@robstelling/t-sne_en
 // Title: Opening the *t*-SNE black box
 // Author: Roberto Stelling (@robstelling)
-// Version: 7518
+// Version: 7519
 // Runtime version: 1
 
 const m0 = {
-  id: "2379c50fe5f906fb@7518",
+  id: "2379c50fe5f906fb@7519",
   variables: [
     {
       inputs: ["md"],
@@ -1040,9 +1040,9 @@ radio({
       value: (G, _) => G.input(_)
     },
     {
-      inputs: ["md","metricNameTex","metric","math","pts","calcDistancia"],
-      value: (function(md,metricNameTex,metric,math,pts,calcDistancia){return(
-md`The ${metricNameTex(metric)} distance between the points ${math.matrix(pts[0])} and ${math.matrix(pts[1])} is ${calcDistancia(pts[0], pts[1])}`
+      inputs: ["md","metricNameTex","metric","math","pts","computeDistance"],
+      value: (function(md,metricNameTex,metric,math,pts,computeDistance){return(
+md`The ${metricNameTex(metric)} distance between the points ${math.matrix(pts[0])} and ${math.matrix(pts[1])} is ${computeDistance(pts[0], pts[1])}`
 )})
     },
     {
@@ -3341,7 +3341,7 @@ require("d3-format")
 };
 
 const notebook = {
-  id: "2379c50fe5f906fb@7518",
+  id: "2379c50fe5f906fb@7519",
   modules: [m0,m1,m2]
 };
 
