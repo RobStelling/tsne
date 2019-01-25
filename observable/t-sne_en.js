@@ -1,11 +1,11 @@
 // URL: https://beta.observablehq.com/@robstelling/t-sne_en
 // Title: Opening the *t*-SNE black box
 // Author: Roberto Stelling (@robstelling)
-// Version: 7519
+// Version: 7711
 // Runtime version: 1
 
 const m0 = {
-  id: "2379c50fe5f906fb@7519",
+  id: "2379c50fe5f906fb@7711",
   variables: [
     {
       inputs: ["md"],
@@ -82,13 +82,13 @@ In the following examples, we will project the data from *2* dimensions to *1* d
     },
     {
       name: "grafico_simples",
-      inputs: ["vegalite","width","points","tamanhoCirculo","opacity","colorScheme"],
-      value: (function(vegalite,width,points,tamanhoCirculo,opacity,colorScheme){return(
+      inputs: ["vegalite","width","points","markSize","opacity","colorScheme"],
+      value: (function(vegalite,width,points,markSize,opacity,colorScheme){return(
 vegalite({
   width: Math.min(400, width),
   height: 400,
   data: points,
-  mark: {type: "circle", size: tamanhoCirculo, opacity: opacity},
+  mark: {type: "circle", size: markSize, opacity: opacity},
   encoding: {
     x: {field: "x", type: "quantitative"},
     y: {field: "y", type: "quantitative"},
@@ -104,12 +104,12 @@ md`# Projecting the points to the *X* axis`
 )})
     },
     {
-      inputs: ["vegalite","width","points","tamanhoCirculo","opacity","colorScheme"],
-      value: (function(vegalite,width,points,tamanhoCirculo,opacity,colorScheme){return(
+      inputs: ["vegalite","width","points","markSize","opacity","colorScheme"],
+      value: (function(vegalite,width,points,markSize,opacity,colorScheme){return(
 vegalite({
   width: Math.min(400, width),
   data: points,
-  mark: {type: "circle", size: tamanhoCirculo, opacity: opacity},
+  mark: {type: "circle", size: markSize, opacity: opacity},
   encoding: {
     x: {field: "x", type: "quantitative"},
     color: {field: "Cluster", type: "nominal", scale: {scheme: colorScheme}}
@@ -136,12 +136,12 @@ md `and rotating to the horizontal`
 )})
     },
     {
-      inputs: ["vegalite","width","points","tamanhoCirculo","opacity","colorScheme"],
-      value: (function(vegalite,width,points,tamanhoCirculo,opacity,colorScheme){return(
+      inputs: ["vegalite","width","points","markSize","opacity","colorScheme"],
+      value: (function(vegalite,width,points,markSize,opacity,colorScheme){return(
 vegalite({
   width: Math.min(400, width),
   data: points,
-  mark: {type: "circle", size: tamanhoCirculo, opacity: opacity},
+  mark: {type: "circle", size: markSize, opacity: opacity},
   encoding: {
     x: {field: "y", type: "quantitative"},
     color: {field: "Cluster", type: "nominal", scale: {scheme: colorScheme}}
@@ -163,12 +163,12 @@ In an *"ideal world"* we would like to see the original points reduced from two 
 )})
     },
     {
-      inputs: ["vegalite","width","ideal_linear","tamanhoCirculo","opacity","colorScheme"],
-      value: (function(vegalite,width,ideal_linear,tamanhoCirculo,opacity,colorScheme){return(
+      inputs: ["vegalite","width","ideal_linear","markSize","opacity","colorScheme"],
+      value: (function(vegalite,width,ideal_linear,markSize,opacity,colorScheme){return(
 vegalite({
   width: Math.min(400, width),
   data: ideal_linear,
-  mark: {type: "circle", size: tamanhoCirculo, opacity: opacity},
+  mark: {type: "circle", size: markSize, opacity: opacity},
   encoding: {
     x: {field: "x", type: "quantitative"},
     color: {field: "Cluster", type: "nominal", scale: {scheme: colorScheme}}
@@ -183,9 +183,9 @@ md `# Half moon dataset`
 )})
     },
     {
-      inputs: ["vegalite","halfMoonGraph"],
-      value: (function(vegalite,halfMoonGraph){return(
-vegalite(halfMoonGraph)
+      inputs: ["vegalite","halfMoonChart"],
+      value: (function(vegalite,halfMoonChart){return(
+vegalite(halfMoonChart)
 )})
     },
     {
@@ -195,12 +195,12 @@ md `## Projecting over the *x* axis`
 )})
     },
     {
-      inputs: ["vegalite","width","halfMoon","tamanhoCirculo","opacity","colorScheme"],
-      value: (function(vegalite,width,halfMoon,tamanhoCirculo,opacity,colorScheme){return(
+      inputs: ["vegalite","width","halfMoon","markSize","opacity","colorScheme"],
+      value: (function(vegalite,width,halfMoon,markSize,opacity,colorScheme){return(
 vegalite({
   width: Math.min(500, width),
   data: {values: halfMoon},
-  mark: {type: "circle", size: tamanhoCirculo, opacity: opacity},
+  mark: {type: "circle", size: markSize, opacity: opacity},
   encoding: {
     x: {field: "x", type: "quantitative"},
     color: {field: "label", type: "nominal", scale: {scheme: colorScheme}, title: "Cluster"},
@@ -215,12 +215,12 @@ md `## Projecting over the *y* axis`
 )})
     },
     {
-      inputs: ["vegalite","width","halfMoon","tamanhoCirculo","opacity","colorScheme"],
-      value: (function(vegalite,width,halfMoon,tamanhoCirculo,opacity,colorScheme){return(
+      inputs: ["vegalite","width","halfMoon","markSize","opacity","colorScheme"],
+      value: (function(vegalite,width,halfMoon,markSize,opacity,colorScheme){return(
 vegalite({
   width: Math.min(500, width),
   data: {values: halfMoon},
-  mark: {type: "circle", size: tamanhoCirculo, opacity: opacity},
+  mark: {type: "circle", size: markSize, opacity: opacity},
   encoding: {
     x: {field: "y", type: "quantitative"},
     color: {field: "label", type: "nominal", scale: {scheme: colorScheme}, title: "Cluster"},
@@ -236,19 +236,19 @@ To map *these particular datapoints* from *2D* to *1D* we can shift all red poin
 )})
     },
     {
-      name: "fake_cluster",
+      name: "fakeCluster",
       inputs: ["halfMoon"],
       value: (function(halfMoon){return(
 halfMoon.map(p => {return {x:(p.x+p.label)*(p.label+1.7), label:p.label}})
 )})
     },
     {
-      inputs: ["vegalite","width","fake_cluster","tamanhoCirculo","opacity","colorScheme"],
-      value: (function(vegalite,width,fake_cluster,tamanhoCirculo,opacity,colorScheme){return(
+      inputs: ["vegalite","width","fakeCluster","markSize","opacity","colorScheme"],
+      value: (function(vegalite,width,fakeCluster,markSize,opacity,colorScheme){return(
 vegalite({
   width: Math.min(500, width),
-  data: {values: fake_cluster},
-  mark: {type: "circle", size: tamanhoCirculo, opacity: opacity},
+  data: {values: fakeCluster},
+  mark: {type: "circle", size: markSize, opacity: opacity},
   encoding: {
    x: {field: "x", type: "quantitative"},
     color: {field: "label", type: "nominal", scale: {scheme: colorScheme}, title: "Cluster"},
@@ -264,13 +264,13 @@ md `## Circles
 )})
     },
     {
-      inputs: ["vegalite","width","circles","tamanhoCirculo","opacity","colorScheme"],
-      value: (function(vegalite,width,circles,tamanhoCirculo,opacity,colorScheme){return(
+      inputs: ["vegalite","width","circles","markSize","opacity","colorScheme"],
+      value: (function(vegalite,width,circles,markSize,opacity,colorScheme){return(
 vegalite({
   width: Math.min(500, width),
   height : 500,
   data: {values: circles},
-  mark: {type: "circle", size: tamanhoCirculo, opacity: opacity},
+  mark: {type: "circle", size: markSize, opacity: opacity},
   encoding: {
     x: {field: "x", type: "quantitative"},
     y: {field: "y", type: "quantitative"},
@@ -289,12 +289,6 @@ But how would we choose what transformation to apply on unknown data with 10, 10
 )})
     },
     {
-      inputs: ["circles"],
-      value: (function(circles){return(
-circles
-)})
-    },
-    {
       name: "radialMap",
       inputs: ["circles","dist"],
       value: (function(circles,dist)
@@ -305,12 +299,12 @@ circles
 )
     },
     {
-      inputs: ["vegalite","width","radialMap","tamanhoCirculo","opacity","colorScheme"],
-      value: (function(vegalite,width,radialMap,tamanhoCirculo,opacity,colorScheme){return(
+      inputs: ["vegalite","width","radialMap","markSize","opacity","colorScheme"],
+      value: (function(vegalite,width,radialMap,markSize,opacity,colorScheme){return(
 vegalite({
   width: Math.min(500, width),
   data: {values: radialMap},
-  mark: {type: "circle", size: tamanhoCirculo, opacity: opacity},
+  mark: {type: "circle", size: markSize, opacity: opacity},
   encoding: {
    x: {field: "x", type: "quantitative"},
     color: {field: "label", type: "nominal", scale: {scheme: colorScheme}, title: "Cluster"},
@@ -332,13 +326,13 @@ If the clusters are not separable on the high dimensions, they won't be separabl
 )})
     },
     {
-      inputs: ["vegalite","width","carros","tamanhoCirculo","opacity","colorScheme"],
-      value: (function(vegalite,width,carros,tamanhoCirculo,opacity,colorScheme){return(
+      inputs: ["vegalite","width","cars","markSize","opacity","colorScheme"],
+      value: (function(vegalite,width,cars,markSize,opacity,colorScheme){return(
 vegalite({
   width: Math.min(400, width),
   height : 400,
-  data: {values: carros},
-  mark: {type: "circle", size: tamanhoCirculo, opacity: opacity},
+  data: {values: cars},
+  mark: {type: "circle", size: markSize, opacity: opacity},
   encoding: {
     x: {field: "Horsepower", type: "quantitative", title: "Horse-Power"},
     y: {field: "Miles_per_Gallon", type: "quantitative", title: "Miles/gallon"},
@@ -384,15 +378,15 @@ md `### Playing with the parameters of normal density curve`
 )})
     },
     {
-      inputs: ["vegalite","width","gera_normal","var_2","mean"],
-      value: (function(vegalite,width,gera_normal,var_2,mean){return(
+      inputs: ["vegalite","width","pointsNormal","var_2","mean"],
+      value: (function(vegalite,width,pointsNormal,var_2,mean){return(
 vegalite({
   width: Math.min(600, width),
   height: 300,
   layer: [
     {
       title: "Density curve of a normal distribution",
-      data: {values: gera_normal(-6, +10, 0.01, 1, 0)},
+      data: {values: pointsNormal(-6, +10, 0.01, 1, 0)},
       mark: "line",
       encoding: {
         x: {field: "x", type: "quantitative"},
@@ -401,7 +395,7 @@ vegalite({
       }
     },
     {
-      data: {values: gera_normal(-6, 10, 0.01, Math.sqrt(var_2), mean)},
+      data: {values: pointsNormal(-6, 10, 0.01, Math.sqrt(var_2), mean)},
       mark: {type: "line"},
       encoding: {
         x: {field: "x", type: "quantitative"},
@@ -464,15 +458,15 @@ md `### Comparing normal and Student *t* distrubutions`
 )})
     },
     {
-      inputs: ["vegalite","width","gera_student","interval","gera_normal","var2"],
-      value: (function(vegalite,width,gera_student,interval,gera_normal,var2){return(
+      inputs: ["vegalite","width","pointsStudent","interval","pointsNormal","var2"],
+      value: (function(vegalite,width,pointsStudent,interval,pointsNormal,var2){return(
 vegalite({
   width: Math.min(600, width),
   height: 300,
   layer: [
     {
       title: "Normal (red) and Studend-t (blue)",
-      data: {values: gera_student(-interval, interval, 0.01, 1, 1)},
+      data: {values: pointsStudent(-interval, interval, 0.01, 1, 1)},
       mark: {type: "line"},
       encoding: {
         x: {field: "x", type: "quantitative"},
@@ -480,7 +474,7 @@ vegalite({
       }
     },
     {
-      data: {values: gera_normal(-interval, interval, 0.01, Math.sqrt(var2), 0)},
+      data: {values: pointsNormal(-interval, interval, 0.01, Math.sqrt(var2), 0)},
       mark: {type: "line"},
       encoding: {
         x: {field: "x", type: "quantitative"},
@@ -541,12 +535,12 @@ md`### Degrees of freedom and on a Student *t* distribution`
 )})
     },
     {
-      inputs: ["vegalite","width","gera_curvas","interval","variance","degreesFreedom","colorScheme"],
-      value: (function(vegalite,width,gera_curvas,interval,variance,degreesFreedom,colorScheme){return(
+      inputs: ["vegalite","width","pointsNormalStudent","interval","variance","degreesFreedom","colorScheme"],
+      value: (function(vegalite,width,pointsNormalStudent,interval,variance,degreesFreedom,colorScheme){return(
 vegalite({
   width: Math.min(600, width),
   height: 300,
-  data: {values: gera_curvas(-interval, interval, 0.01, Math.sqrt(variance), 0, degreesFreedom)},
+  data: {values: pointsNormalStudent(-interval, interval, 0.01, Math.sqrt(variance), 0, degreesFreedom)},
   mark: "line",
   title: "Normal and Student t distributions",
   encoding: {
@@ -686,24 +680,24 @@ vegalite(original)
 )})
     },
     {
-      inputs: ["md","tex","distancias","normal"],
-      value: (function(md,tex,distancias,normal){return(
+      inputs: ["md","tex","distances","normal"],
+      value: (function(md,tex,distances,normal){return(
 md`To convert distances to probabilities, we can imagine each point in the original space as a center of a distribution (Normal/Gaussian or any other of your choosing) and use the distance between the chosen point and every other point as the probability of a link between these points. In principle, the smaller the distance, the bigger the probability of a link. In a way we are *defining the neighbourhood between points*. 
 
-For example, in the dataset above, the distance between ${tex`p_0`} and ${tex`p_1`} is given by the distance matrix, on \`distances[0][1]\` and equals ${tex`${distancias[0][1]}`}. In a normal distribution, with average ${tex`0`} and variance ${tex`1`}, this distance would correspond to ${tex.block`distances[0][1] = ${distancias[0][1]}\rightarrow P_{01} = ${normal(distancias[0][1], 1,0)}`}
+For example, in the dataset above, the distance between ${tex`p_0`} and ${tex`p_1`} is given by the distance matrix, on \`distances[0][1]\` and equals ${tex`${distances[0][1]}`}. In a normal distribution, with average ${tex`0`} and variance ${tex`1`}, this distance would correspond to ${tex.block`distances[0][1] = ${distances[0][1]}\rightarrow P_{01} = ${normal(distances[0][1], 1,0)}`}
 Below we can see the distances and probabilities between a few other points with a normal distribution with  ${tex`\mu = 0`} e ${tex`\sigma^2 = 1`}`
 )})
     },
     {
-      inputs: ["vegalite","gera_normal","distancias","normal"],
-      value: (function(vegalite,gera_normal,distancias,normal){return(
+      inputs: ["vegalite","pointsNormal","distances","normal"],
+      value: (function(vegalite,pointsNormal,distances,normal){return(
 vegalite({
   width: 600,
   height: 300,
   layer: [
     {
       title: "Gaussian with μ=0 and σ=1",
-      data: {values: gera_normal(-5, 5, 0.01, 1, 0)},
+      data: {values: pointsNormal(-5, 5, 0.01, 1, 0)},
       mark: {type: "area", fill:"#d0d0d0", fillOpacity: 0.4},
       encoding: {
         x: {field: "x", type: "quantitative"},
@@ -713,8 +707,8 @@ vegalite({
     {
       data: {
         "values": [
-        {"x": distancias[0][1], "y": 0},
-        {"x": distancias[0][1], "y": normal(distancias[0][1],1,0)},
+        {"x": distances[0][1], "y": 0},
+        {"x": distances[0][1], "y": normal(distances[0][1],1,0)},
         ]
       },
       mark: {type: "line"},
@@ -726,7 +720,7 @@ vegalite({
     {
       data: {
         "values": [
-        {"x": distancias[0][1], "y": normal(distancias[0][1],1,0)},
+        {"x": distances[0][1], "y": normal(distances[0][1],1,0)},
         ]
       },
       mark: {type: "text", baseline: "top", dx: 52, dy: -109},
@@ -737,8 +731,8 @@ vegalite({
     {
       data: {
         "values": [
-        {"x": distancias[0][2], "y": 0},
-        {"x": distancias[0][2], "y": normal(distancias[0][2],1,0)},
+        {"x": distances[0][2], "y": 0},
+        {"x": distances[0][2], "y": normal(distances[0][2],1,0)},
         ]
       },
       mark: {type: "line"},
@@ -750,7 +744,7 @@ vegalite({
     {
       data: {
         "values": [
-        {"x": distancias[0][2], "y": normal(distancias[0][2],1,0)},
+        {"x": distances[0][2], "y": normal(distances[0][2],1,0)},
         ]
       },
       mark: {type: "text", dx: 61, dy: -73},
@@ -761,8 +755,8 @@ vegalite({
     {
       data: {
         "values": [
-        {"x": distancias[0][3], "y": 0},
-        {"x": distancias[0][3], "y": normal(distancias[0][3],1,0)},
+        {"x": distances[0][3], "y": 0},
+        {"x": distances[0][3], "y": normal(distances[0][3],1,0)},
         ]
       },
       mark: {type: "line"},
@@ -774,7 +768,7 @@ vegalite({
     {
       data: {
         "values": [
-        {"x": distancias[0][3], "y": normal(distancias[0][3],1,0)},
+        {"x": distances[0][3], "y": normal(distances[0][3],1,0)},
         ]
       },
       mark: {type: "text", dx: 47, dy: -112},
@@ -785,8 +779,8 @@ vegalite({
     {
       data: {
         "values": [
-        {"x": distancias[0][4], "y": 0},
-        {"x": distancias[0][4], "y": normal(distancias[0][4],1,0)},
+        {"x": distances[0][4], "y": 0},
+        {"x": distances[0][4], "y": normal(distances[0][4],1,0)},
         ]
       },
       mark: {type: "line"},
@@ -798,7 +792,7 @@ vegalite({
     {
       data: {
         "values": [
-        {"x": distancias[0][4], "y": normal(distancias[0][4],1,0)},
+        {"x": distances[0][4], "y": normal(distances[0][4],1,0)},
         ]
       },
       mark: {type: "text", dx: 152, dy: 126},
@@ -809,8 +803,8 @@ vegalite({
     {
       data: {
         "values": [
-        {"x": distancias[0][5], "y": 0},
-        {"x": distancias[0][5], "y": normal(distancias[0][5],1,0)},
+        {"x": distances[0][5], "y": 0},
+        {"x": distances[0][5], "y": normal(distances[0][5],1,0)},
         ]
       },
       mark: {type: "line"},
@@ -822,7 +816,7 @@ vegalite({
     {
       data: {
         "values": [
-        {"x": distancias[0][5], "y": normal(distancias[0][5],1,0)},
+        {"x": distances[0][5], "y": normal(distances[0][5],1,0)},
         ]
       },
       mark: {type: "text", dx: 171, dy: 136},
@@ -835,15 +829,15 @@ vegalite({
 )})
     },
     {
-      inputs: ["md","distancias","tex","normal"],
-      value: (function(md,distancias,tex,normal){return(
+      inputs: ["md","distances","tex","normal"],
+      value: (function(md,distances,tex,normal){return(
 md `
-\`distances[0][1] = \` ${distancias[0][1]} - ${tex`P_{01} = P(${distancias[0][1]})`} = ${normal(distancias[0][1], 1,0)}<br>
-\`distances[0][2] = \` ${distancias[0][2]} - ${tex`P_{02} = P(${distancias[0][2]})`} = ${normal(distancias[0][2], 1,0)}<br>
-\`distances[0][3] = \` ${distancias[0][3]} - ${tex`P_{03} = P(${distancias[0][3]})`} = ${normal(distancias[0][3], 1,0)}<br>
-\`distances[0][4] = \` ${distancias[0][4]} - ${tex`P_{04} = P(${distancias[0][4]})`} = ${normal(distancias[0][4], 1,0)}<br>
-\`distances[0][5] = \` ${distancias[0][5]} - ${tex`P_{05} = P(${distancias[0][5]})`} = ${normal(distancias[0][5], 1,0)}<br>
-\`distances[5][0] = \` ${distancias[5][0]} - ${tex`P_{50} = P(${distancias[5][0]})`} = ${normal(distancias[5][0], 1.2,0)}`
+\`distances[0][1] = \` ${distances[0][1]} - ${tex`P_{01} = P(${distances[0][1]})`} = ${normal(distances[0][1], 1,0)}<br>
+\`distances[0][2] = \` ${distances[0][2]} - ${tex`P_{02} = P(${distances[0][2]})`} = ${normal(distances[0][2], 1,0)}<br>
+\`distances[0][3] = \` ${distances[0][3]} - ${tex`P_{03} = P(${distances[0][3]})`} = ${normal(distances[0][3], 1,0)}<br>
+\`distances[0][4] = \` ${distances[0][4]} - ${tex`P_{04} = P(${distances[0][4]})`} = ${normal(distances[0][4], 1,0)}<br>
+\`distances[0][5] = \` ${distances[0][5]} - ${tex`P_{05} = P(${distances[0][5]})`} = ${normal(distances[0][5], 1,0)}<br>
+\`distances[5][0] = \` ${distances[5][0]} - ${tex`P_{50} = P(${distances[5][0]})`} = ${normal(distances[5][0], 1.2,0)}`
 )})
     },
     {
@@ -853,15 +847,15 @@ md`The same points from the previous example are shown below with a Student *t* 
 )})
     },
     {
-      inputs: ["vegalite","gera_student","distancias","student"],
-      value: (function(vegalite,gera_student,distancias,student){return(
+      inputs: ["vegalite","pointsStudent","distances","student"],
+      value: (function(vegalite,pointsStudent,distances,student){return(
 vegalite({
   width: 600,
   height: 300,
   layer: [
     {
       title: "Student-t with μ=0 and σ=1, 1 degree of freedom",
-      data: {values: gera_student(-5, 5, 0.01, 1, 0)},
+      data: {values: pointsStudent(-5, 5, 0.01, 1, 0)},
       mark: {type: "area", fill:"#d0d0d0", fillOpacity: 0.4},
       encoding: {
         x: {field: "x", type: "quantitative"},
@@ -871,8 +865,8 @@ vegalite({
     {
       data: {
         "values": [
-        {"x": distancias[0][1], "y": 0},
-        {"x": distancias[0][1], "y": student(distancias[0][1],1)},
+        {"x": distances[0][1], "y": 0},
+        {"x": distances[0][1], "y": student(distances[0][1],1)},
         ]
       },
       mark: {type: "line"},
@@ -884,7 +878,7 @@ vegalite({
     {
       data: {
         "values": [
-        {"x": distancias[0][1], "y": student(distancias[0][1],1)},
+        {"x": distances[0][1], "y": student(distances[0][1],1)},
         ]
       },
       mark: {type: "text", baseline: "top", dx: 52, dy: -61},
@@ -895,8 +889,8 @@ vegalite({
     {
       data: {
         "values": [
-        {"x": distancias[0][2], "y": 0},
-        {"x": distancias[0][2], "y": student(distancias[0][2],1)},
+        {"x": distances[0][2], "y": 0},
+        {"x": distances[0][2], "y": student(distances[0][2],1)},
         ]
       },
       mark: {type: "line"},
@@ -908,7 +902,7 @@ vegalite({
     {
       data: {
         "values": [
-        {"x": distancias[0][2], "y": student(distancias[0][2],1)},
+        {"x": distances[0][2], "y": student(distances[0][2],1)},
         ]
       },
       mark: {type: "text", dx: 61, dy: -23},
@@ -919,8 +913,8 @@ vegalite({
     {
       data: {
         "values": [
-        {"x": distancias[0][3], "y": 0},
-        {"x": distancias[0][3], "y": student(distancias[0][3],1)},
+        {"x": distances[0][3], "y": 0},
+        {"x": distances[0][3], "y": student(distances[0][3],1)},
         ]
       },
       mark: {type: "line"},
@@ -932,7 +926,7 @@ vegalite({
     {
       data: {
         "values": [
-        {"x": distancias[0][3], "y": student(distancias[0][3],1)},
+        {"x": distances[0][3], "y": student(distances[0][3],1)},
         ]
       },
       mark: {type: "text", dx: 47, dy: -63},
@@ -943,8 +937,8 @@ vegalite({
     {
       data: {
         "values": [
-        {"x": distancias[0][4], "y": 0},
-        {"x": distancias[0][4], "y": student(distancias[0][4],1)},
+        {"x": distances[0][4], "y": 0},
+        {"x": distances[0][4], "y": student(distances[0][4],1)},
         ]
       },
       mark: {type: "line"},
@@ -956,7 +950,7 @@ vegalite({
     {
       data: {
         "values": [
-        {"x": distancias[0][4], "y": student(distancias[0][4],1)},
+        {"x": distances[0][4], "y": student(distances[0][4],1)},
         ]
       },
       mark: {type: "text", dx: 150, dy: 102},
@@ -967,8 +961,8 @@ vegalite({
     {
       data: {
         "values": [
-        {"x": distancias[0][5], "y": 0},
-        {"x": distancias[0][5], "y": student(distancias[0][5],1)},
+        {"x": distances[0][5], "y": 0},
+        {"x": distances[0][5], "y": student(distances[0][5],1)},
         ]
       },
       mark: {type: "line"},
@@ -980,7 +974,7 @@ vegalite({
     {
       data: {
         "values": [
-        {"x": distancias[0][5], "y": student(distancias[0][5],1)},
+        {"x": distances[0][5], "y": student(distances[0][5],1)},
         ]
       },
       mark: {type: "text", dx: 171, dy: 112},
@@ -993,15 +987,15 @@ vegalite({
 )})
     },
     {
-      inputs: ["md","distancias","tex","student"],
-      value: (function(md,distancias,tex,student){return(
+      inputs: ["md","distances","tex","student"],
+      value: (function(md,distances,tex,student){return(
 md `
-\`distances[0][1] = \` ${distancias[0][1]} - ${tex`P_{01} = P(${distancias[0][1]})`} = ${student(distancias[0][1], 1)}<br>
-\`distances[0][2] = \` ${distancias[0][2]} - ${tex`P_{02} = P(${distancias[0][2]})`} = ${student(distancias[0][2], 1)}<br>
-\`distances[0][3] = \` ${distancias[0][3]} - ${tex`P_{03} = P(${distancias[0][3]})`} = ${student(distancias[0][3], 1)}<br>
-\`distances[0][4] = \` ${distancias[0][4]} - ${tex`P_{04} = P(${distancias[0][4]})`} = ${student(distancias[0][4], 1)}<br>
-\`distances[0][5] = \` ${distancias[0][5]} - ${tex`P_{05} = P(${distancias[0][5]})`} = ${student(distancias[0][5], 1)}<br>
-\`distances[5][0] = \` ${distancias[5][0]} - ${tex`P_{50} = P(${distancias[5][0]})`} = ${student(distancias[5][0], 1.2)}`
+\`distances[0][1] = \` ${distances[0][1]} - ${tex`P_{01} = P(${distances[0][1]})`} = ${student(distances[0][1], 1)}<br>
+\`distances[0][2] = \` ${distances[0][2]} - ${tex`P_{02} = P(${distances[0][2]})`} = ${student(distances[0][2], 1)}<br>
+\`distances[0][3] = \` ${distances[0][3]} - ${tex`P_{03} = P(${distances[0][3]})`} = ${student(distances[0][3], 1)}<br>
+\`distances[0][4] = \` ${distances[0][4]} - ${tex`P_{04} = P(${distances[0][4]})`} = ${student(distances[0][4], 1)}<br>
+\`distances[0][5] = \` ${distances[0][5]} - ${tex`P_{05} = P(${distances[0][5]})`} = ${student(distances[0][5], 1)}<br>
+\`distances[5][0] = \` ${distances[5][0]} - ${tex`P_{50} = P(${distances[5][0]})`} = ${student(distances[5][0], 1.2)}`
 )})
     },
     {
@@ -1029,7 +1023,7 @@ radio({
     { label: metricName(2), value: 2 },
     { label: metricName(3), value: 3 }  
   ],
-  value: 1
+  value: 0
 
 })
 )})
@@ -1169,11 +1163,11 @@ md`## Binary search of high dimension variances`
     },
     {
       name: "varianceBinarySearch",
-      inputs: ["calcPi","computeEntropy"],
-      value: (function(calcPi,computeEntropy){return(
+      inputs: ["computePi","computeEntropy"],
+      value: (function(computePi,computeEntropy){return(
 function varianceBinarySearch(points, i, entropy, error=1e-6, steps=40) {
   function recursiveBinarySearch(variance, lowerBound, upperBound) {
-    const probabilities = calcPi(points, i, variance),
+    const probabilities = computePi(points, i, variance),
           currentEntropy = computeEntropy(probabilities);
  
     if (steps-- <= 1 || Math.abs(currentEntropy - entropy) <= error)
@@ -1350,9 +1344,9 @@ radio({
       value: (G, _) => G.input(_)
     },
     {
-      inputs: ["md"],
-      value: (function(md){return(
-md`### Distance between generated points`
+      inputs: ["md","metricNameTex","metric"],
+      value: (function(md,metricNameTex,metric){return(
+md`### Distance ${metricNameTex(metric)} between generated points`
 )})
     },
     {
@@ -1382,16 +1376,16 @@ tex.block`${eq3}`
 )})
     },
     {
-      name: "calcQ",
-      inputs: ["vetor","computeDistance"],
-      value: (function(vetor,computeDistance){return(
-function calcQ(y) {
+      name: "computeQ",
+      inputs: ["array","computeDistance"],
+      value: (function(array,computeDistance){return(
+function computeQ(y) {
   // Computes affinities of the points on the mapped space, with a Student t kernel
   // y: Points on the mapped space
   // N: number of points
   // Q: probabilities
   var N = y.length;
-  var Q = vetor(N*N, 1e-100);
+  var Q = array(N*N, 1e-100);
   var soma = 0.0;
   for(var i=0; i<N; i++) {
     for(var j=i+1; j<N; j++) {
@@ -1409,9 +1403,9 @@ function calcQ(y) {
 )})
     },
     {
-      inputs: ["pt","math","calcQ","yFlat"],
-      value: (function(pt,math,calcQ,yFlat){return(
-pt(math.matrix(math.reshape(calcQ(yFlat).map(x => +x.toFixed(4)), [16,16])), '\\footnotesize')
+      inputs: ["pt","math","computeQ","yFlat"],
+      value: (function(pt,math,computeQ,yFlat){return(
+pt(math.matrix(math.reshape(computeQ(yFlat).map(x => +x.toFixed(4)), [16,16])), '\\footnotesize')
 )})
     },
     {
@@ -1429,9 +1423,9 @@ The Kullback-Leibler Divergence is given by \`[Equation 2]\` ${tex.block`${eq2}`
 )})
     },
     {
-      inputs: ["md","tex","KLD","pFinal","calcQ","yFlat"],
-      value: (function(md,tex,KLD,pFinal,calcQ,yFlat){return(
-md`In our example, the cost of the distributions ${tex`P`} and initial guess ${tex`Q`} is: ${tex`${KLD(pFinal, calcQ(yFlat)).toFixed(5)}`}`
+      inputs: ["md","tex","KLD","pFinal","computeQ","yFlat"],
+      value: (function(md,tex,KLD,pFinal,computeQ,yFlat){return(
+md`In our example, the cost of the distributions ${tex`P`} and initial guess ${tex`Q`} is: ${tex`${KLD(pFinal, computeQ(yFlat)).toFixed(5)}`}`
 )})
     },
     {
@@ -1453,13 +1447,13 @@ function KL(p, q){
     },
     {
       name: "cost",
-      inputs: ["calcQ"],
-      value: (function(calcQ){return(
+      inputs: ["computeQ"],
+      value: (function(computeQ){return(
 function cost(y, P) {
   // Cost between points and a distribution
   // y: points in the mapped space
   // P: distribution in the high dimensional space
-  var Q = calcQ(y);
+  var Q = computeQ(y);
   const N = y.length;
   var costSum = 0;
   for (var i=0; i<N; i++) {
@@ -1489,9 +1483,9 @@ To speed the the optimization stage and to help find better solutions, the paper
 )})
     },
     {
-      inputs: ["md","tex","pt","math","gradiente","yFlat","pFinal"],
-      value: (function(md,tex,pt,math,gradiente,yFlat,pFinal){return(
-md`Gradient for the first iteraction: ${tex`\frac{\delta C}{\delta y_i} =`} ${pt(math.matrix(gradiente(yFlat, pFinal, 1)), '\\footnotesize')}`
+      inputs: ["md","tex","pt","math","gradient","yFlat","pFinal"],
+      value: (function(md,tex,pt,math,gradient,yFlat,pFinal){return(
+md`Gradient for the first iteraction: ${tex`\frac{\delta C}{\delta y_i} =`} ${pt(math.matrix(gradient(yFlat, pFinal, 1)), '\\footnotesize')}`
 )})
     },
     {
@@ -1672,8 +1666,8 @@ slider({
     },
     {
       name: "pointsMap",
-      inputs: ["iteractionCount","T","yDisplay","Y","gradiente","pFinal","mutable costRun","cost","mutable iteractionCount","ystep","gains","momentum","triggerMomentum","eta"],
-      value: (function*(iteractionCount,T,yDisplay,Y,gradiente,pFinal,$0,cost,$1,ystep,gains,momentum,triggerMomentum,eta)
+      inputs: ["iteractionCount","T","yDisplay","Y","gradient","pFinal","mutable costRun","cost","mutable iteractionCount","ystep","gains","momentum","triggerMomentum","eta"],
+      value: (function*(iteractionCount,T,yDisplay,Y,gradient,pFinal,$0,cost,$1,ystep,gains,momentum,triggerMomentum,eta)
 {
   if (iteractionCount >= T)
     yield yDisplay.map((p, i)=>(p.y==undefined?{x:Y[i][0], 
@@ -1687,7 +1681,7 @@ slider({
     // Adapted from: https://github.com/karpathy/tsnejs
     var N = Y.length;
     var dim = Y[0].length;
-    var grad = gradiente(Y, pFinal, iteractionCount);
+    var grad = gradient(Y, pFinal, iteractionCount);
     var sign = ((p)=>p<0?-1:p>0?1:p);
     $0.value = cost(Y, pFinal);
     $1.value++;    
@@ -1836,13 +1830,13 @@ distancesMatrix(pointsFlat)
     },
     {
       name: "pFlat",
-      inputs: ["pointsFlat","calcPi","s2"],
-      value: (function(pointsFlat,calcPi,s2)
+      inputs: ["pointsFlat","computePi","s2"],
+      value: (function(pointsFlat,computePi,s2)
 {
   var N = pointsFlat.length;
   var matrix = []
   for (var i=0; i<N; i++)
-    matrix = matrix.concat(calcPi(pointsFlat, i, s2));
+    matrix = matrix.concat(computePi(pointsFlat, i, s2));
   return matrix.map(p=>p/16);
 }
 )
@@ -1891,11 +1885,11 @@ adjustVariances(pointsFlat, entropy, 1e-4, 50)
     },
     {
       name: "guessMap",
-      inputs: ["matriz","points","dimensions","gaussRandom","ideal_linear"],
-      value: (function(matriz,points,dimensions,gaussRandom,ideal_linear){return(
+      inputs: ["matrix","points","dimensions","gaussRandom","ideal_linear"],
+      value: (function(matrix,points,dimensions,gaussRandom,ideal_linear){return(
 {
-  random: matriz(points.values.length, +dimensions, (()=>gaussRandom()*1e-4)),
-  compressed: matriz(points.values.length, +dimensions, (()=>gaussRandom()*1e-6)),
+  random: matrix(points.values.length, +dimensions, (()=>gaussRandom()*1e-4)),
+  compressed: matrix(points.values.length, +dimensions, (()=>gaussRandom()*1e-6)),
   ideal: ideal_linear.values.map((p)=>dimensions==1?[p.x]:[p.x, p.y])
 }
 )})
@@ -1960,8 +1954,8 @@ Math.max(3, Math.abs(Math.floor(Math.log10(math.mean(distQ)))))
     },
     {
       name: "original",
-      inputs: ["width","points","colorScheme","tamanhoCirculo","opacity"],
-      value: (function(width,points,colorScheme,tamanhoCirculo,opacity){return(
+      inputs: ["width","points","colorScheme","markSize","opacity"],
+      value: (function(width,points,colorScheme,markSize,opacity){return(
 {
   width: Math.min(300, width),
   height: 300,
@@ -1973,7 +1967,7 @@ Math.max(3, Math.abs(Math.floor(Math.log10(math.mean(distQ)))))
     color: {field: "Cluster", type: "nominal", scale:{scheme: colorScheme}, title:"Cluster"},
   },
   layer: [{
-      mark: {type: "circle", size: tamanhoCirculo, opacity: opacity},
+      mark: {type: "circle", size: markSize, opacity: opacity},
     },{
       mark: {type: "text", dy: 17},
       encoding:{
@@ -1993,26 +1987,25 @@ Math.max(3, Math.abs(Math.floor(Math.log10(math.mean(distQ)))))
   cp.width = Math.min(200, width);
   cp.height = 200;
   cp.layer[0].mark.size = 50;
-  cp.title = "Dados originais";
   return cp;
 }
 )
     },
     {
       name: "fr1",
-      inputs: ["width","colorScheme","tamanhoCirculo","opacity"],
-      value: (function(width,colorScheme,tamanhoCirculo,opacity){return(
+      inputs: ["width","colorScheme","markSize","opacity"],
+      value: (function(width,colorScheme,markSize,opacity){return(
 function fr1(dados) {
   return ({
     width: Math.min(800, width),
     data: {values: dados},
-    //title: "Projeção inicial dos pontos",
+    title: "Points mapped to 1D",
     encoding: {
       x: {field: "x", type: "quantitative"},
       color: {field: "Cluster", type: "nominal", scale: {scheme: colorScheme}, title: "Cluster"},
     },
     layer: [{
-      mark: {type: "circle", size: tamanhoCirculo*2.5, opacity: opacity},
+      mark: {type: "circle", size: markSize*2.5, opacity: opacity},
     },{
       mark: {type: "text", dy: 3},
       encoding:{
@@ -2026,12 +2019,13 @@ function fr1(dados) {
     },
     {
       name: "fr2",
-      inputs: ["width","colorScheme","tamanhoCirculo","opacity"],
-      value: (function(width,colorScheme,tamanhoCirculo,opacity){return(
+      inputs: ["width","colorScheme","markSize","opacity"],
+      value: (function(width,colorScheme,markSize,opacity){return(
 function fr2(dados) {
   return {
     width: Math.min(300, width),
     height: 300,
+    title: 'Points mapped to 2D',
     data: {values:dados},
     encoding: {
       x: {field: "x", type: "quantitative"},
@@ -2039,7 +2033,7 @@ function fr2(dados) {
       color: {field: "Cluster", type: "nominal", scale:{scheme: colorScheme}, title:"Cluster"},
     },
     layer: [{
-        mark: {type: "circle", size: tamanhoCirculo, opacity: opacity},
+        mark: {type: "circle", size: markSize, opacity: opacity},
       },{
         mark: {type: "text", dy: 17},
         encoding:{
@@ -2053,14 +2047,14 @@ function fr2(dados) {
     },
     {
       name: "Y",
-      inputs: ["reset","mutable iteractionCount","yFlat","matriz"],
-      value: (function(reset,$0,yFlat,matriz)
+      inputs: ["reset","mutable iteractionCount","yFlat","matrix"],
+      value: (function(reset,$0,yFlat,matrix)
 {
   reset;
   $0.value = 0;
   const N = yFlat.length,
         dim = yFlat[0].length;
-  let g = matriz(N, dim);
+  let g = matrix(N, dim);
   for (var i=0; i<N; i++)
     for (var d=0; d<dim; d++)
       g[i][d] = yFlat[i][d];
@@ -2070,9 +2064,9 @@ function fr2(dados) {
     },
     {
       name: "initial gains",
-      inputs: ["matriz","ystep"],
-      value: (function(matriz,ystep){return(
-matriz(ystep.length, ystep[0].length, 1.0)
+      inputs: ["matrix","ystep"],
+      value: (function(matrix,ystep){return(
+matrix(ystep.length, ystep[0].length, 1.0)
 )})
     },
     {
@@ -2137,6 +2131,19 @@ function distancesMatrix(points, metric) {
 )})
     },
     {
+      name: "metricName",
+      value: (function(){return(
+c => ["L2", "L2 Squared", "L1", "Max"][c]
+)})
+    },
+    {
+      name: "metricNameTex",
+      inputs: ["tex"],
+      value: (function(tex){return(
+c => [tex`L^2`, tex`L^{2^2}`, tex`L^1`, tex`\max`][c]
+)})
+    },
+    {
       name: "L2",
       inputs: ["L2Q"],
       value: (function(L2Q){return(
@@ -2191,51 +2198,41 @@ function LMax(p1, p2) {
 )})
     },
     {
-      name: "metricName",
-      value: (function(){return(
-c => ["L2", "L2 Squared", "L1", "Max"][c]
-)})
-    },
-    {
-      name: "metricNameTex",
-      inputs: ["tex"],
-      value: (function(tex){return(
-c => [tex`L^2`, tex`L^{2^2}`, tex`L^1`, tex`\max`][c]
-)})
-    },
-    {
-      name: "calcPi",
+      name: "computePi",
       inputs: ["zeros","computeDistance"],
       value: (function(zeros,computeDistance){return(
-function calcPi(p, i, s2i) {
+function computePi(p, i, s2i) {
+  // p: points
+  // i: index of p_i
+  // s2i: variance for p_i
   var N = p.length,
       N2 = N*N,
       dim = p[i].length,
-      norma = 0.0,
+      norm = 0.0,
       P = zeros(N);
   for (var j=0; j<N; j++) {
     if (i != j)
       P[j] = Math.exp(-(computeDistance(p[i], p[j]))/(2*s2i));
-    norma += P[j];
+    norm += P[j];
   }
-  return P.map(p=>p/norma);
+  return P.map(p=>p/norm);
 }
 )})
     },
     {
-      name: "gradiente",
-      inputs: ["stop_exaggeration","exaggerationFactor","calcQ","zeros","computeDistance"],
-      value: (function(stop_exaggeration,exaggerationFactor,calcQ,zeros,computeDistance){return(
-function gradiente(y, P, iter) {
-  // Retorna o gradiente dados:
-  // y: pontos no espaço mapeado
-  // P: Probabilidades no espaço original
-  // iter: Número da iteração atual
+      name: "gradient",
+      inputs: ["stop_exaggeration","exaggerationFactor","computeQ","zeros","computeDistance"],
+      value: (function(stop_exaggeration,exaggerationFactor,computeQ,zeros,computeDistance){return(
+function gradient(y, P, iter) {
+  // Computes the gradient given:
+  // y: points on the mapped space
+  // P: probabilities on the original space
+  // iter: Number of current iteration
   // dC/dy = 4 * sum((p_ij-q_ij)(y_i-y_j)(1+|y_i-y_j|^2)^-1)
   const ex = iter <= stop_exaggeration?exaggerationFactor:1,
         N = y.length,
         dim = y[0].length,
-        Q = calcQ(y);
+        Q = computeQ(y);
   var g = zeros(N, dim);
   for (var i=0; i<N; i++) {
     for (var j=0; j<N; j++) {
@@ -2251,17 +2248,16 @@ function gradiente(y, P, iter) {
 )})
     },
     {
-      name: "grad",
+      name: "gradObsolete",
       inputs: ["stop_exaggeration","exaggerationFactor","zeros","computeDistance","ind"],
       value: (function(stop_exaggeration,exaggerationFactor,zeros,computeDistance,ind){return(
-function grad(p, q, y, iter) {
-  /*
-   * Retorna o gradiente dados:
-   * p: Probabilidades dos pontos no espaço original
-   * q: Probabilidades dos pontos no espaço mapeado
-   * y: Pontos no espaço mapeado
-   * iter: Iteração atual
-   */
+function gradObsolete(p, q, y, iter) {
+  // Obsolete
+  // Returns the gradient given:
+  // p: affinities on the high dimensional space
+  // q: affinities on the mapped space
+  // y: Points on the mapped space
+  // iter: Current iteraction
   const numPontos = y.length;
   const dim = y[0].length;
   const exagero = iter<stop_exaggeration?exaggerationFactor:1;
@@ -2284,33 +2280,33 @@ function grad(p, q, y, iter) {
 )})
     },
     {
-      name: "emq",
+      name: "mse",
       value: (function(){return(
-function emq(p1, p2) {
-  return p1.reduce((soma, valor, i)=> soma + (valor - p2[i]) * (valor - p2[i]) , 0)/p1.length;
+function mse(p1, p2) {
+  // Mean squared error
+  // Used for debug
+  return p1.reduce((sum, value, i)=> sum + (value - p2[i]) * (value - p2[i]) , 0)/p1.length;
 }
 )})
     },
     {
       name: "zeros",
-      inputs: ["vetor","matriz"],
-      value: (function(vetor,matriz){return(
+      inputs: ["array","matrix"],
+      value: (function(array,matrix){return(
 function zeros(m, n) {
-  // Retorna um vetor ou matriz de zeros
+  // Returns a matrix or vector of zeroes
   if (n == undefined)
-    return vetor(m, 0.0);
-  return matriz(m, n, 0.0);
+    return array(m, 0.0);
+  return matrix(m, n, 0.0);
 }
 )})
     },
     {
-      name: "vetor",
+      name: "array",
       inputs: ["math"],
       value: (function(math){return(
-function vetor(n, s) {
-  // Retorna um vetor de n itens de formato s
-  // Se s for uma função, chama a funcão a cada vez
-  // Se s for indefinido, inicializa com tgRand
+function array(n, s) {
+  // Returns a vector of n items of s
   if (typeof(n) === 'undefined' || isNaN(n))
     return [];
   if (typeof(n) === 'number')
@@ -2325,53 +2321,19 @@ function vetor(n, s) {
 )})
     },
     {
-      name: "matriz",
-      inputs: ["vetor"],
-      value: (function(vetor){return(
-function matriz(m, n, s) {
-  // Retorna uma matriz mxn inicializada com s
-  // Se s não for definido, inicializa com tgRand (ver vetor)
-  return [...new Array(m)].map(()=>vetor(n, s));
-}
-)})
-    },
-    {
-      inputs: ["md"],
-      value: (function(md){return(
-md`#### Distance vector
-More economic than a matrix`
-)})
-    },
-    {
-      name: "v_d",
-      inputs: ["zero","dist"],
-      value: (function(zero,dist){return(
-function v_d(p) {
-  let tamanho = p.length,
-      v = new Array(),
-      d;
-  for (let i = 0; i < tamanho; i++) {
-    v.push({source: i, target: i, distance: zero});
-    for (let j = i+1 ; j < tamanho; j++) {
-      d = +dist(p[i], p[j]).toFixed(3);
-      v.push({source: i, target: j, distance: d});
-    }
-  }
-  return v;
+      name: "matrix",
+      inputs: ["array"],
+      value: (function(array){return(
+function matrix(m, n, s) {
+  // Returns a mxn matrix, inicialized with s
+  return [...new Array(m)].map(()=>array(n, s));
 }
 )})
     },
     {
       name: "zero",
       value: (function(){return(
-0
-)})
-    },
-    {
-      name: "d_p",
-      inputs: ["v_d","points"],
-      value: (function(v_d,points){return(
-v_d(points.values)
+1e-100
 )})
     },
     {
@@ -2390,84 +2352,52 @@ function ind(i, j) {
 )})
     },
     {
-      name: "indT",
+      name: "array2Ind",
       value: (function(){return(
-function indT(i, j, k) {
-  function triangular(i) {
-    return (i * (i + 1)) / 2;
-  }
-  
-  let menor = Math.min(i, j), maior = Math.max(i, j);
-  return triangular(k) - triangular(k-menor) + maior - menor;
+function array2Ind(i, N) {
+  return [Math.floor(i/N), i%N];
 }
 )})
     },
     {
       inputs: ["md"],
       value: (function(md){return(
-md`#### Generates distance matrix`
-)})
-    },
-    {
-      name: "m_dR1",
-      inputs: ["md_generica","distR1"],
-      value: (function(md_generica,distR1){return(
-function m_dR1(p) {
-  return md_generica(p, distR1);
-}
-)})
-    },
-    {
-      name: "distR1",
-      inputs: ["distR1_g"],
-      value: (function(distR1_g){return(
-function distR1(pi, pj){
-  // Função de distância para pontos no formato {x: X}
-  return distR1_g(pi.x, pj.x);
-}
-)})
-    },
-    {
-      name: "distR1_g",
-      value: (function(){return(
-function distR1_g(pi, pj){
-  // Função de distância para pontos no formato {x: X}
-  return Math.sqrt((pi-pj)**2);
-}
+md`#### Generate distances matrix for the probabilities discussion`
 )})
     },
     {
       name: "m_d",
-      inputs: ["md_generica","dist"],
-      value: (function(md_generica,dist){return(
+      inputs: ["genericDistanceMatrix","dist"],
+      value: (function(genericDistanceMatrix,dist){return(
 function m_d(p) {
-  return md_generica(p, dist);
+  return genericDistanceMatrix(p, dist);
 }
 )})
     },
     {
       name: "dist",
-      value: (function(){return(
+      inputs: ["L2"],
+      value: (function(L2){return(
 function dist(pi, pj){
-  // Função de distância para pontos no formato {x: X, y: Y}
-  return Math.sqrt((pi.x-pj.x)**2+(pi.y-pj.y)**2);
+  // Distance for the points formatted as {x: X, y: Y}
+  return L2([pi.x, pi.y], [pj.x, pj.y]);
 }
 )})
     },
     {
-      name: "md_generica",
+      name: "genericDistanceMatrix",
       inputs: ["zero"],
       value: (function(zero){return(
-function md_generica(p, funcaoDistancia) {
-  let tamanho = p.length,
-      m = new Array(tamanho);
+function genericDistanceMatrix(p, distanceMetric) {
+  let length = p.length,
+      m = new Array(length);
 
-  for (let i = 0; i < tamanho; i++)
-    m[i] = new Array(tamanho);
-  for (let i = 0; i < tamanho; i++) {
+  for (let i = 0; i < length; i++)
+    m[i] = new Array(length);
+  for (let i = 0; i < length; i++) {
     m[i][i] = zero;
-    for (let j = i+1; j < tamanho; j++) {
-      m[i][j] = +funcaoDistancia(p[i], p[j]).toFixed(3);
+    for (let j = i+1; j < length; j++) {
+      m[i][j] = +distanceMetric(p[i], p[j]).toFixed(3);
       m[j][i] = m[i][j];
     }
   }
@@ -2476,7 +2406,7 @@ function md_generica(p, funcaoDistancia) {
 )})
     },
     {
-      name: "distancias",
+      name: "distances",
       inputs: ["m_d","points"],
       value: (function(m_d,points){return(
 m_d(points.values)
@@ -2485,7 +2415,7 @@ m_d(points.values)
     {
       inputs: ["md"],
       value: (function(md){return(
-md`#### Flattened distance and affinities matrices`
+md`#### Gets and sets a value to an array of m points using *i,j* indexes`
 )})
     },
     {
@@ -2504,19 +2434,6 @@ function atribIJ(i, j, m, valor) {
   // Posição [i][j] de uma matrix m kxk
   m[Math.sqrt(m.length)*i+j] = valor;
 }
-)})
-    },
-    {
-      inputs: ["valorIJ","m_p"],
-      value: (function(valorIJ,m_p){return(
-valorIJ(0,1,m_p)
-)})
-    },
-    {
-      name: "m_p",
-      inputs: ["dFlat","zero","student"],
-      value: (function(dFlat,zero,student){return(
-dFlat.map(y=>y<=zero?0.0:student(y, 1))
 )})
     },
     {
@@ -2557,7 +2474,7 @@ md`#### Cars dataset`
 )})
     },
     {
-      name: "carros",
+      name: "cars",
       inputs: ["d3"],
       value: (function(d3){return(
 d3.json("https://vega.github.io/vega-lite/data/cars.json")
@@ -2584,14 +2501,14 @@ JSON.parse(h_m)
 )})
     },
     {
-      name: "halfMoonGraph",
-      inputs: ["width","halfMoon","tamanhoCirculo","opacity","colorScheme"],
-      value: (function(width,halfMoon,tamanhoCirculo,opacity,colorScheme){return(
+      name: "halfMoonChart",
+      inputs: ["width","halfMoon","markSize","opacity","colorScheme"],
+      value: (function(width,halfMoon,markSize,opacity,colorScheme){return(
 {
   width: Math.min(500, width),
   height : 250,
   data: {values: halfMoon},
-  mark: {type: "circle", size: tamanhoCirculo, opacity: opacity},
+  mark: {type: "circle", size: markSize, opacity: opacity},
   encoding: {
     x: {field: "x", type: "quantitative"},
     y: {field: "y", type: "quantitative"},
@@ -2623,11 +2540,11 @@ JSON.parse(circ)
     {
       inputs: ["md"],
       value: (function(md){return(
-md`#### Graph attributes`
+md`#### Chart attributes`
 )})
     },
     {
-      name: "tamanhoCirculo",
+      name: "markSize",
       value: (function(){return(
 150
 )})
@@ -2680,13 +2597,14 @@ md `#### Normal and Student *t* density curves`
 )})
     },
     {
-      name: "gera_curvas",
+      name: "pointsNormalStudent",
       inputs: ["normal","students"],
       value: (function(normal,students){return(
-function gera_curvas(minimo, maximo, step, sigma, mi, gl) {
-  // Gera pontos para distribuições Normal e Student com mesma variância
+function pointsNormalStudent(min, max, step, sigma, mi, gl) {
+  // Generates points for Normal and Student distributions
+  // with same variance
   let vetor = [];
-  for (let x = minimo; x < maximo; x+= step) {
+  for (let x = min; x < max; x+= step) {
     vetor.push({x:x, y:normal(x, sigma, mi), Curva:"Normal"});
     vetor.push({x:x, y:students(x, gl, sigma), Curva:"Student"});
   }
@@ -2695,13 +2613,26 @@ function gera_curvas(minimo, maximo, step, sigma, mi, gl) {
 )})
     },
     {
-      name: "gera_normal",
+      name: "pointsNormal",
       inputs: ["normal"],
       value: (function(normal){return(
-function gera_normal(minimo, maximo, step, sigma, mi) {
+function pointsNormal(min, max, step, sigma, mi) {
+  // Generates points for a normal distribution
   let vetor = [];
-  for (let x = minimo; x < maximo; x+= step)
+  for (let x = min; x < max; x+= step)
     vetor.push({x:x, y:normal(x, sigma, mi)});
+  return vetor;
+}
+)})
+    },
+    {
+      name: "pointsStudent",
+      inputs: ["student"],
+      value: (function(student){return(
+function pointsStudent(min, max, step, gl) {
+  let vetor = [];
+  for (let x = min; x <= max; x+= step)
+    vetor.push({x:x, y:student(x, gl)});
   return vetor;
 }
 )})
@@ -2710,41 +2641,11 @@ function gera_normal(minimo, maximo, step, sigma, mi) {
       name: "normal",
       value: (function(){return(
 function normal(x, s, mi) {
+  // Normal density function
   let y;
   y = 1/(s*Math.sqrt(2*Math.PI));
   y = y * Math.exp(-((x-mi)**2)/(2*s**2));
   return +y.toFixed(4);
-}
-)})
-    },
-    {
-      name: "gera_student",
-      inputs: ["student"],
-      value: (function(student){return(
-function gera_student(minimo, maximo, step, gl) {
-  let vetor = [];
-  for (let x = minimo; x <= maximo; x+= step)
-    vetor.push({x:x, y:student(x, gl)});
-  return vetor;
-}
-)})
-    },
-    {
-      name: "student",
-      inputs: ["students"],
-      value: (function(students){return(
-function student(x, gl) {
-  // t de Student com desvio padrão 1
-  return students(x, gl, 1);
-}
-)})
-    },
-    {
-      name: "students",
-      inputs: ["stats"],
-      value: (function(stats){return(
-function students(x, gl, s) {
-  return +(stats.gammaFunc((gl+1)/2)/((Math.sqrt(gl*Math.PI)*s)*stats.gammaFunc(gl/2))*(1+((x/s)**2/gl))**(-(gl+1)/2)).toFixed(4)
 }
 )})
     },
@@ -2757,100 +2658,22 @@ function cauchy(x) {
 )})
     },
     {
-      inputs: ["md"],
-      value: (function(md){return(
-md`##### Gamma function`
-)})
-    },
-    {
-      name: "p",
-      value: (function(){return(
-[
-    0.99999999999980993,
-    676.5203681218851,
-    -1259.1392167224028,
-    771.32342877765313,
-    -176.61502916214059,
-    12.507343278686905,
-    -0.13857109526572012,
-    9.9843695780195716e-6,
-    1.5056327351493116e-7
-]
-)})
-    },
-    {
-      name: "g_ln",
-      value: (function(){return(
-607/128
-)})
-    },
-    {
-      name: "p_ln",
-      value: (function(){return(
-[
-    0.99999999999999709182,
-    57.156235665862923517,
-    -59.597960355475491248,
-    14.136097974741747174,
-    -0.49191381609762019978,
-    0.33994649984811888699e-4,
-    0.46523628927048575665e-4,
-    -0.98374475304879564677e-4,
-    0.15808870322491248884e-3,
-    -0.21026444172410488319e-3,
-    0.21743961811521264320e-3,
-    -0.16431810653676389022e-3,
-    0.84418223983852743293e-4,
-    -0.26190838401581408670e-4,
-    0.36899182659531622704e-5
-]
-)})
-    },
-    {
-      name: "logGamma",
-      value: (function(){return(
-function logGamma(Z) {
-  var S=1+76.18009173/Z-86.50532033/(Z+1)+24.01409822/(Z+2)-1.231739516/(Z+3)+.00120858003/(Z+4)-.00000536382/(Z+5);
-  var LG=(Z-.5)*Math.log(Z+4.5)-(Z+4.5)+Math.log(S*2.50662827465);
-	return LG;
+      name: "student",
+      inputs: ["students"],
+      value: (function(students){return(
+function student(x, df) {
+  // Student t with sd = 1
+  return students(x, df, 1);
 }
 )})
     },
     {
-      name: "lngamma",
-      inputs: ["p_ln","g_ln"],
-      value: (function(p_ln,g_ln){return(
-function lngamma(z) {
-    if(z < 0) return Number('0/0');
-    var x = p_ln[0];
-    for(var i = p_ln.length - 1; i > 0; --i) x += p_ln[i] / (z + i);
-    var t = z + g_ln + 0.5;
-    return .5*Math.log(2*Math.PI)+(z+.5)*Math.log(t)-t+Math.log(x)-Math.log(z);
-}
-)})
-    },
-    {
-      name: "gamma",
-      inputs: ["lngamma","p"],
-      value: (function(lngamma,p){return(
-function gamma (z) {
-  var g = 7;
-  if (z < 0.5) {
-      return Math.PI / (Math.sin(Math.PI * z) * gamma(1 - z));
-  }
-  else if(z > 100) return Math.exp(lngamma(z));
-  else {
-    z -= 1;
-    var x = p[0];
-    for (var i = 1; i < g + 2; i++) {
-        x += p[i] / (z + i);
-    }
-    var t = z + g + 0.5;
-    return Math.sqrt(2 * Math.PI)
-        * Math.pow(t, z + 0.5)
-        * Math.exp(-t)
-        * x;
-  }
+      name: "students",
+      inputs: ["stats"],
+      value: (function(stats){return(
+function students(x, df, s) {
+  // Student t distribution
+  return +(stats.gammaFunc((df+1)/2)/((Math.sqrt(df*Math.PI)*s)*stats.gammaFunc(df/2))*(1+((x/s)**2/df))**(-(df+1)/2)).toFixed(4)
 }
 )})
     },
@@ -3341,7 +3164,7 @@ require("d3-format")
 };
 
 const notebook = {
-  id: "2379c50fe5f906fb@7519",
+  id: "2379c50fe5f906fb@7711",
   modules: [m0,m1,m2]
 };
 
