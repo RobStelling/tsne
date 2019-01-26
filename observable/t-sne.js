@@ -1,11 +1,11 @@
 // URL: https://beta.observablehq.com/@robstelling/t-sne
 // Title: Abrindo a caixa preta do t-SNE
 // Author: Roberto Stelling (@robstelling)
-// Version: 6877
+// Version: 6952
 // Runtime version: 1
 
 const m0 = {
-  id: "2331ea7cae3cdc98@6877",
+  id: "2331ea7cae3cdc98@6952",
   variables: [
     {
       inputs: ["md"],
@@ -1055,7 +1055,7 @@ md`A distância ${nomeMetricaTex(cDistancia)} entre os pontos ${math.matrix(pts[
     {
       name: "pts",
       value: (function(){return(
-[[0, 0], [-2, 1]]
+[[0, 0], [-4, 3]]
 )})
     },
     {
@@ -1495,105 +1495,46 @@ md`# *t*-SNE Playground`
 )})
     },
     {
-      name: "viewof eta",
-      inputs: ["slider"],
-      value: (function(slider){return(
-slider({
-  title: 'Taxa de aprendizado',
-  min: 0,
-  max: 20,
-  value: 10,
-  step: 0.1,
-  description: 'Valor da taxa de aprendizado do gradiente descendente'
-})
-)})
-    },
-    {
-      name: "eta",
-      inputs: ["Generators","viewof eta"],
-      value: (G, _) => G.input(_)
-    },
-    {
-      name: "viewof gatilho_momentum",
-      inputs: ["slider"],
-      value: (function(slider){return(
-slider({
-  title: 'Alteração do momentum',
-  min: 1,
-  max: 500,
-  step: 1,
-  value: 100,
-  description: 'Passo em que o valor do momentum será alterado'
-})
-)})
-    },
-    {
-      name: "gatilho_momentum",
-      inputs: ["Generators","viewof gatilho_momentum"],
-      value: (G, _) => G.input(_)
-    },
-    {
-      name: "viewof it_exagero",
-      inputs: ["slider"],
-      value: (function(slider){return(
-slider({
-  title: 'Número de iterações com exagero',
-  min: 0,
-  max: 200,
-  step: 1,
-  value:100,
-  description: 'Número de iterações em que será aplicado o fator de exagero'
-})
-)})
-    },
-    {
-      name: "it_exagero",
-      inputs: ["Generators","viewof it_exagero"],
-      value: (G, _) => G.input(_)
-    },
-    {
-      name: "viewof valor_exagero",
-      inputs: ["slider"],
-      value: (function(slider){return(
-slider({
-  title: 'Exagero',
-  min: 0.5,
-  max: 10,
-  step: 0.5,
-  value: 1.5,
-  description: 'Multiplicador das probabilidades do espaço original'
-})
-)})
-    },
-    {
-      name: "valor_exagero",
-      inputs: ["Generators","viewof valor_exagero"],
-      value: (G, _) => G.input(_)
-    },
-    {
-      name: "viewof Perp",
-      inputs: ["slider"],
-      value: (function(slider){return(
-slider({
-  title: 'Perplexidade',
-  min: 1,
-  max: 100,
-  step: 0.5,
-  value: 10,
-  description: "Entre com o valor do parâmetro perplexidade"
-})
-)})
-    },
-    {
-      name: "Perp",
-      inputs: ["Generators","viewof Perp"],
-      value: (G, _) => G.input(_)
-    },
-    {
       inputs: ["vegalite","copiaPequeno"],
       value: (function(vegalite,copiaPequeno){return(
 vegalite(copiaPequeno)
 )})
+    },
+    {
+      inputs: ["md","bind","html","viewof eta","viewof gatilho_momentum","viewof it_exagero","viewof valor_exagero","viewof Perp","viewof T"],
+      value: (function(md,bind,html,$0,$1,$2,$3,$4,$5){return(
+md`<b>Taxa de aprendizado</b>: ${bind(html`<input type=range min="0" max="20" step="0.1" style="width:90px;">`, $0)}
+${bind(html`<input type=number style="width:40px;">`, $0)}
+<br><b>Alteração do momentum</b>: ${bind(html`<input type=range min="1" max="500" step="1" style="width:90px;">`, $1)}
+${bind(html`<input type=number style="width:40px;">`, $1)}
+<br><b>Iterações com exagero</b>: ${bind(html`<input type=range min="0" max="200" step="1" style="width:90px;">`, $2)}
+${bind(html`<input type=number style="width:40px;">`, $2)}
+<br><b>Fator de exagero</b>: ${bind(html`<input type=range min="0.5" max="10" step="0.5" style="width:90px;">`, $3)}
+${bind(html`<input type=number style="width:40px;">`, $3)}
+<br><b>Perplexidade</b>: ${bind(html`<input type=range min="1" max="100" step="0.5" style="width:90px;">`, $4)}
+${bind(html`<input type=number style="width:40px;">`, $4)}
+<br><b>Número de iterações</b>: ${bind(html`<input type=range min="0" max="5000" step="50" style="width:90px;">`, $5)}
+${bind(html`<input type=number style="width:40px;">`, $5)}`
+)})
+    },
+    {
+      name: "viewof reset",
+      inputs: ["html"],
+      value: (function(html)
+{
+  const form = html`<form>Selecione o número de iterações e clique em <button name=button>Iniciar`;
+  form.button.onclick = event => {
+    event.preventDefault(); // Don’t submit the form.
+    form.dispatchEvent(new CustomEvent("input"));
+  };
+  return form;
+}
+)
+    },
+    {
+      name: "reset",
+      inputs: ["Generators","viewof reset"],
+      value: (G, _) => G.input(_)
     },
     {
       inputs: ["md","iteracao","T","custoRun","it_exagero","valor_exagero","Perp","valores_momentum","gatilho_momentum","nomeMetricaTex","cDistancia"],
@@ -1610,44 +1551,6 @@ md`**Iteração**: ${iteracao}/${T} - **Custo**: ${custoRun}<br>
       value: (function(vegalite,fr1,pontosMapa,fr2,dimensoes){return(
 vegalite([fr1(pontosMapa), fr2(pontosMapa)][+dimensoes-1])
 )})
-    },
-    {
-      name: "viewof reset",
-      inputs: ["html"],
-      value: (function(html)
-{
-  const form = html`<form><button name=button>Iniciar`;
-  form.button.onclick = event => {
-    event.preventDefault(); // Don’t submit the form.
-    form.dispatchEvent(new CustomEvent("input"));
-  };
-  return form;
-}
-)
-    },
-    {
-      name: "reset",
-      inputs: ["Generators","viewof reset"],
-      value: (G, _) => G.input(_)
-    },
-    {
-      name: "viewof T",
-      inputs: ["slider"],
-      value: (function(slider){return(
-slider({
-  title: 'Número de iterações',
-  min: 0,
-  max: 5000,
-  step: 50,
-  value: 0,
-  description: 'Número de iterações do gradiente descendente do t-SNE'
-})
-)})
-    },
-    {
-      name: "T",
-      inputs: ["Generators","viewof T"],
-      value: (G, _) => G.input(_)
     },
     {
       name: "pontosMapa",
@@ -1771,6 +1674,90 @@ md `# Dados e funções auxiliares`
       inputs: ["md"],
       value: (function(md){return(
 md`#### Variáveis de apoio`
+)})
+    },
+    {
+      inputs: ["md"],
+      value: (function(md){return(
+md`##### Variáveis do playground`
+)})
+    },
+    {
+      name: "viewof eta",
+      inputs: ["View"],
+      value: (function(View){return(
+new View(10)
+)})
+    },
+    {
+      name: "eta",
+      inputs: ["Generators","viewof eta"],
+      value: (G, _) => G.input(_)
+    },
+    {
+      name: "viewof gatilho_momentum",
+      inputs: ["View"],
+      value: (function(View){return(
+new View(75)
+)})
+    },
+    {
+      name: "gatilho_momentum",
+      inputs: ["Generators","viewof gatilho_momentum"],
+      value: (G, _) => G.input(_)
+    },
+    {
+      name: "viewof it_exagero",
+      inputs: ["View"],
+      value: (function(View){return(
+new View(50)
+)})
+    },
+    {
+      name: "it_exagero",
+      inputs: ["Generators","viewof it_exagero"],
+      value: (G, _) => G.input(_)
+    },
+    {
+      name: "viewof valor_exagero",
+      inputs: ["View"],
+      value: (function(View){return(
+new View(1.5)
+)})
+    },
+    {
+      name: "valor_exagero",
+      inputs: ["Generators","viewof valor_exagero"],
+      value: (G, _) => G.input(_)
+    },
+    {
+      name: "viewof Perp",
+      inputs: ["View"],
+      value: (function(View){return(
+new View(10)
+)})
+    },
+    {
+      name: "Perp",
+      inputs: ["Generators","viewof Perp"],
+      value: (G, _) => G.input(_)
+    },
+    {
+      name: "viewof T",
+      inputs: ["View"],
+      value: (function(View){return(
+new View(100)
+)})
+    },
+    {
+      name: "T",
+      inputs: ["Generators","viewof T"],
+      value: (G, _) => G.input(_)
+    },
+    {
+      inputs: ["md"],
+      value: (function(md){return(
+md`##### Dados`
 )})
     },
     {
@@ -2083,6 +2070,33 @@ md`#### Funções de apoio`
 )})
     },
     {
+      inputs: ["md"],
+      value: (function(md){return(
+md`##### Input
+Retirado de [Multi-value inputs](https://beta.observablehq.com/@mbostock/multi-value-inputs) de [Mike Bostok](https://beta.observablehq.com/@mbostock) `
+)})
+    },
+    {
+      name: "bind",
+      inputs: ["disposal"],
+      value: (function(disposal){return(
+function bind(input, view) {
+  const value = ["range", "number"].includes(input.type) ? "valueAsNumber" : "value";
+  const update = () => input[value] = view.value;
+  input.oninput = () => view.value = input[value];
+  view.addEventListener("input", update);
+  disposal(input).then(() => view.removeEventListener("input", update));
+  return update(), input;
+}
+)})
+    },
+    {
+      inputs: ["md"],
+      value: (function(md){return(
+md`##### Métricas`
+)})
+    },
+    {
       name: "matrizDistancias",
       inputs: ["zeros","calcDistancia"],
       value: (function(zeros,calcDistancia){return(
@@ -2106,14 +2120,14 @@ function matrizDistancias(pontos, metrica) {
     {
       name: "nomeMetrica",
       value: (function(){return(
-c => ["L2", "L2 Quadrado", "L1", "Max"][c]
+c => ["L2", "L2 Quadrado", "L1", "Chebyshev"][c]
 )})
     },
     {
       name: "nomeMetricaTex",
       inputs: ["tex"],
       value: (function(tex){return(
-c => [tex`L^2`, tex`L^{2^2}`, tex`L^1`, tex`\max`][c]
+c => [tex`L^2`, tex`L^{2^2}`, tex`L^1`, tex`D_{Chebyshev}`][c]
 )})
     },
     {
@@ -2516,12 +2530,6 @@ function atribIJ(i, j, m, valor) {
   // Posição [i][j] de uma matrix m kxk
   m[Math.sqrt(m.length)*i+j] = valor;
 }
-)})
-    },
-    {
-      inputs: ["valorIJ","m_p"],
-      value: (function(valorIJ,m_p){return(
-valorIJ(0,1,m_p)
 )})
     },
     {
@@ -2933,16 +2941,6 @@ md `# Conteúdo importado`
       remote: "chart"
     },
     {
-      from: "@jashkenas/inputs",
-      name: "slider",
-      remote: "slider"
-    },
-    {
-      from: "@jashkenas/inputs",
-      name: "radio",
-      remote: "radio"
-    },
-    {
       name: "vegalite",
       inputs: ["require"],
       value: (function(require){return(
@@ -2969,6 +2967,32 @@ require("d3-fetch@1")
       value: (function(require){return(
 require('statdists')
 )})
+    },
+    {
+      inputs: ["md"],
+      value: (function(md){return(
+md`#### Inputs`
+)})
+    },
+    {
+      from: "@jashkenas/inputs",
+      name: "slider",
+      remote: "slider"
+    },
+    {
+      from: "@jashkenas/inputs",
+      name: "radio",
+      remote: "radio"
+    },
+    {
+      from: "@mbostock/synchronized-views",
+      name: "View",
+      remote: "View"
+    },
+    {
+      from: "@mbostock/disposal",
+      name: "disposal",
+      remote: "disposal"
     }
   ]
 };
@@ -3335,9 +3359,72 @@ require("d3-format")
   ]
 };
 
+const m3 = {
+  id: "@mbostock/synchronized-views",
+  variables: [
+    {
+      name: "View",
+      value: (function(){return(
+class View {
+  constructor(value) {
+    Object.defineProperties(this, {
+      _list: {value: [], writable: true},
+      _value: {value, writable: true}
+    });
+  }
+  get value() {
+    return this._value;
+  }
+  set value(value) {
+    this._value = value;
+    this.dispatchEvent({type: "input", value});
+  }
+  addEventListener(type, listener) {
+    if (type != "input" || this._list.includes(listener)) return;
+    this._list = [listener].concat(this._list);
+  }
+  removeEventListener(type, listener) {
+    if (type != "input") return;
+    this._list = this._list.filter(l => l !== listener);
+  }
+  dispatchEvent(event) {
+    const p = Promise.resolve(event);
+    this._list.forEach(l => p.then(l));
+  }
+}
+)})
+    }
+  ]
+};
+
+const m4 = {
+  id: "@mbostock/disposal",
+  variables: [
+    {
+      name: "disposal",
+      inputs: ["MutationObserver"],
+      value: (function(MutationObserver){return(
+function disposal(element) {
+  return new Promise(resolve => {
+    requestAnimationFrame(() => {
+      const target = element.closest(".observablehq");
+      if (!target) return resolve();
+      const observer = new MutationObserver(mutations => {
+        if (target.contains(element)) return;
+        observer.disconnect(), resolve();
+      });
+      observer.observe(target, {childList: true});
+    });
+  });
+}
+)})
+    }
+  ]
+};
+
 const notebook = {
-  id: "2331ea7cae3cdc98@6877",
-  modules: [m0,m1,m2]
+  id: "2331ea7cae3cdc98@6952",
+  modules: [m0,m1,m2,m3,m4]
 };
 
 export default notebook;
