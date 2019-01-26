@@ -1,16 +1,17 @@
 // URL: https://beta.observablehq.com/@robstelling/t-sne
 // Title: Abrindo a caixa preta do t-SNE
 // Author: Roberto Stelling (@robstelling)
-// Version: 6952
+// Version: 7174
 // Runtime version: 1
 
 const m0 = {
-  id: "2331ea7cae3cdc98@6952",
+  id: "2331ea7cae3cdc98@7174",
   variables: [
     {
       inputs: ["md"],
       value: (function(md){return(
-md`# Abrindo a caixa preta do t-SNE`
+md`# Abrindo a caixa preta do t-SNE
+Visão detalhada do *t*-SNE, implementação do algoritmo e análise de dados em um ambiente artificial.`
 )})
     },
     {
@@ -162,11 +163,11 @@ Em um *"mundo ideal"* teríamos a redução de duas dimensões deste conjunto de
 )})
     },
     {
-      inputs: ["vegalite","width","ideal_linear","tamanhoCirculo","opacity","colorScheme"],
-      value: (function(vegalite,width,ideal_linear,tamanhoCirculo,opacity,colorScheme){return(
+      inputs: ["vegalite","width","idealLinear","tamanhoCirculo","opacity","colorScheme"],
+      value: (function(vegalite,width,idealLinear,tamanhoCirculo,opacity,colorScheme){return(
 vegalite({
   width: Math.min(400, width),
-  data: ideal_linear,
+  data: idealLinear,
   mark: {type: "circle", size: tamanhoCirculo, opacity: opacity},
   encoding: {
     x: {field: "x", type: "quantitative"},
@@ -182,12 +183,12 @@ md `# Dataset tipo meia lua`
 )})
     },
     {
-      inputs: ["vegalite","width","meia_lua","tamanhoCirculo","opacity","colorScheme"],
-      value: (function(vegalite,width,meia_lua,tamanhoCirculo,opacity,colorScheme){return(
+      inputs: ["vegalite","width","meiaLua","tamanhoCirculo","opacity","colorScheme"],
+      value: (function(vegalite,width,meiaLua,tamanhoCirculo,opacity,colorScheme){return(
 vegalite({
   width: Math.min(500, width),
   height : 250,
-  data: {values: meia_lua},
+  data: {values: meiaLua},
   mark: {type: "circle", size: tamanhoCirculo, opacity: opacity},
   encoding: {
     x: {field: "x", type: "quantitative"},
@@ -204,11 +205,11 @@ md `## Projetando sobre o eixo *x*`
 )})
     },
     {
-      inputs: ["vegalite","width","meia_lua","tamanhoCirculo","opacity","colorScheme"],
-      value: (function(vegalite,width,meia_lua,tamanhoCirculo,opacity,colorScheme){return(
+      inputs: ["vegalite","width","meiaLua","tamanhoCirculo","opacity","colorScheme"],
+      value: (function(vegalite,width,meiaLua,tamanhoCirculo,opacity,colorScheme){return(
 vegalite({
   width: Math.min(500, width),
-  data: {values: meia_lua},
+  data: {values: meiaLua},
   mark: {type: "circle", size: tamanhoCirculo, opacity: opacity},
   encoding: {
     x: {field: "x", type: "quantitative"},
@@ -224,11 +225,11 @@ md `## Projetando sobre o eixo *y*`
 )})
     },
     {
-      inputs: ["vegalite","width","meia_lua","tamanhoCirculo","opacity","colorScheme"],
-      value: (function(vegalite,width,meia_lua,tamanhoCirculo,opacity,colorScheme){return(
+      inputs: ["vegalite","width","meiaLua","tamanhoCirculo","opacity","colorScheme"],
+      value: (function(vegalite,width,meiaLua,tamanhoCirculo,opacity,colorScheme){return(
 vegalite({
   width: Math.min(500, width),
-  data: {values: meia_lua},
+  data: {values: meiaLua},
   mark: {type: "circle", size: tamanhoCirculo, opacity: opacity},
   encoding: {
     x: {field: "y", type: "quantitative"},
@@ -239,9 +240,9 @@ vegalite({
     },
     {
       name: "cluster_falso",
-      inputs: ["meia_lua"],
-      value: (function(meia_lua){return(
-meia_lua.map(p => {return {x:(p.x+p.label)*(p.label+1.7), label:p.label}})
+      inputs: ["meiaLua"],
+      value: (function(meiaLua){return(
+meiaLua.map(p => {return {x:(p.x+p.label)*(p.label+1.7), label:p.label}})
 )})
     },
     {
@@ -302,10 +303,10 @@ circulos
     },
     {
       name: "circulosMap",
-      inputs: ["circulos","dist"],
-      value: (function(circulos,dist)
+      inputs: ["circulos","L2D"],
+      value: (function(circulos,L2D)
 {
-  var circ = circulos.map((p) => ({x:dist(p, {x:0, y:0}), label:p.label}));
+  var circ = circulos.map((p) => ({x:L2D(p, {x:0, y:0}), label:p.label}));
   return circ.map((p) => ({x: p.x-circ.reduce((soma, ponto) => soma + ponto.x,0)/circulos.length,label:p.label}));
 }
 )
@@ -386,15 +387,15 @@ md `### Alterando parâmetros da curva de densidade de uma distribuição normal
 )})
     },
     {
-      inputs: ["vegalite","width","gera_normal","var_2","media"],
-      value: (function(vegalite,width,gera_normal,var_2,media){return(
+      inputs: ["vegalite","width","pontosNormal","var_2","media"],
+      value: (function(vegalite,width,pontosNormal,var_2,media){return(
 vegalite({
   width: Math.min(600, width),
   height: 300,
   layer: [
     {
       title: "Curva de densidade de uma distribuição normal",
-      data: {values: gera_normal(-6, +6, 0.01, 1, 0)},
+      data: {values: pontosNormal(-6, +6, 0.01, 1, 0)},
       mark: "line",
       encoding: {
         x: {field: "x", type: "quantitative"},
@@ -403,7 +404,7 @@ vegalite({
       }
     },
     {
-      data: {values: gera_normal(-6, 6, 0.01, Math.sqrt(var_2), media)},
+      data: {values: pontosNormal(-6, 6, 0.01, Math.sqrt(var_2), media)},
       mark: {type: "line"},
       encoding: {
         x: {field: "x", type: "quantitative"},
@@ -465,15 +466,15 @@ md `### Comparando distribuições normal e *t* de Student`
 )})
     },
     {
-      inputs: ["vegalite","width","gera_student","intervalo","gera_normal","var2"],
-      value: (function(vegalite,width,gera_student,intervalo,gera_normal,var2){return(
+      inputs: ["vegalite","width","pontosStudent","intervalo","pontosNormal","var2"],
+      value: (function(vegalite,width,pontosStudent,intervalo,pontosNormal,var2){return(
 vegalite({
   width: Math.min(600, width),
   height: 300,
   layer: [
     {
       title: "Normal (vermelho) e Studend-t (azul)",
-      data: {values: gera_student(-intervalo, intervalo, 0.01, 1, 1)},
+      data: {values: pontosStudent(-intervalo, intervalo, 0.01, 1, 1)},
       mark: {type: "line"},
       encoding: {
         x: {field: "x", type: "quantitative"},
@@ -481,7 +482,7 @@ vegalite({
       }
     },
     {
-      data: {values: gera_normal(-intervalo, intervalo, 0.01, Math.sqrt(var2), 0)},
+      data: {values: pontosNormal(-intervalo, intervalo, 0.01, Math.sqrt(var2), 0)},
       mark: {type: "line"},
       encoding: {
         x: {field: "x", type: "quantitative"},
@@ -542,12 +543,12 @@ md`### Graus de liberdade e variância em normais e *t* de Student`
 )})
     },
     {
-      inputs: ["vegalite","width","gera_curvas","intervalo","variancia","gl","colorScheme"],
-      value: (function(vegalite,width,gera_curvas,intervalo,variancia,gl,colorScheme){return(
+      inputs: ["vegalite","width","pontosCurvasNS","intervalo","variancia","gl","colorScheme"],
+      value: (function(vegalite,width,pontosCurvasNS,intervalo,variancia,gl,colorScheme){return(
 vegalite({
   width: Math.min(600, width),
   height: 300,
-  data: {values: gera_curvas(-intervalo, intervalo, 0.01, Math.sqrt(variancia), 0, gl)},
+  data: {values: pontosCurvasNS(-intervalo, intervalo, 0.01, Math.sqrt(variancia), 0, gl)},
   mark: "line",
   encoding: {
     title: "Curvas normal e t-Student",
@@ -609,8 +610,8 @@ Primeiro vamos revisar o algoritmo do *t*-SNE como descrito no paper original<su
     },
     {
       name: "tsneAlgoritmo1",
-      inputs: ["md","tex","gamma_eval"],
-      value: (function(md,tex,gamma_eval){return(
+      inputs: ["md","tex","gammaEval"],
+      value: (function(md,tex,gammaEval){return(
 md `# Algoritmo simplificado do t-SNE
 **Dados**: conjunto ${tex`X = \{x_1, x_2, \dots, x_n\}, x_i \in \mathbb{R}^M`}<br>
 Parâmetros da função de custo: perplexidade ${tex`Perp`}<br>
@@ -623,7 +624,7 @@ Parâmetros de otimização: número de iterações ${tex`T`}, taxa de aprendiza
 &nbsp;&nbsp;\`for\` *t=1* \`to\` *T* \`do\`<br>
 &nbsp;&nbsp;&nbsp;&nbsp;Calcular afinidades em baixas dimensões ${tex`q_{ij}`} (usando \`Equação 4\`)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;Calcular o gradiente ${tex`\frac{\delta C}{\delta \gamma}`} (usando \`Equação 5\`)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;\`set\` ${tex`${gamma_eval}`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;\`set\` ${tex`${gammaEval}`}<br>
 &nbsp;&nbsp;\`end\`<br>
 \`end\``
 )})
@@ -648,8 +649,8 @@ ${tex.block`${eq5}`}`
     },
     {
       name: "tsneAlgoritmo2",
-      inputs: ["md","tex","eq5","gamma_eval"],
-      value: (function(md,tex,eq5,gamma_eval){return(
+      inputs: ["md","tex","eq5","gammaEval"],
+      value: (function(md,tex,eq5,gammaEval){return(
 md `A versão acima do algoritmo omite alguns detalhes importantes, após a leitura do paper é possível reescrever o algoritmo e gerar uma versão passível de ser implementada e que facilite o entendimento do algoritmo.
 # <center>Algoritmo do *t*-SNE<br>*Revisitado*</center>
 
@@ -662,7 +663,7 @@ md `A versão acima do algoritmo omite alguns detalhes importantes, após a leit
 7. Repita ${tex`T`} vezes, atualizando ${tex`t = 1\dots T`}:
   8. Calcule as probabilidades dos pontos no espaço mapeado, ${tex`q_{ij}`}, com distribuição *t* de Student com 1 grau de liberdade e ${tex`\sigma^2`} igual a 1
   9. Calcule o gradiente da função de custo em relação ao conjunto ${tex`\gamma^{(t)} = \{y_1, \dots, y_N\}`} de forma que: ${tex.block`${eq5}`}
-  10. Ajuste os pontos ${tex`\gamma`} de forma que: ${tex.block`${gamma_eval}`}
+  10. Ajuste os pontos ${tex`\gamma`} de forma que: ${tex.block`${gammaEval}`}
 11. O conjunto de pontos ${tex`\gamma^{(T)}`} é a saída do algoritmo`
 )})
     },
@@ -696,15 +697,15 @@ Abaixo vemos as distâncias e probabilidades para alguns pontos usando uma distr
 )})
     },
     {
-      inputs: ["vegalite","gera_normal","distancias","normal"],
-      value: (function(vegalite,gera_normal,distancias,normal){return(
+      inputs: ["vegalite","pontosNormal","distancias","normal"],
+      value: (function(vegalite,pontosNormal,distancias,normal){return(
 vegalite({
   width: 600,
   height: 300,
   layer: [
     {
       title: "Normal com μ=0 e σ=1",
-      data: {values: gera_normal(-5, 5, 0.01, 1, 0)},
+      data: {values: pontosNormal(-5, 5, 0.01, 1, 0)},
       mark: {type: "area", fill:"#d0d0d0", fillOpacity: 0.4},
       encoding: {
         x: {field: "x", type: "quantitative"},
@@ -854,15 +855,15 @@ md`Os mesmos pontos do exemplo anterior são mostrados abaixo para uma distribui
 )})
     },
     {
-      inputs: ["vegalite","gera_student","distancias","student"],
-      value: (function(vegalite,gera_student,distancias,student){return(
+      inputs: ["vegalite","pontosStudent","distancias","student"],
+      value: (function(vegalite,pontosStudent,distancias,student){return(
 vegalite({
   width: 600,
   height: 300,
   layer: [
     {
       title: "Student-t com μ=0 e σ=1, 1 grau de liberdade",
-      data: {values: gera_student(-5, 5, 0.01, 1, 0)},
+      data: {values: pontosStudent(-5, 5, 0.01, 1, 0)},
       mark: {type: "area", fill:"#d0d0d0", fillOpacity: 0.4},
       encoding: {
         x: {field: "x", type: "quantitative"},
@@ -1018,9 +1019,9 @@ vegalite(original)
 )})
     },
     {
-      inputs: ["pt","math","d_flat","zero"],
-      value: (function(pt,math,d_flat,zero){return(
-pt(math.matrix(math.reshape(d_flat.map(y => y<=zero?0.0:+y.toFixed(3)), [16,16])), "\\footnotesize")
+      inputs: ["pt","math","dFlat","zero"],
+      value: (function(pt,math,dFlat,zero){return(
+pt(math.matrix(math.reshape(dFlat.map(y => y<=zero?0.0:+y.toFixed(3)), [16,16])), "\\footnotesize")
 )})
     },
     {
@@ -1090,9 +1091,9 @@ md`### Matriz de probabilidades, com distância ${nomeMetricaTex(cDistancia)}, e
 )})
     },
     {
-      inputs: ["pt","math","p_flat"],
-      value: (function(pt,math,p_flat){return(
-pt(math.matrix(math.reshape(p_flat.map(x => +x.toFixed(3)), [16,16])))
+      inputs: ["pt","math","pFlat"],
+      value: (function(pt,math,pFlat){return(
+pt(math.matrix(math.reshape(pFlat.map(x => +x.toFixed(3)), [16,16])))
 )})
     },
     {
@@ -1153,9 +1154,9 @@ function calcEntropia(probabilidades){
 )})
     },
     {
-      inputs: ["md","s2","tex","calcEntropia","p_flat"],
-      value: (function(md,s2,tex,calcEntropia,p_flat){return(
-md `No nosso exemplo, com todas as variâncias iguais a ${+(s2).toFixed(3)}, temos a ${tex`entropia = ${+(calcEntropia(p_flat)/16).toFixed(4)}`} e ${tex`perplexidade = ${Math.exp(calcEntropia(p_flat)/16).toFixed(4)}`}`
+      inputs: ["md","s2","tex","calcEntropia","pFlat"],
+      value: (function(md,s2,tex,calcEntropia,pFlat){return(
+md `No nosso exemplo, com todas as variâncias iguais a ${+(s2).toFixed(3)}, temos a ${tex`entropia = ${+(calcEntropia(pFlat)/16).toFixed(4)}`} e ${tex`perplexidade = ${Math.exp(calcEntropia(pFlat)/16).toFixed(4)}`}`
 )})
     },
     {
@@ -1210,9 +1211,9 @@ function ajustaVariancias(pontos, entropia, erro, passos) {
 )})
     },
     {
-      inputs: ["pt","math","p_variancias_display"],
-      value: (function(pt,math,p_variancias_display){return(
-pt(math.matrix(math.reshape(p_variancias_display.map(x => +x.toFixed(3)), [16,16])))
+      inputs: ["pt","math","pVarianciasDisplay"],
+      value: (function(pt,math,pVarianciasDisplay){return(
+pt(math.matrix(math.reshape(pVarianciasDisplay.map(x => +x.toFixed(3)), [16,16])))
 )})
     },
     {
@@ -1235,9 +1236,9 @@ slider({
       value: (G, _) => G.input(_)
     },
     {
-      inputs: ["md","calcEntropia","p_variancias_display"],
-      value: (function(md,calcEntropia,p_variancias_display){return(
-md`Entropia resultante = ${calcEntropia(p_variancias_display)}`
+      inputs: ["md","calcEntropia","pVarianciasDisplay"],
+      value: (function(md,calcEntropia,pVarianciasDisplay){return(
+md`Entropia resultante = ${calcEntropia(pVarianciasDisplay)}`
 )})
     },
     {
@@ -1255,17 +1256,17 @@ Para tornar a matriz simétrica, ou seja com ${tex`P_{i|j} = P_{j|i}`}, calculam
     },
     {
       name: "p_final_display",
-      inputs: ["p_variancias_display","p_variancias","atribIJ","valorIJ"],
-      value: (function(p_variancias_display,p_variancias,atribIJ,valorIJ)
+      inputs: ["pVarianciasDisplay","pVariancias","atribIJ","valorIJ"],
+      value: (function(pVarianciasDisplay,pVariancias,atribIJ,valorIJ)
 {
-  var tamanho = p_variancias_display.length;
+  var tamanho = pVarianciasDisplay.length;
   var tamanho_linha = Math.sqrt(tamanho);
-  var m_a = new Array(p_variancias.length),
+  var m_a = new Array(pVariancias.length),
       probMedia;
   for (let i=0; i<tamanho_linha; i++) {
     atribIJ(i, i, m_a, 0);
     for (let j=i+1; j<tamanho_linha; j++) {
-      probMedia = (valorIJ(i, j, p_variancias_display)+valorIJ(j, i, p_variancias_display))/2;
+      probMedia = (valorIJ(i, j, pVarianciasDisplay)+valorIJ(j, i, pVarianciasDisplay))/2;
       atribIJ(i, j, m_a, probMedia);
       atribIJ(j, i, m_a, probMedia);
     }
@@ -1281,11 +1282,11 @@ pt(math.matrix(math.reshape(p_final_display.map(x => +x.toFixed(3)), [16,16])))
 )})
     },
     {
-      inputs: ["md","d_flat","tex","dimensoes"],
-      value: (function(md,d_flat,tex,dimensoes){return(
+      inputs: ["md","dFlat","tex","dimensoes"],
+      value: (function(md,dFlat,tex,dimensoes){return(
 md`# Mapeando os pontos para baixa dimensão
 Nesse ponto, terminamos de tratar os dados em alta dimensão e já temos a matriz de probabilidades com as características desejadas. Agora é necessário aproximar os pontos em baixa dimensão, definir uma função de custo para a aproximação e encontrar o melhor conjunto de pontos utilizando gradiente descendente.
-A geração inicial dos pontos é randômica, com o número de dimensões desejado. No nosso caso vamos gerar ${Math.sqrt(d_flat.length)} pontos em ${tex`\mathbb{R}^${dimensoes}`}`
+A geração inicial dos pontos é randômica, com o número de dimensões desejado. No nosso caso vamos gerar ${Math.sqrt(dFlat.length)} pontos em ${tex`\mathbb{R}^${dimensoes}`}`
 )})
     },
     {
@@ -1368,9 +1369,9 @@ pt(math.matrix(math.reshape(distQ.map(y=>y<=zero?0:+y.toFixed(digitos)), [16,16]
     },
     {
       name: "distQ",
-      inputs: ["matrizDistancias","y_flat"],
-      value: (function(matrizDistancias,y_flat){return(
-matrizDistancias(y_flat)
+      inputs: ["vetorDistancias","yFlat"],
+      value: (function(vetorDistancias,yFlat){return(
+vetorDistancias(yFlat)
 )})
     },
     {
@@ -1387,9 +1388,9 @@ tex.block`${eq3}`
 )})
     },
     {
-      inputs: ["pt","math","calcQ","y_flat"],
-      value: (function(pt,math,calcQ,y_flat){return(
-pt(math.matrix(math.reshape(calcQ(y_flat).map(x => +x.toFixed(4)), [16,16])), '\\footnotesize')
+      inputs: ["pt","math","calcQ","yFlat"],
+      value: (function(pt,math,calcQ,yFlat){return(
+pt(math.matrix(math.reshape(calcQ(yFlat).map(x => +x.toFixed(4)), [16,16])), '\\footnotesize')
 )})
     },
     {
@@ -1407,9 +1408,9 @@ A divergência de Kullback-Leibler é dada pela \`[Equação 2]\` ${tex.block`${
 )})
     },
     {
-      inputs: ["md","tex","KLD","p_final","calcQ","y_flat"],
-      value: (function(md,tex,KLD,p_final,calcQ,y_flat){return(
-md`No nosso exemplo, a custo inicial das distribuições ${tex`P`} e ${tex`Q`} é: ${tex`${KLD(p_final, calcQ(y_flat)).toFixed(5)}`}`
+      inputs: ["md","tex","KLD","pFinal","calcQ","yFlat"],
+      value: (function(md,tex,KLD,pFinal,calcQ,yFlat){return(
+md`No nosso exemplo, a custo inicial das distribuições ${tex`P`} e ${tex`Q`} é: ${tex`${KLD(pFinal, calcQ(yFlat)).toFixed(5)}`}`
 )})
     },
     {
@@ -1468,16 +1469,16 @@ Para acelerar o processo de otimização e permitir encontrar soluções melhore
 )})
     },
     {
-      inputs: ["md","tex","pt","math","gradiente","y_flat","p_final"],
-      value: (function(md,tex,pt,math,gradiente,y_flat,p_final){return(
-md`Cálculo do gradiente na primeira iteração: ${tex`\frac{\delta C}{\delta y_i} =`} ${pt(math.matrix(gradiente(y_flat, p_final, 1)), '\\footnotesize')}`
+      inputs: ["md","tex","pt","math","gradiente","yFlat","pFinal"],
+      value: (function(md,tex,pt,math,gradiente,yFlat,pFinal){return(
+md`Cálculo do gradiente na primeira iteração: ${tex`\frac{\delta C}{\delta y_i} =`} ${pt(math.matrix(gradiente(yFlat, pFinal, 1)), '\\footnotesize')}`
 )})
     },
     {
-      inputs: ["md","tex","gamma_eval"],
-      value: (function(md,tex,gamma_eval){return(
+      inputs: ["md","tex","gammaEval"],
+      value: (function(md,tex,gammaEval){return(
 md`## Ajuste dos pontos mapeados
-Após o cálculo do gradiente os pontos devem ser ajustados, para a próxima iteração, da seguinte forma: ${tex.block`${gamma_eval}`}
+Após o cálculo do gradiente os pontos devem ser ajustados, para a próxima iteração, da seguinte forma: ${tex.block`${gammaEval}`}
 O valor dos novos pontos mapeados corresponde aos pontos anteriores, somados ao gradiente por um fator de aprendizado e somados à diferença entre as duas últimas predições por um fator ${tex`\alpha(t)`} (momentum). O paper sugere que o momentum tenha valor 0.5 nas primeiras 250 iterações e 0.8 a partir daí.`
 )})
     },
@@ -1501,7 +1502,7 @@ vegalite(copiaPequeno)
 )})
     },
     {
-      inputs: ["md","bind","html","viewof eta","viewof gatilho_momentum","viewof it_exagero","viewof valor_exagero","viewof Perp","viewof T"],
+      inputs: ["md","bind","html","viewof eta","viewof gatilhoMomentum","viewof itExagero","viewof valorExagero","viewof Perp","viewof T"],
       value: (function(md,bind,html,$0,$1,$2,$3,$4,$5){return(
 md`<b>Taxa de aprendizado</b>: ${bind(html`<input type=range min="0" max="20" step="0.1" style="width:90px;">`, $0)}
 ${bind(html`<input type=number style="width:40px;">`, $0)}
@@ -1522,7 +1523,7 @@ ${bind(html`<input type=number style="width:40px;">`, $5)}`
       inputs: ["html"],
       value: (function(html)
 {
-  const form = html`<form>Selecione o número de iterações e clique em <button name=button>Iniciar`;
+  const form = html`<form>Selecione o número de iterações e clique em <button style="color:#ff2800" name=button>Iniciar`;
   form.button.onclick = event => {
     event.preventDefault(); // Don’t submit the form.
     form.dispatchEvent(new CustomEvent("input"));
@@ -1537,12 +1538,12 @@ ${bind(html`<input type=number style="width:40px;">`, $5)}`
       value: (G, _) => G.input(_)
     },
     {
-      inputs: ["md","iteracao","T","custoRun","it_exagero","valor_exagero","Perp","valores_momentum","gatilho_momentum","nomeMetricaTex","cDistancia"],
-      value: (function(md,iteracao,T,custoRun,it_exagero,valor_exagero,Perp,valores_momentum,gatilho_momentum,nomeMetricaTex,cDistancia){return(
+      inputs: ["md","iteracao","T","custoRun","itExagero","valorExagero","Perp","valores_momentum","gatilhoMomentum","nomeMetricaTex","cDistancia"],
+      value: (function(md,iteracao,T,custoRun,itExagero,valorExagero,Perp,valores_momentum,gatilhoMomentum,nomeMetricaTex,cDistancia){return(
 md`**Iteração**: ${iteracao}/${T} - **Custo**: ${custoRun}<br>
-**Exagero**: ${iteracao<=it_exagero?valor_exagero:"nenhum"} (${valor_exagero} até iteração ${it_exagero}) - 
+**Exagero**: ${iteracao<=itExagero?valorExagero:"nenhum"} (${valorExagero} até iteração ${itExagero}) - 
 **Perplexidade**: ${Perp}<br>
-**Momentum**: ${valores_momentum[iteracao<gatilho_momentum]} (${valores_momentum[true]} até iteração ${gatilho_momentum}, ${valores_momentum[false]} depois)<br>
+**Momentum**: ${valores_momentum[iteracao<gatilhoMomentum]} (${valores_momentum[true]} até iteração ${gatilhoMomentum}, ${valores_momentum[false]} depois)<br>
 **Métrica de distância**: ${nomeMetricaTex(cDistancia)}`
 )})
     },
@@ -1554,8 +1555,8 @@ vegalite([fr1(pontosMapa), fr2(pontosMapa)][+dimensoes-1])
     },
     {
       name: "pontosMapa",
-      inputs: ["iteracao","T","yDisplay","Y","gradiente","p_final","mutable custoRun","custo","mutable iteracao","ystep","gains","valores_momentum","gatilho_momentum","eta"],
-      value: (function*(iteracao,T,yDisplay,Y,gradiente,p_final,$0,custo,$1,ystep,gains,valores_momentum,gatilho_momentum,eta)
+      inputs: ["iteracao","T","yDisplay","Y","gradiente","pFinal","mutable custoRun","custo","mutable iteracao","ystep","gains","valores_momentum","gatilhoMomentum","eta"],
+      value: (function*(iteracao,T,yDisplay,Y,gradiente,pFinal,$0,custo,$1,ystep,gains,valores_momentum,gatilhoMomentum,eta)
 {
   if (iteracao >= T)
     yield yDisplay.map((p, i)=>(p.y==undefined?{x:Y[i][0], 
@@ -1569,9 +1570,9 @@ vegalite([fr1(pontosMapa), fr2(pontosMapa)][+dimensoes-1])
     // Adaptado de: https://github.com/karpathy/tsnejs
     var N = Y.length;
     var dim = Y[0].length;
-    var grad = gradiente(Y, p_final, iteracao);
+    var grad = gradiente(Y, pFinal, iteracao);
     var sign = ((p)=>p<0?-1:p>0?1:p);
-    $0.value = custo(Y, p_final);
+    $0.value = custo(Y, pFinal);
     $1.value++;    
     // perform gradient step
     for(var i=0;i<N;i++) {
@@ -1586,7 +1587,7 @@ vegalite([fr1(pontosMapa), fr2(pontosMapa)][+dimensoes-1])
         gains[i][d] = newgain; // store for next turn
 
         // compute momentum step direction
-        var momval = valores_momentum[iteracao < gatilho_momentum]; // ? 0.5 : 0.8;
+        var momval = valores_momentum[iteracao < gatilhoMomentum]; // ? 0.5 : 0.8;
         var newsid = momval * sid - eta * newgain * grad[i][d];
         ystep[i][d] = newsid; // remember the step we took
 
@@ -1695,39 +1696,39 @@ new View(10)
       value: (G, _) => G.input(_)
     },
     {
-      name: "viewof gatilho_momentum",
+      name: "viewof gatilhoMomentum",
       inputs: ["View"],
       value: (function(View){return(
 new View(75)
 )})
     },
     {
-      name: "gatilho_momentum",
-      inputs: ["Generators","viewof gatilho_momentum"],
+      name: "gatilhoMomentum",
+      inputs: ["Generators","viewof gatilhoMomentum"],
       value: (G, _) => G.input(_)
     },
     {
-      name: "viewof it_exagero",
+      name: "viewof itExagero",
       inputs: ["View"],
       value: (function(View){return(
 new View(50)
 )})
     },
     {
-      name: "it_exagero",
-      inputs: ["Generators","viewof it_exagero"],
+      name: "itExagero",
+      inputs: ["Generators","viewof itExagero"],
       value: (G, _) => G.input(_)
     },
     {
-      name: "viewof valor_exagero",
+      name: "viewof valorExagero",
       inputs: ["View"],
       value: (function(View){return(
 new View(1.5)
 )})
     },
     {
-      name: "valor_exagero",
-      inputs: ["Generators","viewof valor_exagero"],
+      name: "valorExagero",
+      inputs: ["Generators","viewof valorExagero"],
       value: (G, _) => G.input(_)
     },
     {
@@ -1786,37 +1787,37 @@ md`##### Dados`
 )})
     },
     {
-      name: "pontos_flat",
+      name: "pontosFlat",
       inputs: ["pontos"],
       value: (function(pontos){return(
 pontos.values.map(p=>[p.x, p.y])
 )})
     },
     {
-      name: "d_flat",
-      inputs: ["matrizDistancias","pontos_flat"],
-      value: (function(matrizDistancias,pontos_flat){return(
-matrizDistancias(pontos_flat)
+      name: "dFlat",
+      inputs: ["vetorDistancias","pontosFlat"],
+      value: (function(vetorDistancias,pontosFlat){return(
+vetorDistancias(pontosFlat)
 )})
     },
     {
-      name: "p_flat",
-      inputs: ["pontos_flat","calcPi","s2"],
-      value: (function(pontos_flat,calcPi,s2)
+      name: "pFlat",
+      inputs: ["pontosFlat","calcPi","s2"],
+      value: (function(pontosFlat,calcPi,s2)
 {
-  var N = pontos_flat.length;
+  var N = pontosFlat.length;
   var matriz = []
   for (var i=0; i<N; i++)
-    matriz = matriz.concat(calcPi(pontos_flat, i, s2));
+    matriz = matriz.concat(calcPi(pontosFlat, i, s2));
   return matriz.map(p=>p/16);
 }
 )
     },
     {
-      name: "p_variancias_display",
-      inputs: ["ajustaVariancias","pontos_flat","Perp_display"],
-      value: (function(ajustaVariancias,pontos_flat,Perp_display){return(
-ajustaVariancias(pontos_flat, Math.log2(Perp_display), 1e-4, 50)
+      name: "pVarianciasDisplay",
+      inputs: ["ajustaVariancias","pontosFlat","Perp_display"],
+      value: (function(ajustaVariancias,pontosFlat,Perp_display){return(
+ajustaVariancias(pontosFlat, Math.log2(Perp_display), 1e-4, 50)
 )})
     },
     {
@@ -1827,25 +1828,25 @@ Math.log2(Perp)
 )})
     },
     {
-      name: "p_variancias",
-      inputs: ["ajustaVariancias","pontos_flat","entropia"],
-      value: (function(ajustaVariancias,pontos_flat,entropia){return(
-ajustaVariancias(pontos_flat, entropia, 1e-4, 50)
+      name: "pVariancias",
+      inputs: ["ajustaVariancias","pontosFlat","entropia"],
+      value: (function(ajustaVariancias,pontosFlat,entropia){return(
+ajustaVariancias(pontosFlat, entropia, 1e-4, 50)
 )})
     },
     {
-      name: "p_final",
-      inputs: ["p_variancias","atribIJ","valorIJ"],
-      value: (function(p_variancias,atribIJ,valorIJ)
+      name: "pFinal",
+      inputs: ["pVariancias","atribIJ","valorIJ"],
+      value: (function(pVariancias,atribIJ,valorIJ)
 {
-  var tamanho = p_variancias.length;
+  var tamanho = pVariancias.length;
   var tamanho_linha = Math.sqrt(tamanho);
-  var m_a = new Array(p_variancias.length),
+  var m_a = new Array(pVariancias.length),
       probMedia;
   for (let i=0; i<tamanho_linha; i++) {
     atribIJ(i, i, m_a, 0);
     for (let j=i+1; j<tamanho_linha; j++) {
-      probMedia = (valorIJ(i, j, p_variancias)+valorIJ(j, i, p_variancias))/2;
+      probMedia = (valorIJ(i, j, pVariancias)+valorIJ(j, i, pVariancias))/2;
       atribIJ(i, j, m_a, probMedia);
       atribIJ(j, i, m_a, probMedia);
     }
@@ -1856,17 +1857,17 @@ ajustaVariancias(pontos_flat, entropia, 1e-4, 50)
     },
     {
       name: "dMapa",
-      inputs: ["matriz","pontos","dimensoes","gaussRandom","ideal_linear"],
-      value: (function(matriz,pontos,dimensoes,gaussRandom,ideal_linear){return(
+      inputs: ["matriz","pontos","dimensoes","gaussRandom","idealLinear"],
+      value: (function(matriz,pontos,dimensoes,gaussRandom,idealLinear){return(
 {
   randomico: matriz(pontos.values.length, +dimensoes, (()=>gaussRandom()*1e-4)),
   comprimido: matriz(pontos.values.length, +dimensoes, (()=>gaussRandom()*1e-6)),
-  ideal: ideal_linear.values.map((p)=>dimensoes==1?[p.x]:[p.x, p.y])
+  ideal: idealLinear.values.map((p)=>dimensoes==1?[p.x]:[p.x, p.y])
 }
 )})
     },
     {
-      name: "y_flat",
+      name: "yFlat",
       inputs: ["dMapa","tipo_projecao"],
       value: (function(dMapa,tipo_projecao){return(
 dMapa[tipo_projecao]
@@ -1874,13 +1875,13 @@ dMapa[tipo_projecao]
     },
     {
       name: "yDisplay",
-      inputs: ["pontos","dimensoes","y_flat"],
-      value: (function(pontos,dimensoes,y_flat){return(
+      inputs: ["pontos","dimensoes","yFlat"],
+      value: (function(pontos,dimensoes,yFlat){return(
 pontos.values.map(function(x, i){
   if (dimensoes == 1)
-    return {x:y_flat[i][0], nome:x.nome, Cluster:x.Cluster};
+    return {x:yFlat[i][0], nome:x.nome, Cluster:x.Cluster};
   else if (dimensoes == 2)
-    return {x:y_flat[i][0], y: y_flat[i][1], nome:x.nome, Cluster:x.Cluster};
+    return {x:yFlat[i][0], y: yFlat[i][1], nome:x.nome, Cluster:x.Cluster};
 })
 )})
     },
@@ -2014,17 +2015,17 @@ dados => ({
     },
     {
       name: "Y",
-      inputs: ["reset","mutable iteracao","y_flat","matriz"],
-      value: (function(reset,$0,y_flat,matriz)
+      inputs: ["reset","mutable iteracao","yFlat","matriz"],
+      value: (function(reset,$0,yFlat,matriz)
 {
   reset;
   $0.value = 0;
-  const N = y_flat.length,
-        dim = y_flat[0].length;
+  const N = yFlat.length,
+        dim = yFlat[0].length;
   let g = matriz(N, dim);
   for (var i=0; i<N; i++)
     for (var d=0; d<dim; d++)
-      g[i][d] = y_flat[i][d];
+      g[i][d] = yFlat[i][d];
   return g;
 }
 )
@@ -2097,15 +2098,18 @@ md`##### Métricas`
 )})
     },
     {
-      name: "matrizDistancias",
+      name: "vetorDistancias",
       inputs: ["zeros","calcDistancia"],
       value: (function(zeros,calcDistancia){return(
-function matrizDistancias(pontos, metrica) {
+function vetorDistancias(pontos, metrica) {
   // pontos: Vetor de pontos em R^N
   // ṕontos = [[p_11, ..., p_0n], [p_21, ..., p_2n], ..., [p_k1,...,p_kn]]
   var N = pontos.length,          // Quantidade de pontos
       dist = zeros(N*N);
   if (metrica===undefined) metrica = calcDistancia;
+  // Como d[i,j] = d[j,i] então o loop é:
+  // i: 0 a N-1 e j: i+1, N
+  // d[i,i] inicializado com 0
   for (let i = 0; i < N - 1; i++) {
     for (let j = i + 1; j < N; j++ ) {
       var distancia = metrica(pontos[i], pontos[j])
@@ -2214,15 +2218,15 @@ function calcPi(p, i, s2i) {
     },
     {
       name: "gradiente",
-      inputs: ["it_exagero","valor_exagero","calcQ","zeros","L2Q"],
-      value: (function(it_exagero,valor_exagero,calcQ,zeros,L2Q){return(
+      inputs: ["itExagero","valorExagero","calcQ","zeros","L2Q"],
+      value: (function(itExagero,valorExagero,calcQ,zeros,L2Q){return(
 function gradiente(y, P, iter) {
   // Retorna o gradiente dados:
   // y: pontos no espaço mapeado
   // P: Probabilidades no espaço original
   // iter: Número da iteração atual
   // dC/dy = 4 * sum((p_ij-q_ij)(y_i-y_j)(1+|y_i-y_j|^2)^-1)
-  const ex = iter <= it_exagero?valor_exagero:1,
+  const ex = iter <= itExagero?valorExagero:1,
         N = y.length,
         dim = y[0].length,
         Q = calcQ(y);
@@ -2269,8 +2273,8 @@ function calcQ(y) {
     },
     {
       name: "grad",
-      inputs: ["it_exagero","valor_exagero","zeros","L2Q","ind"],
-      value: (function(it_exagero,valor_exagero,zeros,L2Q,ind){return(
+      inputs: ["itExagero","valorExagero","zeros","L2Q","ind"],
+      value: (function(itExagero,valorExagero,zeros,L2Q,ind){return(
 function grad(p, q, y, iter) {
   /*
    * Retorna o gradiente dados:
@@ -2281,7 +2285,7 @@ function grad(p, q, y, iter) {
    */
   const numPontos = y.length;
   const dim = y[0].length;
-  const exagero = iter<it_exagero?valor_exagero:1;
+  const exagero = iter<itExagero?valorExagero:1;
   var soma;
   var gradiente = zeros(numPontos, dim);
   for (let j, i=0; i<numPontos; i++) {
@@ -2369,17 +2373,17 @@ Mais econõmico em espaço que matriz`
 )})
     },
     {
-      name: "v_d",
-      inputs: ["zero","dist"],
-      value: (function(zero,dist){return(
-function v_d(p) {
+      name: "grafoDistancias",
+      inputs: ["zero","L2"],
+      value: (function(zero,L2){return(
+function grafoDistancias(p) {
   let tamanho = p.length,
       v = new Array(),
       d;
   for (let i = 0; i < tamanho; i++) {
     v.push({source: i, target: i, distance: zero});
     for (let j = i+1 ; j < tamanho; j++) {
-      d = +dist(p[i], p[j]).toFixed(3);
+      d = +L2(p[i], p[j]).toFixed(3);
       v.push({source: i, target: j, distance: d});
     }
   }
@@ -2388,16 +2392,16 @@ function v_d(p) {
 )})
     },
     {
-      name: "zero",
-      value: (function(){return(
-0
+      name: "distanciaPontos",
+      inputs: ["grafoDistancias","pontos"],
+      value: (function(grafoDistancias,pontos){return(
+grafoDistancias(pontos.values)
 )})
     },
     {
-      name: "d_p",
-      inputs: ["v_d","pontos"],
-      value: (function(v_d,pontos){return(
-v_d(pontos.values)
+      name: "zero",
+      value: (function(){return(
+1e-100
 )})
     },
     {
@@ -2435,56 +2439,19 @@ md`#### Gera matriz de distâncias`
 )})
     },
     {
-      name: "m_dR1",
-      inputs: ["md_generica","distR1"],
-      value: (function(md_generica,distR1){return(
-function m_dR1(p) {
-  return md_generica(p, distR1);
+      name: "matrizDistancias",
+      inputs: ["matrizDistanciasGenerica","L2D"],
+      value: (function(matrizDistanciasGenerica,L2D){return(
+function matrizDistancias(p) {
+  return matrizDistanciasGenerica(p, L2D);
 }
 )})
     },
     {
-      name: "distR1",
-      inputs: ["distR1_g"],
-      value: (function(distR1_g){return(
-function distR1(pi, pj){
-  // Função de distância para pontos no formato {x: X}
-  return distR1_g(pi.x, pj.x);
-}
-)})
-    },
-    {
-      name: "distR1_g",
-      value: (function(){return(
-function distR1_g(pi, pj){
-  // Função de distância para pontos no formato {x: X}
-  return Math.sqrt((pi-pj)**2);
-}
-)})
-    },
-    {
-      name: "m_d",
-      inputs: ["md_generica","dist"],
-      value: (function(md_generica,dist){return(
-function m_d(p) {
-  return md_generica(p, dist);
-}
-)})
-    },
-    {
-      name: "dist",
-      value: (function(){return(
-function dist(pi, pj){
-  // Função de distância para pontos no formato {x: X, y: Y}
-  return Math.sqrt((pi.x-pj.x)**2+(pi.y-pj.y)**2);
-}
-)})
-    },
-    {
-      name: "md_generica",
+      name: "matrizDistanciasGenerica",
       inputs: ["zero"],
       value: (function(zero){return(
-function md_generica(p, funcaoDistancia) {
+function matrizDistanciasGenerica(p, funcaoDistancia) {
   let tamanho = p.length,
       m = new Array(tamanho);
 
@@ -2502,41 +2469,59 @@ function md_generica(p, funcaoDistancia) {
 )})
     },
     {
+      name: "L2D",
+      inputs: ["L2"],
+      value: (function(L2){return(
+function L2D(i, j) {
+  return L2([i.x, i.y], [j.x, j.y]);
+}
+)})
+    },
+    {
       name: "distancias",
-      inputs: ["m_d","pontos"],
-      value: (function(m_d,pontos){return(
-m_d(pontos.values)
+      inputs: ["matrizDistancias","pontos"],
+      value: (function(matrizDistancias,pontos){return(
+matrizDistancias(pontos.values)
+)})
+    },
+    {
+      inputs: ["pontos"],
+      value: (function(pontos){return(
+pontos.values
 )})
     },
     {
       inputs: ["md"],
       value: (function(md){return(
-md`#### Matrizes de distâncias e probabilidades "achatadas"`
+md`#### Funções para matrizes de distâncias e probabilidades "achatadas"`
+)})
+    },
+    {
+      name: "indice",
+      value: (function(){return(
+function indice(i, j, n) {
+  return Math.sqrt(n)*i+j;
+}
 )})
     },
     {
       name: "valorIJ",
-      value: (function(){return(
+      inputs: ["indice"],
+      value: (function(indice){return(
 function valorIJ(i, j, m) {
-  // Posição [i][j] de uma matrix m kxk
-  return m[Math.sqrt(m.length)*i+j];
+  // Posição [i][j] de um vetor matricial m[kxk]
+  return m[indice(i, j, m.length)];
 }
 )})
     },
     {
       name: "atribIJ",
-      value: (function(){return(
+      inputs: ["indice"],
+      value: (function(indice){return(
 function atribIJ(i, j, m, valor) {
-  // Posição [i][j] de uma matrix m kxk
-  m[Math.sqrt(m.length)*i+j] = valor;
+  // Atribuição à posição [i][j] de um vetor matricial m[kxk]
+  m[indice(i, j, m.length)] = valor;
 }
-)})
-    },
-    {
-      name: "m_p",
-      inputs: ["d_flat","zero","student"],
-      value: (function(d_flat,zero,student){return(
-d_flat.map(y=>y<=zero?0.0:student(y, 1))
 )})
     },
     {
@@ -2546,7 +2531,7 @@ md`Dados artificiais para projeção idealizada dos 16 pontos`
 )})
     },
     {
-      name: "ideal_linear",
+      name: "idealLinear",
       value: (function(){return(
 {
     "values": [
@@ -2590,17 +2575,17 @@ md `#### Dataset meia lua`
 )})
     },
     {
-      name: "m_l",
+      name: "meiaLuaJSON",
       inputs: ["d3"],
       value: (function(d3){return(
 d3.json("https://raw.githubusercontent.com/RobStelling/miscImg/master/dados/halfMoon.json")
 )})
     },
     {
-      name: "meia_lua",
-      inputs: ["m_l"],
-      value: (function(m_l){return(
-JSON.parse(m_l)
+      name: "meiaLua",
+      inputs: ["meiaLuaJSON"],
+      value: (function(meiaLuaJSON){return(
+JSON.parse(meiaLuaJSON)
 )})
     },
     {
@@ -2610,7 +2595,7 @@ md`#### Dataset círculos`
 )})
     },
     {
-      name: "circ",
+      name: "circulosJSON",
       inputs: ["d3"],
       value: (function(d3){return(
 d3.json("https://raw.githubusercontent.com/RobStelling/miscImg/master/dados/2circulos.json")
@@ -2618,9 +2603,9 @@ d3.json("https://raw.githubusercontent.com/RobStelling/miscImg/master/dados/2cir
     },
     {
       name: "circulos",
-      inputs: ["circ"],
-      value: (function(circ){return(
-JSON.parse(circ)
+      inputs: ["circulosJSON"],
+      value: (function(circulosJSON){return(
+JSON.parse(circulosJSON)
 )})
     },
     {
@@ -2683,10 +2668,10 @@ md `#### Curvas normal e *t* de Student`
 )})
     },
     {
-      name: "gera_curvas",
+      name: "pontosCurvasNS",
       inputs: ["normal","students"],
       value: (function(normal,students){return(
-function gera_curvas(minimo, maximo, step, sigma, mi, gl) {
+function pontosCurvasNS(minimo, maximo, step, sigma, mi, gl) {
   // Gera pontos para distribuições Normal e Student com mesma variância
   let vetor = [];
   for (let x = minimo; x < maximo; x+= step) {
@@ -2698,10 +2683,10 @@ function gera_curvas(minimo, maximo, step, sigma, mi, gl) {
 )})
     },
     {
-      name: "gera_normal",
+      name: "pontosNormal",
       inputs: ["normal"],
       value: (function(normal){return(
-function gera_normal(minimo, maximo, step, sigma, mi) {
+function pontosNormal(minimo, maximo, step, sigma, mi) {
   let vetor = [];
   for (let x = minimo; x < maximo; x+= step)
     vetor.push({x:x, y:normal(x, sigma, mi)});
@@ -2721,10 +2706,10 @@ function normal(x, s, mi) {
 )})
     },
     {
-      name: "gera_student",
+      name: "pontosStudent",
       inputs: ["student"],
       value: (function(student){return(
-function gera_student(minimo, maximo, step, gl) {
+function pontosStudent(minimo, maximo, step, gl) {
   let vetor = [];
   for (let x = minimo; x <= maximo; x+= step)
     vetor.push({x:x, y:student(x, gl)});
@@ -2924,7 +2909,7 @@ String.raw`\sum_i\sum_j p_{ij} \log p_{ij}-p_{ij}\log q_{ij}`
 )})
     },
     {
-      name: "gamma_eval",
+      name: "gammaEval",
       value: (function(){return(
 String.raw`\gamma^{(t)} = \gamma^{(t-1)} + \eta\frac{\delta C}{\delta \gamma} + \alpha(t)(\gamma^{(t-1)} - \gamma^{(t-2)})`
 )})
@@ -3423,7 +3408,7 @@ function disposal(element) {
 };
 
 const notebook = {
-  id: "2331ea7cae3cdc98@6952",
+  id: "2331ea7cae3cdc98@7174",
   modules: [m0,m1,m2,m3,m4]
 };
 
