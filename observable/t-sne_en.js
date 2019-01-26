@@ -1,16 +1,17 @@
 // URL: https://beta.observablehq.com/@robstelling/t-sne_en
 // Title: Opening the *t*-SNE black box
 // Author: Roberto Stelling (@robstelling)
-// Version: 7711
+// Version: 7823
 // Runtime version: 1
 
 const m0 = {
-  id: "2379c50fe5f906fb@7711",
+  id: "2379c50fe5f906fb@7823",
   variables: [
     {
       inputs: ["md"],
       value: (function(md){return(
-md`# Opening the *t*-SNE black box`
+md`# Opening the *t*-SNE black box
+An in depth view of *t*-SNE, with algorithm breakdown, implementation and a toy problem playground.`
 )})
     },
     {
@@ -1346,7 +1347,7 @@ radio({
     {
       inputs: ["md","metricNameTex","metric"],
       value: (function(md,metricNameTex,metric){return(
-md`### Distance ${metricNameTex(metric)} between generated points`
+md`### ${metricNameTex(metric)} distance between generated points`
 )})
     },
     {
@@ -1511,105 +1512,46 @@ md`# *t*-SNE Playground`
 )})
     },
     {
-      name: "viewof eta",
-      inputs: ["slider"],
-      value: (function(slider){return(
-slider({
-  title: 'Learning rate',
-  min: 0,
-  max: 20,
-  value: 10,
-  step: 0.1,
-  description: 'Learning rate for gradient descent'
-})
-)})
-    },
-    {
-      name: "eta",
-      inputs: ["Generators","viewof eta"],
-      value: (G, _) => G.input(_)
-    },
-    {
-      name: "viewof triggerMomentum",
-      inputs: ["slider"],
-      value: (function(slider){return(
-slider({
-  title: 'Momentum update',
-  min: 1,
-  max: 500,
-  step: 1,
-  value: 75,
-  description: 'Inform when momentum will be updated'
-})
-)})
-    },
-    {
-      name: "triggerMomentum",
-      inputs: ["Generators","viewof triggerMomentum"],
-      value: (G, _) => G.input(_)
-    },
-    {
-      name: "viewof stop_exaggeration",
-      inputs: ["slider"],
-      value: (function(slider){return(
-slider({
-  title: 'Number of interactions with exaggeration',
-  min: 0,
-  max: 200,
-  step: 1,
-  value:50,
-  description: 'Number of interactions to apply the exaggeration factor'
-})
-)})
-    },
-    {
-      name: "stop_exaggeration",
-      inputs: ["Generators","viewof stop_exaggeration"],
-      value: (G, _) => G.input(_)
-    },
-    {
-      name: "viewof exaggerationFactor",
-      inputs: ["slider"],
-      value: (function(slider){return(
-slider({
-  title: 'Exaggeration',
-  min: 0.5,
-  max: 10,
-  step: 0.5,
-  value: 1.5,
-  description: 'Exaggeration factor'
-})
-)})
-    },
-    {
-      name: "exaggerationFactor",
-      inputs: ["Generators","viewof exaggerationFactor"],
-      value: (G, _) => G.input(_)
-    },
-    {
-      name: "viewof Perp",
-      inputs: ["slider"],
-      value: (function(slider){return(
-slider({
-  title: 'Perplexity',
-  min: 1,
-  max: 100,
-  step: 0.5,
-  value: 10,
-  description: "Perplexity hyperparameter value"
-})
-)})
-    },
-    {
-      name: "Perp",
-      inputs: ["Generators","viewof Perp"],
-      value: (G, _) => G.input(_)
-    },
-    {
       inputs: ["vegalite","thumbnail"],
       value: (function(vegalite,thumbnail){return(
 vegalite(thumbnail)
 )})
+    },
+    {
+      inputs: ["md","bind","html","viewof eta","viewof triggerMomentum","viewof stop_exaggeration","viewof exaggerationFactor","viewof Perp","viewof T"],
+      value: (function(md,bind,html,$0,$1,$2,$3,$4,$5){return(
+md`<b>Learning rate</b>: ${bind(html`<input type=range min="0" max="20" step="0.1" style="width:90px;">`, $0)}
+${bind(html`<input type=number style="width:40px;">`, $0)}
+<br><b>Momentum update rate</b>: ${bind(html`<input type=range min="1" max="500" step="1" style="width:90px;">`, $1)}
+${bind(html`<input type=number style="width:40px;">`, $1)}
+<br><b>Exaggeration stop</b>: ${bind(html`<input type=range min="0" max="200" step="1" style="width:90px;">`, $2)}
+${bind(html`<input type=number style="width:40px;">`, $2)}
+<br><b>Exaggeration factor</b>: ${bind(html`<input type=range min="0.5" max="10" step="0.5" style="width:90px;">`, $3)}
+${bind(html`<input type=number style="width:40px;">`, $3)}
+<br><b>Perplexity</b>: ${bind(html`<input type=range min="1" max="100" step="0.5" style="width:90px;">`, $4)}
+${bind(html`<input type=number style="width:40px;">`, $4)}
+<br><b>Number of Interactions</b>: ${bind(html`<input type=range min="0" max="5000" step="50" style="width:90px;">`, $5)}
+${bind(html`<input type=number style="width:40px;">`, $5)}`
+)})
+    },
+    {
+      name: "viewof reset",
+      inputs: ["html"],
+      value: (function(html)
+{
+  const form = html`<form>Select the number of interactions and click <button name=button>Start`;
+  form.button.onclick = event => {
+    event.preventDefault(); // Don’t submit the form.
+    form.dispatchEvent(new CustomEvent("input"));
+  };
+  return form;
+}
+)
+    },
+    {
+      name: "reset",
+      inputs: ["Generators","viewof reset"],
+      value: (G, _) => G.input(_)
     },
     {
       inputs: ["md","iteractionCount","T","costRun","stop_exaggeration","exaggerationFactor","Perp","momentum","triggerMomentum","metricName","metric"],
@@ -1627,42 +1569,10 @@ vegalite([fr1(pointsMap), fr2(pointsMap)][+dimensions-1])
 )})
     },
     {
-      name: "viewof reset",
-      inputs: ["html"],
-      value: (function(html)
-{
-  const form = html`<form><button name=button>Start`;
-  form.button.onclick = event => {
-    event.preventDefault(); // Don’t submit the form.
-    form.dispatchEvent(new CustomEvent("input"));
-  };
-  return form;
-}
-)
-    },
-    {
-      name: "reset",
-      inputs: ["Generators","viewof reset"],
-      value: (G, _) => G.input(_)
-    },
-    {
-      name: "viewof T",
-      inputs: ["slider"],
-      value: (function(slider){return(
-slider({
-  title: 'Number of iteractions',
-  min: 0,
-  max: 5000,
-  step: 50,
-  value: 0,
-  description: 'Inform the number of interactions for the gradient descent and click on Start'
-})
+      inputs: ["md"],
+      value: (function(md){return(
+md`### One gradient descent step, returns a set of points to be displayed`
 )})
-    },
-    {
-      name: "T",
-      inputs: ["Generators","viewof T"],
-      value: (G, _) => G.input(_)
     },
     {
       name: "pointsMap",
@@ -1787,6 +1697,90 @@ md `# Data and auxiliary functions`
       inputs: ["md"],
       value: (function(md){return(
 md`#### Variables and functions`
+)})
+    },
+    {
+      inputs: ["md"],
+      value: (function(md){return(
+md`##### Playground inputs`
+)})
+    },
+    {
+      name: "viewof eta",
+      inputs: ["View"],
+      value: (function(View){return(
+new View(10)
+)})
+    },
+    {
+      name: "eta",
+      inputs: ["Generators","viewof eta"],
+      value: (G, _) => G.input(_)
+    },
+    {
+      name: "viewof triggerMomentum",
+      inputs: ["View"],
+      value: (function(View){return(
+new View(75)
+)})
+    },
+    {
+      name: "triggerMomentum",
+      inputs: ["Generators","viewof triggerMomentum"],
+      value: (G, _) => G.input(_)
+    },
+    {
+      name: "viewof stop_exaggeration",
+      inputs: ["View"],
+      value: (function(View){return(
+new View(50)
+)})
+    },
+    {
+      name: "stop_exaggeration",
+      inputs: ["Generators","viewof stop_exaggeration"],
+      value: (G, _) => G.input(_)
+    },
+    {
+      name: "viewof exaggerationFactor",
+      inputs: ["View"],
+      value: (function(View){return(
+new View(1.5)
+)})
+    },
+    {
+      name: "exaggerationFactor",
+      inputs: ["Generators","viewof exaggerationFactor"],
+      value: (G, _) => G.input(_)
+    },
+    {
+      name: "viewof Perp",
+      inputs: ["View"],
+      value: (function(View){return(
+new View(10)
+)})
+    },
+    {
+      name: "Perp",
+      inputs: ["Generators","viewof Perp"],
+      value: (G, _) => G.input(_)
+    },
+    {
+      name: "viewof T",
+      inputs: ["View"],
+      value: (function(View){return(
+new View(0)
+)})
+    },
+    {
+      name: "T",
+      inputs: ["Generators","viewof T"],
+      value: (G, _) => G.input(_)
+    },
+    {
+      inputs: ["md"],
+      value: (function(md){return(
+md`##### Data`
 )})
     },
     {
@@ -2103,6 +2097,32 @@ md`# Auxiliary functions`
 )})
     },
     {
+      inputs: ["md"],
+      value: (function(md){return(
+md`#### Input bind`
+)})
+    },
+    {
+      name: "bind",
+      inputs: ["disposal"],
+      value: (function(disposal){return(
+function bind(input, view) {
+  const value = ["range", "number"].includes(input.type) ? "valueAsNumber" : "value";
+  const update = () => input[value] = view.value;
+  input.oninput = () => view.value = input[value];
+  view.addEventListener("input", update);
+  disposal(input).then(() => view.removeEventListener("input", update));
+  return update(), input;
+}
+)})
+    },
+    {
+      inputs: ["md"],
+      value: (function(md){return(
+md`#### Metrics`
+)})
+    },
+    {
       name: "distancesMatrix",
       inputs: ["zeros","computeDistance"],
       value: (function(zeros,computeDistance){return(
@@ -2133,14 +2153,14 @@ function distancesMatrix(points, metric) {
     {
       name: "metricName",
       value: (function(){return(
-c => ["L2", "L2 Squared", "L1", "Max"][c]
+c => ["L2", "L2 Squared", "L1", "Chebyshev"][c]
 )})
     },
     {
       name: "metricNameTex",
       inputs: ["tex"],
       value: (function(tex){return(
-c => [tex`L^2`, tex`L^{2^2}`, tex`L^1`, tex`\max`][c]
+c => [tex`L^2`, tex`L^{2^2}`, tex`L^1`, tex`D_{Chebyshev}`][c]
 )})
     },
     {
@@ -2761,16 +2781,6 @@ md `# Imported Content`
       remote: "chart"
     },
     {
-      from: "@jashkenas/inputs",
-      name: "slider",
-      remote: "slider"
-    },
-    {
-      from: "@jashkenas/inputs",
-      name: "radio",
-      remote: "radio"
-    },
-    {
       name: "vegalite",
       inputs: ["require"],
       value: (function(require){return(
@@ -2797,6 +2807,32 @@ require("d3-fetch@1")
       value: (function(require){return(
 require('statdists')
 )})
+    },
+    {
+      inputs: ["md"],
+      value: (function(md){return(
+md`#### Inputs`
+)})
+    },
+    {
+      from: "@jashkenas/inputs",
+      name: "slider",
+      remote: "slider"
+    },
+    {
+      from: "@jashkenas/inputs",
+      name: "radio",
+      remote: "radio"
+    },
+    {
+      from: "@mbostock/synchronized-views",
+      name: "View",
+      remote: "View"
+    },
+    {
+      from: "@mbostock/disposal",
+      name: "disposal",
+      remote: "disposal"
     }
   ]
 };
@@ -3163,9 +3199,72 @@ require("d3-format")
   ]
 };
 
+const m3 = {
+  id: "@mbostock/synchronized-views",
+  variables: [
+    {
+      name: "View",
+      value: (function(){return(
+class View {
+  constructor(value) {
+    Object.defineProperties(this, {
+      _list: {value: [], writable: true},
+      _value: {value, writable: true}
+    });
+  }
+  get value() {
+    return this._value;
+  }
+  set value(value) {
+    this._value = value;
+    this.dispatchEvent({type: "input", value});
+  }
+  addEventListener(type, listener) {
+    if (type != "input" || this._list.includes(listener)) return;
+    this._list = [listener].concat(this._list);
+  }
+  removeEventListener(type, listener) {
+    if (type != "input") return;
+    this._list = this._list.filter(l => l !== listener);
+  }
+  dispatchEvent(event) {
+    const p = Promise.resolve(event);
+    this._list.forEach(l => p.then(l));
+  }
+}
+)})
+    }
+  ]
+};
+
+const m4 = {
+  id: "@mbostock/disposal",
+  variables: [
+    {
+      name: "disposal",
+      inputs: ["MutationObserver"],
+      value: (function(MutationObserver){return(
+function disposal(element) {
+  return new Promise(resolve => {
+    requestAnimationFrame(() => {
+      const target = element.closest(".observablehq");
+      if (!target) return resolve();
+      const observer = new MutationObserver(mutations => {
+        if (target.contains(element)) return;
+        observer.disconnect(), resolve();
+      });
+      observer.observe(target, {childList: true});
+    });
+  });
+}
+)})
+    }
+  ]
+};
+
 const notebook = {
-  id: "2379c50fe5f906fb@7711",
-  modules: [m0,m1,m2]
+  id: "2379c50fe5f906fb@7823",
+  modules: [m0,m1,m2,m3,m4]
 };
 
 export default notebook;
