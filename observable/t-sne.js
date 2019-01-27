@@ -1,11 +1,11 @@
 // URL: https://beta.observablehq.com/@robstelling/t-sne
 // Title: Abrindo a caixa preta do t-SNE
 // Author: Roberto Stelling (@robstelling)
-// Version: 7174
+// Version: 7185
 // Runtime version: 1
 
 const m0 = {
-  id: "2331ea7cae3cdc98@7174",
+  id: "2331ea7cae3cdc98@7185",
   variables: [
     {
       inputs: ["md"],
@@ -1050,13 +1050,13 @@ radio({
     {
       inputs: ["md","nomeMetricaTex","cDistancia","math","pts","calcDistancia"],
       value: (function(md,nomeMetricaTex,cDistancia,math,pts,calcDistancia){return(
-md`A distância ${nomeMetricaTex(cDistancia)} entre os pontos ${math.matrix(pts[0])} e ${math.matrix(pts[1])} é ${calcDistancia(pts[0], pts[1])}`
+md`A distância ${nomeMetricaTex(cDistancia)} entre os pontos ${math.matrix(pts[0])} e ${math.matrix(pts[1])} é ${calcDistancia(pts[0], pts[1])}.<br>A distância ${nomeMetricaTex(cDistancia)} entre os pontos ${math.matrix(pts[2])} e ${math.matrix(pts[3])} é ${calcDistancia([pts[2]],[pts[3]])}`
 )})
     },
     {
       name: "pts",
       value: (function(){return(
-[[0, 0], [-4, 3]]
+[[0, 0], [-4, 3], [-1.3], [3.5]]
 )})
     },
     {
@@ -1515,7 +1515,7 @@ ${bind(html`<input type=number style="width:40px;">`, $3)}
 <br><b>Perplexidade</b>: ${bind(html`<input type=range min="1" max="100" step="0.5" style="width:90px;">`, $4)}
 ${bind(html`<input type=number style="width:40px;">`, $4)}
 <br><b>Número de iterações</b>: ${bind(html`<input type=range min="0" max="5000" step="50" style="width:90px;">`, $5)}
-${bind(html`<input type=number style="width:40px;">`, $5)}`
+${bind(html`<input type=number style="width:45px;">`, $5)}`
 )})
     },
     {
@@ -1543,8 +1543,7 @@ ${bind(html`<input type=number style="width:40px;">`, $5)}`
 md`**Iteração**: ${iteracao}/${T} - **Custo**: ${custoRun}<br>
 **Exagero**: ${iteracao<=itExagero?valorExagero:"nenhum"} (${valorExagero} até iteração ${itExagero}) - 
 **Perplexidade**: ${Perp}<br>
-**Momentum**: ${valores_momentum[iteracao<gatilhoMomentum]} (${valores_momentum[true]} até iteração ${gatilhoMomentum}, ${valores_momentum[false]} depois)<br>
-**Métrica de distância**: ${nomeMetricaTex(cDistancia)}`
+**Momentum**: ${valores_momentum[iteracao<gatilhoMomentum]} (${valores_momentum[true]} até iteração ${gatilhoMomentum}, ${valores_momentum[false]} depois) - **Métrica**: ${nomeMetricaTex(cDistancia)}`
 )})
     },
     {
@@ -3408,7 +3407,7 @@ function disposal(element) {
 };
 
 const notebook = {
-  id: "2331ea7cae3cdc98@7174",
+  id: "2331ea7cae3cdc98@7185",
   modules: [m0,m1,m2,m3,m4]
 };
 

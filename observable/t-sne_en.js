@@ -1,11 +1,11 @@
 // URL: https://beta.observablehq.com/@robstelling/t-sne_en
 // Title: Opening the *t*-SNE black box
 // Author: Roberto Stelling (@robstelling)
-// Version: 7823
+// Version: 7835
 // Runtime version: 1
 
 const m0 = {
-  id: "2379c50fe5f906fb@7823",
+  id: "2379c50fe5f906fb@7835",
   variables: [
     {
       inputs: ["md"],
@@ -1518,20 +1518,20 @@ vegalite(thumbnail)
 )})
     },
     {
-      inputs: ["md","bind","html","viewof eta","viewof triggerMomentum","viewof stop_exaggeration","viewof exaggerationFactor","viewof Perp","viewof T"],
+      inputs: ["md","bind","html","viewof eta","viewof triggerMomentum","viewof exaggerationFactor","viewof stop_exaggeration","viewof Perp","viewof T"],
       value: (function(md,bind,html,$0,$1,$2,$3,$4,$5){return(
 md`<b>Learning rate</b>: ${bind(html`<input type=range min="0" max="20" step="0.1" style="width:90px;">`, $0)}
 ${bind(html`<input type=number style="width:40px;">`, $0)}
-<br><b>Momentum update rate</b>: ${bind(html`<input type=range min="1" max="500" step="1" style="width:90px;">`, $1)}
+<br><b>Momentum update</b>: ${bind(html`<input type=range min="1" max="500" step="1" style="width:90px;">`, $1)}
 ${bind(html`<input type=number style="width:40px;">`, $1)}
-<br><b>Exaggeration stop</b>: ${bind(html`<input type=range min="0" max="200" step="1" style="width:90px;">`, $2)}
+<br><b>Exaggeration factor</b>: ${bind(html`<input type=range min="0.5" max="10" step="0.5" style="width:90px;">`, $2)}
 ${bind(html`<input type=number style="width:40px;">`, $2)}
-<br><b>Exaggeration factor</b>: ${bind(html`<input type=range min="0.5" max="10" step="0.5" style="width:90px;">`, $3)}
+<br><b>Exaggeration stop</b>: ${bind(html`<input type=range min="0" max="200" step="1" style="width:90px;">`, $3)}
 ${bind(html`<input type=number style="width:40px;">`, $3)}
 <br><b>Perplexity</b>: ${bind(html`<input type=range min="1" max="100" step="0.5" style="width:90px;">`, $4)}
 ${bind(html`<input type=number style="width:40px;">`, $4)}
 <br><b>Number of Interactions</b>: ${bind(html`<input type=range min="0" max="5000" step="50" style="width:90px;">`, $5)}
-${bind(html`<input type=number style="width:40px;">`, $5)}`
+${bind(html`<input type=number style="width:45px;">`, $5)}`
 )})
     },
     {
@@ -1539,7 +1539,7 @@ ${bind(html`<input type=number style="width:40px;">`, $5)}`
       inputs: ["html"],
       value: (function(html)
 {
-  const form = html`<form>Select the number of interactions and click <button name=button>Start`;
+  const form = html`<form>Select the number of interactions and click <button style="color:#ff2800" name=button>Start`;
   form.button.onclick = event => {
     event.preventDefault(); // Don’t submit the form.
     form.dispatchEvent(new CustomEvent("input"));
@@ -1566,12 +1566,6 @@ md`**Iteraction**: ${iteractionCount}/${T} - **Cost**: ${costRun}<br>
       inputs: ["vegalite","fr1","pointsMap","fr2","dimensions"],
       value: (function(vegalite,fr1,pointsMap,fr2,dimensions){return(
 vegalite([fr1(pointsMap), fr2(pointsMap)][+dimensions-1])
-)})
-    },
-    {
-      inputs: ["md"],
-      value: (function(md){return(
-md`### One gradient descent step, returns a set of points to be displayed`
 )})
     },
     {
@@ -1628,6 +1622,12 @@ md`### One gradient descent step, returns a set of points to be displayed`
 )
     },
     {
+      inputs: ["md"],
+      value: (function(md){return(
+md`### One gradient descent step, returns a set of points to be displayed`
+)})
+    },
+    {
       inputs: ["md","tex"],
       value: (function(md,tex){return(
 md `# Limitations
@@ -1647,7 +1647,7 @@ md `# Limitations
       name: "ref",
       inputs: ["md"],
       value: (function(md){return(
-md`# References
+md`# References and recommended reading
 ### Paper's BibTeX
 \`\`\`
 @article{maaten2008visualizing,
@@ -1769,7 +1769,7 @@ new View(10)
       name: "viewof T",
       inputs: ["View"],
       value: (function(View){return(
-new View(0)
+new View(100)
 )})
     },
     {
@@ -2100,6 +2100,12 @@ md`# Auxiliary functions`
       inputs: ["md"],
       value: (function(md){return(
 md`#### Input bind`
+)})
+    },
+    {
+      inputs: ["md"],
+      value: (function(md){return(
+md`From [Bostok's](https://beta.observablehq.com/@mbostock) [Multi-value inputs](https://beta.observablehq.com/@mbostock/multi-value-inputs)`
 )})
     },
     {
@@ -3263,7 +3269,7 @@ function disposal(element) {
 };
 
 const notebook = {
-  id: "2379c50fe5f906fb@7823",
+  id: "2379c50fe5f906fb@7835",
   modules: [m0,m1,m2,m3,m4]
 };
 
