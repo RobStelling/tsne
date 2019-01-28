@@ -1,17 +1,17 @@
 // URL: https://beta.observablehq.com/@robstelling/t-sne
 // Title: Abrindo a caixa preta do t-SNE
 // Author: Roberto Stelling (@robstelling)
-// Version: 7185
+// Version: 7190
 // Runtime version: 1
 
 const m0 = {
-  id: "2331ea7cae3cdc98@7185",
+  id: "2331ea7cae3cdc98@7190",
   variables: [
     {
       inputs: ["md"],
       value: (function(md){return(
 md`# Abrindo a caixa preta do t-SNE
-Visão detalhada do *t*-SNE, implementação do algoritmo e análise de dados em um ambiente artificial.`
+Visão detalhada do *t*-SNE, implementação do algoritmo, animação e análise de resultados com um exemplo simplificado.`
 )})
     },
     {
@@ -2542,14 +2542,14 @@ md`Dados artificiais para projeção idealizada dos 16 pontos`
       {"x": 1.63, "y": 3.73, "Cluster": "b"},
       {"x": 1.73, "y": 4.25, "Cluster": "b"},
       {"x": 1.83, "y": 3.74, "Cluster": "b"},
-      {"x": 3.23, "y": 3, "Cluster": "c"},
-      {"x": 3.33, "y": 3.55, "Cluster": "c"},
-      {"x": 3.43, "y": 4, "Cluster": "c"},
-      {"x": 3.53, "y": 3.45, "Cluster": "c"},
-      {"x": 2.53, "y": 0.75, "Cluster": "d"},
-      {"x": 2.63, "y": 1.22, "Cluster": "d"},
-      {"x": 2.73, "y": 1.75, "Cluster": "d"},
-      {"x": 2.83, "y": 1.28, "Cluster": "d"},
+      {"x": 2.53, "y": 0.75, "Cluster": "c"},
+      {"x": 2.63, "y": 1.22, "Cluster": "c"},
+      {"x": 2.73, "y": 1.75, "Cluster": "c"},
+      {"x": 2.83, "y": 1.28, "Cluster": "c"},
+      {"x": 3.23, "y": 3, "Cluster": "d"},
+      {"x": 3.33, "y": 3.55, "Cluster": "d"},
+      {"x": 3.43, "y": 4, "Cluster": "d"},
+      {"x": 3.53, "y": 3.45, "Cluster": "d"}
     ]
   }
 )})
@@ -3407,7 +3407,7 @@ function disposal(element) {
 };
 
 const notebook = {
-  id: "2331ea7cae3cdc98@7185",
+  id: "2331ea7cae3cdc98@7190",
   modules: [m0,m1,m2,m3,m4]
 };
 
