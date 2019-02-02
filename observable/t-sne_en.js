@@ -1,11 +1,11 @@
 // URL: https://beta.observablehq.com/@robstelling/t-sne_en
 // Title: Opening the *t*-SNE black box
 // Author: Roberto Stelling (@robstelling)
-// Version: 7835
+// Version: 7899
 // Runtime version: 1
 
 const m0 = {
-  id: "2379c50fe5f906fb@7835",
+  id: "2379c50fe5f906fb@7899",
   variables: [
     {
       inputs: ["md"],
@@ -164,11 +164,11 @@ In an *"ideal world"* we would like to see the original points reduced from two 
 )})
     },
     {
-      inputs: ["vegalite","width","ideal_linear","markSize","opacity","colorScheme"],
-      value: (function(vegalite,width,ideal_linear,markSize,opacity,colorScheme){return(
+      inputs: ["vegalite","width","idealLinear","markSize","opacity","colorScheme"],
+      value: (function(vegalite,width,idealLinear,markSize,opacity,colorScheme){return(
 vegalite({
   width: Math.min(400, width),
-  data: ideal_linear,
+  data: idealLinear,
   mark: {type: "circle", size: markSize, opacity: opacity},
   encoding: {
     x: {field: "x", type: "quantitative"},
@@ -286,7 +286,7 @@ vegalite({
 md`### Radial projection!
 In each of the previous examples there was a simple and suggestive way to map the points from *2D* to *1D* in a way that they would be separable, but the methods worked because *we knew* how the data was organized on the original *2D* space.
 
-But how would we choose what transformation to apply on unknown data with 10, 100 or 1000 dimensions?`
+But how would we choose what transformation to apply to unknown data with 10, 100 or 1000 dimensions?`
 )})
     },
     {
@@ -323,7 +323,7 @@ md `# Also, it is not allways possible to map the points to a lower space and se
       inputs: ["md"],
       value: (function(md){return(
 md `### For example, miles per gallon, power and country of origin on the [*cars*](https://vega.github.io/vega-lite/data/cars.json) dataset
-If the clusters are not separable on the high dimensions, they won't be separable on inferior dimensions (although the can be separable in dimensions higher than the original!). This points to the idea of intrinsic dimensionality, meaning the mininum dimensions necessary to *"portrait"* the data and separate in the intended clusters. If the data intrinsic dimension is higher than *2D* or *3D*, no mapping will fully express its content.`
+If the clusters are not separable on the high dimensions, they won't be separable on inferior dimensions (although they may be separable in dimensions higher than the original!). This points to the idea of intrinsic dimensionality, meaning the mininum dimensions necessary to faithfully *"portrait"* the data and still separate in the intended clusters. If the data intrinsic dimension is higher than *2D* or *3D*, no mapping will fully express its content.`
 )})
     },
     {
@@ -357,6 +357,13 @@ md`To visualize data from high dimensions we can use
 Essentially, *t*-SNE uses a gaussian kernel to convert the points on the original space to connection probabilities (**P**) and a Student *t* kernel, with one degree of freedom, to map the connection probabilities in the lower dimensions (**Q**). The cost of the diference between these two distribuitions **P** and **Q** is modeled by the asymmetric Kullbach-Leibler<sup><a href="#ref">20</a></sup> divergence. The gradient of this function (see \`[Equation 5]\` bellow) is used to update the connection probabilities in the mapped (lower dimension) space.
 
 *t*-SNE is not garanteed to converge but still produces very good results as, for example, the mapping of the MNIST dataset from 784 dimensions to just 2 (or 3, if we include the color and mark channels - that represent the same information: the digit label) dimensions. The graph below was generated with Tensorflow.js<sup><a href="#ref">17</a></sup>`
+)})
+    },
+    {
+      inputs: ["html"],
+      value: (function(html){return(
+html`<img src="https://raw.githubusercontent.com/RobStelling/miscImg/master/imagens/mnist_tsne.jpg"></img>
+<center><i>t</i>-SNE applied to MNIST (Laurens van der Maaten<sup><a href="#ref">3</a></sup>)</center>`
 )})
     },
     {
@@ -1164,11 +1171,11 @@ md`## Binary search of high dimension variances`
     },
     {
       name: "varianceBinarySearch",
-      inputs: ["computePi","computeEntropy"],
-      value: (function(computePi,computeEntropy){return(
+      inputs: ["computeP_i","computeEntropy"],
+      value: (function(computeP_i,computeEntropy){return(
 function varianceBinarySearch(points, i, entropy, error=1e-6, steps=40) {
   function recursiveBinarySearch(variance, lowerBound, upperBound) {
-    const probabilities = computePi(points, i, variance),
+    const probabilities = computeP_i(points, i, variance),
           currentEntropy = computeEntropy(probabilities);
  
     if (steps-- <= 1 || Math.abs(currentEntropy - entropy) <= error)
@@ -1244,7 +1251,7 @@ The resulting affinities matrix is asymmetric, to make it symmetric, so that ${t
 )})
     },
     {
-      name: "p_final_display",
+      name: "pFinalDisplay",
       inputs: ["pVariancesDisplay","atribIJ","valorIJ"],
       value: (function(pVariancesDisplay,atribIJ,valorIJ)
 {
@@ -1265,9 +1272,9 @@ The resulting affinities matrix is asymmetric, to make it symmetric, so that ${t
 )
     },
     {
-      inputs: ["pt","math","p_final_display"],
-      value: (function(pt,math,p_final_display){return(
-pt(math.matrix(math.reshape(p_final_display.map(x => +x.toFixed(3)), [16,16])))
+      inputs: ["pt","math","pFinalDisplay"],
+      value: (function(pt,math,pFinalDisplay){return(
+pt(math.matrix(math.reshape(pFinalDisplay.map(x => +x.toFixed(3)), [16,16])))
 )})
     },
     {
@@ -1480,7 +1487,7 @@ During the optimization stage, ${tex`p`} is kept fixed, the points ${tex`y`} are
 
 To speed the the optimization stage and to help find better solutions, the paper suggest the following two *"tricks"*:
 1. **Initial compression**: This forces the points of the mapped space to be closer on the beginning of the optimization. The smaller the initial distances, the easier it is for the agglomerations to form, resulting on a better exploration of the solution space.
-2. **Initial exageration**: Multiply all ${tex`p_{ij}`} by a fixed factor (e.g. 4) during the first steps of the optimization. This means that almost all ${tex`q_{ij}`}, that still add up to 1, are to small to model high values of ${tex`p_{ij}`}. This means that the optimization is "encouraged" to model high ${tex`p_{ij}`} to high ${tex`q_{ij}`}, this tend to separate the agglomerations in different groups in the mapped space, help the clusters to move to and fro.`
+2. **Initial exageration**: Multiply all ${tex`p_{ij}`} by a fixed factor (e.g. 4) during the first steps of the optimization. This means that almost all ${tex`q_{ij}`}, that still add up to 1, are too small to model high values of ${tex`p_{ij}`}. This means that the optimization is "encouraged" to model high ${tex`p_{ij}`} to high ${tex`q_{ij}`}, this tend to separate the agglomerations in different groups in the mapped space and help the clusters to move to and fro.`
 )})
     },
     {
@@ -1518,7 +1525,7 @@ vegalite(thumbnail)
 )})
     },
     {
-      inputs: ["md","bind","html","viewof eta","viewof triggerMomentum","viewof exaggerationFactor","viewof stop_exaggeration","viewof Perp","viewof T"],
+      inputs: ["md","bind","html","viewof eta","viewof triggerMomentum","viewof exaggerationFactor","viewof stopExaggeration","viewof Perp","viewof T"],
       value: (function(md,bind,html,$0,$1,$2,$3,$4,$5){return(
 md`<b>Learning rate</b>: ${bind(html`<input type=range min="0" max="20" step="0.1" style="width:90px;">`, $0)}
 ${bind(html`<input type=number style="width:40px;">`, $0)}
@@ -1554,10 +1561,10 @@ ${bind(html`<input type=number style="width:45px;">`, $5)}`
       value: (G, _) => G.input(_)
     },
     {
-      inputs: ["md","iteractionCount","T","costRun","stop_exaggeration","exaggerationFactor","Perp","momentum","triggerMomentum","metricName","metric"],
-      value: (function(md,iteractionCount,T,costRun,stop_exaggeration,exaggerationFactor,Perp,momentum,triggerMomentum,metricName,metric){return(
+      inputs: ["md","iteractionCount","T","costRun","stopExaggeration","exaggerationFactor","Perp","momentum","triggerMomentum","metricName","metric"],
+      value: (function(md,iteractionCount,T,costRun,stopExaggeration,exaggerationFactor,Perp,momentum,triggerMomentum,metricName,metric){return(
 md`**Iteraction**: ${iteractionCount}/${T} - **Cost**: ${costRun}<br>
-**Exaggeration**: ${iteractionCount<=stop_exaggeration?exaggerationFactor:"none"} (${exaggerationFactor} until interaction ${stop_exaggeration}) - 
+**Exaggeration**: ${iteractionCount<=stopExaggeration?exaggerationFactor:"none"} (${exaggerationFactor} until interaction ${stopExaggeration}) - 
 **Perplexity**: ${Perp}<br>
 **Momentum**: ${momentum[iteractionCount<triggerMomentum]} (${momentum[true]} until iteraction ${triggerMomentum}, ${momentum[false]} afterwards) - **Metric**: ${metricName(metric)}`
 )})
@@ -1637,10 +1644,10 @@ md `# Limitations
   - There's no guarantee of convergence.
   - The value of the hyperparameter \`Perp\` can highly influence the resulting map.
 - This implementation:
-  - The current implementation is a bit fractioned (with pieces and bits of code throughut the notebook) and applies ontly from maps from ${tex`\mathbb{R}^M`} to ${tex`\mathbb{R}^{1|2}`}.
-  - It is not difficult to include other datasets, but edition has to be manual.
+  - The current implementation is a bit fractioned (with pieces and bits of code spread throughout the notebook) and applies ontly from maps from ${tex`\mathbb{R}^M`} to ${tex`\mathbb{R}^{1|2}`}.
+  - It is not difficult to include other datasets, but the process is currently manual.
   - Text and code can be downloaded from here or from <a href="#ref">Github<sup>23</sup></a>.
-  - Although one can observe interesting behaviours of *t*-SNE in reductions from ${tex`\mathbb{R}^2`} to ${tex`\mathbb{R}^1`}, one should generalize the results observed in this notebook with care, given the limited dataset and minimal reduction.`
+  - Although one can observe interesting behaviours of *t*-SNE in reductions from ${tex`\mathbb{R}^2`} to ${tex`\mathbb{R}^1`} or mapping to ${tex`\mathbb{R}^2`}, one should generalize the results observed in this notebook with care, given the limited dataset and minimal reduction.`
 )})
     },
     {
@@ -1702,7 +1709,7 @@ md`#### Variables and functions`
     {
       inputs: ["md"],
       value: (function(md){return(
-md`##### Playground inputs`
+md`##### Playground parameters`
 )})
     },
     {
@@ -1730,15 +1737,15 @@ new View(75)
       value: (G, _) => G.input(_)
     },
     {
-      name: "viewof stop_exaggeration",
+      name: "viewof stopExaggeration",
       inputs: ["View"],
       value: (function(View){return(
 new View(50)
 )})
     },
     {
-      name: "stop_exaggeration",
-      inputs: ["Generators","viewof stop_exaggeration"],
+      name: "stopExaggeration",
+      inputs: ["Generators","viewof stopExaggeration"],
       value: (G, _) => G.input(_)
     },
     {
@@ -1776,6 +1783,95 @@ new View(100)
       name: "T",
       inputs: ["Generators","viewof T"],
       value: (G, _) => G.input(_)
+    },
+    {
+      inputs: ["md"],
+      value: (function(md){return(
+md`##### Playground globals`
+)})
+    },
+    {
+      name: "initial iteractionCount",
+      value: (function(){return(
+0
+)})
+    },
+    {
+      name: "mutable iteractionCount",
+      inputs: ["Mutable","initial iteractionCount"],
+      value: (M, _) => new M(_)
+    },
+    {
+      name: "iteractionCount",
+      inputs: ["mutable iteractionCount"],
+      value: _ => _.generator
+    },
+    {
+      name: "initial costRun",
+      value: (function(){return(
+Infinity
+)})
+    },
+    {
+      name: "mutable costRun",
+      inputs: ["Mutable","initial costRun"],
+      value: (M, _) => new M(_)
+    },
+    {
+      name: "costRun",
+      inputs: ["mutable costRun"],
+      value: _ => _.generator
+    },
+    {
+      name: "Y",
+      inputs: ["reset","mutable iteractionCount","yFlat","matrix"],
+      value: (function(reset,$0,yFlat,matrix)
+{
+  reset;
+  $0.value = 0;
+  const N = yFlat.length,
+        dim = yFlat[0].length;
+  let g = matrix(N, dim);
+  for (var i=0; i<N; i++)
+    for (var d=0; d<dim; d++)
+      g[i][d] = yFlat[i][d];
+  return g;
+}
+)
+    },
+    {
+      name: "initial gains",
+      inputs: ["matrix","ystep"],
+      value: (function(matrix,ystep){return(
+matrix(ystep.length, ystep[0].length, 1.0)
+)})
+    },
+    {
+      name: "mutable gains",
+      inputs: ["Mutable","initial gains"],
+      value: (M, _) => new M(_)
+    },
+    {
+      name: "gains",
+      inputs: ["mutable gains"],
+      value: _ => _.generator
+    },
+    {
+      name: "initial ystep",
+      inputs: ["zeros","Y"],
+      value: (function(zeros,Y){return(
+zeros(Y.length, Y[0].length)
+)})
+    },
+    {
+      name: "mutable ystep",
+      inputs: ["Mutable","initial ystep"],
+      value: (M, _) => new M(_)
+    },
+    {
+      name: "ystep",
+      inputs: ["mutable ystep"],
+      value: _ => _.generator
     },
     {
       inputs: ["md"],
@@ -1824,13 +1920,13 @@ distancesMatrix(pointsFlat)
     },
     {
       name: "pFlat",
-      inputs: ["pointsFlat","computePi","s2"],
-      value: (function(pointsFlat,computePi,s2)
+      inputs: ["pointsFlat","computeP_i","s2"],
+      value: (function(pointsFlat,computeP_i,s2)
 {
   var N = pointsFlat.length;
   var matrix = []
   for (var i=0; i<N; i++)
-    matrix = matrix.concat(computePi(pointsFlat, i, s2));
+    matrix = matrix.concat(computeP_i(pointsFlat, i, s2));
   return matrix.map(p=>p/16);
 }
 )
@@ -1879,12 +1975,12 @@ adjustVariances(pointsFlat, entropy, 1e-4, 50)
     },
     {
       name: "guessMap",
-      inputs: ["matrix","points","dimensions","gaussRandom","ideal_linear"],
-      value: (function(matrix,points,dimensions,gaussRandom,ideal_linear){return(
+      inputs: ["matrix","points","dimensions","gaussRandom","idealLinear"],
+      value: (function(matrix,points,dimensions,gaussRandom,idealLinear){return(
 {
   random: matrix(points.values.length, +dimensions, (()=>gaussRandom()*1e-4)),
   compressed: matrix(points.values.length, +dimensions, (()=>gaussRandom()*1e-6)),
-  ideal: ideal_linear.values.map((p)=>dimensions==1?[p.x]:[p.x, p.y])
+  ideal: idealLinear.values.map((p)=>dimensions==1?[p.x]:[p.x, p.y])
 }
 )})
     },
@@ -1906,38 +2002,6 @@ points.values.map(function(x, i){
     return {x:yFlat[i][0], y: yFlat[i][1], name:x.name, Cluster:x.Cluster};
 })
 )})
-    },
-    {
-      name: "initial costRun",
-      value: (function(){return(
-Infinity
-)})
-    },
-    {
-      name: "mutable costRun",
-      inputs: ["Mutable","initial costRun"],
-      value: (M, _) => new M(_)
-    },
-    {
-      name: "costRun",
-      inputs: ["mutable costRun"],
-      value: _ => _.generator
-    },
-    {
-      name: "initial iteractionCount",
-      value: (function(){return(
-0
-)})
-    },
-    {
-      name: "mutable iteractionCount",
-      inputs: ["Mutable","initial iteractionCount"],
-      value: (M, _) => new M(_)
-    },
-    {
-      name: "iteractionCount",
-      inputs: ["mutable iteractionCount"],
-      value: _ => _.generator
     },
     {
       name: "digits",
@@ -2040,57 +2104,6 @@ function fr2(dados) {
 )})
     },
     {
-      name: "Y",
-      inputs: ["reset","mutable iteractionCount","yFlat","matrix"],
-      value: (function(reset,$0,yFlat,matrix)
-{
-  reset;
-  $0.value = 0;
-  const N = yFlat.length,
-        dim = yFlat[0].length;
-  let g = matrix(N, dim);
-  for (var i=0; i<N; i++)
-    for (var d=0; d<dim; d++)
-      g[i][d] = yFlat[i][d];
-  return g;
-}
-)
-    },
-    {
-      name: "initial gains",
-      inputs: ["matrix","ystep"],
-      value: (function(matrix,ystep){return(
-matrix(ystep.length, ystep[0].length, 1.0)
-)})
-    },
-    {
-      name: "mutable gains",
-      inputs: ["Mutable","initial gains"],
-      value: (M, _) => new M(_)
-    },
-    {
-      name: "gains",
-      inputs: ["mutable gains"],
-      value: _ => _.generator
-    },
-    {
-      name: "initial ystep",
-      inputs: ["zeros","Y"],
-      value: (function(zeros,Y){return(
-zeros(Y.length, Y[0].length)
-)})
-    },
-    {
-      name: "mutable ystep",
-      inputs: ["Mutable","initial ystep"],
-      value: (M, _) => new M(_)
-    },
-    {
-      name: "ystep",
-      inputs: ["mutable ystep"],
-      value: _ => _.generator
-    },
-    {
       inputs: ["md"],
       value: (function(md){return(
 md`# Auxiliary functions`
@@ -2166,7 +2179,7 @@ c => ["L2", "L2 Squared", "L1", "Chebyshev"][c]
       name: "metricNameTex",
       inputs: ["tex"],
       value: (function(tex){return(
-c => [tex`L^2`, tex`L^{2^2}`, tex`L^1`, tex`D_{Chebyshev}`][c]
+c => [tex`L^2`, tex`L^{2^2}`, tex`L^1`, tex`L_\infty`][c]
 )})
     },
     {
@@ -2224,10 +2237,10 @@ function LMax(p1, p2) {
 )})
     },
     {
-      name: "computePi",
+      name: "computeP_i",
       inputs: ["zeros","computeDistance"],
       value: (function(zeros,computeDistance){return(
-function computePi(p, i, s2i) {
+function computeP_i(p, i, s2i) {
   // p: points
   // i: index of p_i
   // s2i: variance for p_i
@@ -2247,15 +2260,15 @@ function computePi(p, i, s2i) {
     },
     {
       name: "gradient",
-      inputs: ["stop_exaggeration","exaggerationFactor","computeQ","zeros","computeDistance"],
-      value: (function(stop_exaggeration,exaggerationFactor,computeQ,zeros,computeDistance){return(
+      inputs: ["stopExaggeration","exaggerationFactor","computeQ","zeros","computeDistance"],
+      value: (function(stopExaggeration,exaggerationFactor,computeQ,zeros,computeDistance){return(
 function gradient(y, P, iter) {
   // Computes the gradient given:
   // y: points on the mapped space
   // P: probabilities on the original space
   // iter: Number of current iteration
   // dC/dy = 4 * sum((p_ij-q_ij)(y_i-y_j)(1+|y_i-y_j|^2)^-1)
-  const ex = iter <= stop_exaggeration?exaggerationFactor:1,
+  const ex = iter <= stopExaggeration?exaggerationFactor:1,
         N = y.length,
         dim = y[0].length,
         Q = computeQ(y);
@@ -2275,8 +2288,8 @@ function gradient(y, P, iter) {
     },
     {
       name: "gradObsolete",
-      inputs: ["stop_exaggeration","exaggerationFactor","zeros","computeDistance","ind"],
-      value: (function(stop_exaggeration,exaggerationFactor,zeros,computeDistance,ind){return(
+      inputs: ["stopExaggeration","exaggerationFactor","zeros","computeDistance","ind"],
+      value: (function(stopExaggeration,exaggerationFactor,zeros,computeDistance,ind){return(
 function gradObsolete(p, q, y, iter) {
   // Obsolete
   // Returns the gradient given:
@@ -2286,7 +2299,7 @@ function gradObsolete(p, q, y, iter) {
   // iter: Current iteraction
   const numPontos = y.length;
   const dim = y[0].length;
-  const exagero = iter<stop_exaggeration?exaggerationFactor:1;
+  const exagero = iter<stopExaggeration?exaggerationFactor:1;
   var soma;
   var gradiente = zeros(numPontos, dim);
   for (let j, i=0; i<numPontos; i++) {
@@ -2448,7 +2461,7 @@ md`#### Gets and sets a value to an array of m points using *i,j* indexes`
       name: "valorIJ",
       value: (function(){return(
 function valorIJ(i, j, m) {
-  // Posição [i][j] de uma matrix m kxk
+  // [i][j] value of a matrix m (kxk)
   return m[Math.sqrt(m.length)*i+j];
 }
 )})
@@ -2456,9 +2469,9 @@ function valorIJ(i, j, m) {
     {
       name: "atribIJ",
       value: (function(){return(
-function atribIJ(i, j, m, valor) {
-  // Posição [i][j] de uma matrix m kxk
-  m[Math.sqrt(m.length)*i+j] = valor;
+function atribIJ(i, j, m, value) {
+  // Assigns a value to the [i][j] position of a matrix m (kxk)
+  m[Math.sqrt(m.length)*i+j] = value;
 }
 )})
     },
@@ -2469,7 +2482,7 @@ md`Artificial data for the idealized projection of the data points`
 )})
     },
     {
-      name: "ideal_linear",
+      name: "idealLinear",
       value: (function(){return(
 {
     "values": [
@@ -2481,14 +2494,14 @@ md`Artificial data for the idealized projection of the data points`
       {"x": 1.63, "y": 3.73, "Cluster": "b"},
       {"x": 1.73, "y": 4.25, "Cluster": "b"},
       {"x": 1.83, "y": 3.74, "Cluster": "b"},
-      {"x": 3.23, "y": 3, "Cluster": "c"},
-      {"x": 3.33, "y": 3.55, "Cluster": "c"},
-      {"x": 3.43, "y": 4, "Cluster": "c"},
-      {"x": 3.53, "y": 3.45, "Cluster": "c"},
-      {"x": 2.53, "y": 0.75, "Cluster": "d"},
-      {"x": 2.63, "y": 1.22, "Cluster": "d"},
-      {"x": 2.73, "y": 1.75, "Cluster": "d"},
-      {"x": 2.83, "y": 1.28, "Cluster": "d"},
+      {"x": 2.53, "y": 0.75, "Cluster": "c"},
+      {"x": 2.63, "y": 1.22, "Cluster": "c"},
+      {"x": 2.73, "y": 1.75, "Cluster": "c"},
+      {"x": 2.83, "y": 1.28, "Cluster": "c"},
+      {"x": 3.23, "y": 3, "Cluster": "d"},
+      {"x": 3.33, "y": 3.55, "Cluster": "d"},
+      {"x": 3.43, "y": 4, "Cluster": "d"},
+      {"x": 3.53, "y": 3.45, "Cluster": "d"}
     ]
   }
 )})
@@ -3269,7 +3282,7 @@ function disposal(element) {
 };
 
 const notebook = {
-  id: "2379c50fe5f906fb@7835",
+  id: "2379c50fe5f906fb@7899",
   modules: [m0,m1,m2,m3,m4]
 };
 
