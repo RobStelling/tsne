@@ -1,11 +1,11 @@
 // URL: https://beta.observablehq.com/@robstelling/t-sne_en
 // Title: Opening the *t*-SNE black box
 // Author: Roberto Stelling (@robstelling)
-// Version: 7899
+// Version: 7932
 // Runtime version: 1
 
 const m0 = {
-  id: "2379c50fe5f906fb@7899",
+  id: "2379c50fe5f906fb@7932",
   variables: [
     {
       inputs: ["md"],
@@ -294,8 +294,12 @@ But how would we choose what transformation to apply to unknown data with 10, 10
       inputs: ["circles","dist"],
       value: (function(circles,dist)
 {
-  var circ = circles.map((p) => ({x:dist(p, {x:0, y:0}), label:p.label}));
-  return circ.map((p) => ({x: p.x-circ.reduce((sum, point) => sum + point.x,0)/circles.length,label:p.label}));
+  // pointsDistances is a vector with the distances of each point to the origin (0,0)
+  var pointsDistances = circles.map((p) => ({x:dist(p, {x:0, y:0}), label:p.label}));
+  // mean of the distances
+  var mean = pointsDistances.reduce((sum, point) => sum + point.x, 0)/circles.length
+  // We return a map of each distance minus the mean (so the sample is "centralized")
+  return pointsDistances.map((p) => ({x: p.x-mean,label:p.label}));
 }
 )
     },
@@ -1515,7 +1519,8 @@ The value of the new mapped points correspond to the previous points, added up t
       name: "tsnePlayground",
       inputs: ["md"],
       value: (function(md){return(
-md`# *t*-SNE Playground`
+md`# *t*-SNE Playground
+Here you can play with the *t*-SNE hyperparameters with the following dataset in hand. Select the value for each parameter and click on the <font color="red">Start</font> button`
 )})
     },
     {
@@ -3212,7 +3217,7 @@ function input(config) {
       name: "d3format",
       inputs: ["require"],
       value: (function(require){return(
-require("d3-format")
+require("d3-format@1")
 )})
     }
   ]
@@ -3282,7 +3287,7 @@ function disposal(element) {
 };
 
 const notebook = {
-  id: "2379c50fe5f906fb@7899",
+  id: "2379c50fe5f906fb@7932",
   modules: [m0,m1,m2,m3,m4]
 };
 
